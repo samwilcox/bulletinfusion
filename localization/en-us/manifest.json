@@ -1,0 +1,12 @@
+{
+    "metadata": {
+        "name": "English (US-American)",
+        "authorName": "Bulletin Fusion",
+        "authorEmail": "sam@bulletinfusion.com",
+        "authorUrl": "https://www.bulletinfusion.com"
+    },
+    "files": [
+        "global",
+        "errors"
+    ]
+}

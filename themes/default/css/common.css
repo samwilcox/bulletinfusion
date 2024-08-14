@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+body { font-family: 'Lato', sans-serif; font-size: 13px; color: #000; background-color: #FFF; padding: 0px; margin: 0px; }
+header { width: auto; }
+.floater { width: 1300px; margin-left: auto; margin-right: auto; }
+.topBar { width: auto; background-color: #303030; color: #FFF; padding: 0px; }
+.middleBar { width: auto; background-color: #EF9C66; padding: 14px 0 14px 0; }
+.topBarGrid { display: grid; grid-template-columns: auto auto; gap: 40px; align-items: center; }
+.topBarGridLeft i { margin-right: 5px; }
+.topBarGridRight { text-align: right; }
+.topBarGridRight i { margin-right: 5px; }
+.guestUserBar i { margin-right: 5px; }
+.bottomBar { width: auto; background-color: #FCDC94; padding: 8px 0 8px 0; }
+.bottomBarGrid { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: center; }
+.bottomBarGridLeft { font-size: 11px; }
+.bottomBarGridLeft i { margin-right: 5px; }
+.bottomBarGridLeft i .bottomBarGridLeft i { margin-left: 5px; }
+.bottomBarGridRight { text-align: right; }
+.bottomBarGridRight i { margin-right: 5px; }
+.bottomBarGridRight i + .bottomBarGridRight i { margin-left: 5px; }
+.topBarGridRight i { margin-right: 5px; }
+.topBarGridRight i + i { margin-left: 5px; font-size: 11px; }
+.middleBarGrid { display: grid; grid-template-columns: auto auto; gap: 40px; align-items: center; }
+.middleBarGridRight { text-align: right; }
+.guestUserBarSignInLink i { margin-right: 5px; }
+.guestUserBarSignUpLink i { margin-right: 5px; }

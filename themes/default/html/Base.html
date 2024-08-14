@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE-edge">
+        <meta name="viewport" content="width=device-width, initial-scale = 0.86, maximum-scale=3.0, minimum-scale=0.86, user-scalable=0">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="robots" content="noindex">
+        <title>${communityTitle}</title>
+        ${webFontLink}
+        <link href="${wrapper}?controller=resource&action=css&file=normalize" rel="stylesheet" type="text/css">
+        <link href="${baseUrl}/public/fontawesome/css/all.min.css" rel="stylesheet" type="text/css">
+        <link href="${wrapper}?controller=resource&action=css&file=common" rel="stylesheet" type="text/css">
+        <link href="${wrapper}?controller=resource&action=css&file=hyperlinks" rel="stylesheet" type="text/css">
+        <link href="${wrapper}?controller=resource&action=css&file=forms" rel="stylesheet" type="text/css">
+        <script src="${wrapper}?controller=resource&action=js&file=jquery.min"></script>
+        <script src="${wrapper}?controller=resource&action=js&file=jquery-ui"></script>
+        <script src="${wrapper}?controller=resource&action=js&file=common"></script>
+        <script type="application/json" id="json">
+            {
+                "ajaxUrl":"${wrapper}"
+            }
+        </script>
+    </head>
+    <body>
+        <header>
+            <div class="topBar">
+                <div class="floater">
+                    <div class="topBarGrid">
+                        <div class="topBarGridLeft">
+                            <a href=""><i class="fa-solid fa-house"></i>${[global][homeLink]}</a><a href=""><i class="fa-solid fa-users"></i>${[global][membersLink]}</a><a href=""><i class="fa-solid fa-earth-americas"></i>${[global][whosOnlineLink]}</a><a href=""><i class="fa-solid fa-magnifying-glass"></i>${[global][searchLink]}</a><a href=""><i class="fa-solid fa-circle-question"></i>${[global][helpLink]}</a>
+                        </div>
+                        <div class="topBarGridRight"><a href=""><i class="fa-solid fa-language"></i>Languages<i class="fa-solid fa-chevron-down"></i></a><a href=""><i class="fa-solid fa-palette"></i>Themes<i class="fa-solid fa-chevron-down"></i></a></div>
+                    </div>
+                </div>
+            </div>
+            <div class="middleBar">
+                <div class="floater">
+                    <div class="middleBarGrid">
+                        <div><a href=""><img src="/public/imagesets/default/images/logo.png"></a></div>
+                        <div class="middleBarGridRight">
+                            <span class="guestUserBarSignInLink">
+                                <a href=""><i class="fa-solid fa-right-to-bracket"></i>Sign In</a>
+                            </span>
+                            {{ if $signUpEnabled }}
+                                <span class="guestUserBarSignUpLink">
+                                    <a href=""><i class="fa-solid fa-user-plus"></i>Sign Up</a>
+                                </span>
+                            {{ endif }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottomBar">
+                <div class="floater">
+                    <div class="bottomBarGrid">
+                        <div class="bottomBarGridLeft"><i class="fa-solid fa-house"></i><a href="">Home</a></div>
+                        <div class="bottomBarGridRight"><a href=""><i class="fa-solid fa-user-shield"></i>Community Leaders</a><a href=""><i class="fa-solid fa-tags"></i>Tags</a><a href=""><i class="fa-solid fa-people-arrows"></i>Clubs</a></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </body>
+</html>

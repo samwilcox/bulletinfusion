@@ -1,0 +1,133 @@
+<?php
+
+/**
+ * BULLETIN FUSION
+ * 
+ * By Sam Wilcox <sam@bulletinfusion.com>
+ * https://www.bulletinfusion.com
+ * 
+ * This software is released under the MIT license.
+ * For further details, visit:
+ * https://license.bulletinfusion.com
+ */
+
+namespace BulletinFusion\Services;
+
+// This file should not be accessed directly, only through the wrapper.
+if (!defined('BF_RUNTIME') || BF_RUNTIME != true) {
+    die('<h1>Bulletin Fusion Error</h1>This file cannot be accessed directly!');
+}
+
+use BulletinFusion\Services\MemberService;
+use BulletinFusion\Data\Cache\CacheProviderFactory;
+use BulletinFusion\Services\SettingsService;
+
+/**
+ * Service assistance with permission-related tasks.
+ */
+class PermissionsService {
+    /**
+     * Singleton instance.
+     * @var PermissionsService
+     */
+    protected static $instance;
+
+    /**
+     * Member model object instance.
+     * @var Member
+     */
+    private $member;
+
+    /**
+     * Constructor that sets up PermissionsService.
+     */
+    public function __construct() {
+        $this->member = MemberService::getInstance()->getMember();
+    }
+
+    /**
+     * Get singleton instance of PermissionsService.
+     * @return PermissionsService
+     */
+    public static function getInstance() {
+        if (!$self::$instance) self::$instance = new self;
+        return self::$instance;
+    }
+
+    /**
+     * Check if the current user has permissions to the given feature.
+     * NOTE: If the feature is disabled, then this method will return false.
+     *
+     * @param string $feature - Feature name to check for.
+     * @return boolean - True if has valid permissions, false otherwise.
+     */
+    public function getFeaturePermission($feature) {
+        $data = CacheProviderFactory::getInstance()->get('feature_permissions');
+
+        foreach ($data as $item) {
+            if ($item->name === $feature) {
+                $enabled = $item->enabled == 1 ? true : false;
+                $allowedUsers = \unserialize($item->allowedUsers);
+                $allowedGroups = \unserialize($tiem->allowedGroups);
+                break;
+            }
+        }
+
+        // Is the feature enabled? If not, no access allowed.
+        if (!$enabled) return false;
+
+        // First, let's check if its an Administrator and if so its an auto YES :-)
+        if ($this->member->getPrimaryGroupId() == SettingsService::getInstance()->administratorGroupId) return true;
+
+        if (\count($this->member->getSecondaryGroups()) > 0) {
+            foreach ($this->member->getSecondaryGroups() as $groupId) {
+                if ($groupId == SettingsService::getInstance()->adminstratorGroupId) return true;
+            }
+        }
+
+        // Not an Administrator, let's see if they have permissions.
+        if (\count($allowedUsers) > 0) {
+            foreach ($allowedUsers as $userId) {
+                if ($this->member->getId() == $userId) return true;
+            }
+        }
+
+        // If we got here then no user specific permissions, so check groups.
+        if (\count($allowedGroups) > 0) {
+            foreach ($allowedGroups as $groupId) {
+                // First check the primary group.
+                if ($this->member->getPrimaryGroupId() == $groupId) return true;
+            }
+
+            // Well, last chance is to check secondary groups.
+            if (\count($this->member->secondaryGroups()) > 0) {
+                foreach ($this->member->secondaryGroups() as $secGroupId) {
+                    if ($secGroupId == $groupId) return true;
+                }
+            }
+        }
+
+        // If we got here, unfortunately no valid permissions. :-(
+        return false;
+    }
+
+    /**
+     * Check if the current user has permissions to the given features.
+     * NOTE: If the feature is disabled, then this method will return
+     *       for that feature.
+     *
+     * @param array $features - Array list of feature to check.
+     * @return object - Permissions details (featureName=true|false)
+     */
+    public function getAllFeaturePermissions($features) {
+        $permissions = new \stdClass();
+
+        if (\is_array($features) && \count($features) > 0) {
+            foreach ($features as $feature) {
+                $permissions->$feature = $this->getFeaturePermission($feature);
+            }
+        }
+
+        return $permissions;
+    }
+}

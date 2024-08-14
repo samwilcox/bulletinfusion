@@ -1,0 +1,15 @@
+.topBarGridLeft a, .topBarGridLeft a:link, .topBarGridLeft a:active, .topBarGridLeft a:visited { color: #FFF; text-decoration: none; transition: 0.5s; display: inline-block; padding: 6px 20px 6px 20px; border-left: 1px solid #505050; text-transform: uppercase; }
+.topBarGridLeft a:hover { color: #FFF; text-decoration: none; background-color: #000; }
+.topBarGridLeft a:last-of-type { border-right: 1px solid #505050; }
+.topBarGridRight a, .topBarGridRight a:link, .topBarGridRight a:active, .topBarGridRight a:visited { color: #FFF; text-decoration: none; transition: 0.5s; display: inline-block; padding: 6px 20px 6px 20px; border-left: 1px solid #505050; }
+.topBarGridRight a:hover { color: #FFF; text-decoration: none; background-color: #000; }
+.topBarGridRight a:last-of-type { border-right: 1px solid #505050; }
+.bottomBarGridLeft a, .bottomBarGridLeft a:link, .bottomBarGridLeft a:active, .bottomBarGridLeft a:visited { color: #000; text-decoration: none; }
+.bottomBarGridLeft a:hover { color: #000; text-decoration: underline; }
+.bottomBarGridRight a, .bottomBarGridRight a:link, .bottomBarGridRight a:active, .bottomBarGridRight a:visited { color: #000; text-decoration: none; margin-left: 20px; }
+.bottomBarGridRight a:hover { color: #000; text-decoration: underline; }
+.bottomBarGridRight a:first-of-type { margin-left: 0px; }
+.guestUserBarSignInLink a, .guestUserBarSignInLink a:link, .guestUserBarSignInLink a:active, .guestUserBarSignInLink a:visited { color: #000; text-decoration: none; transition: 0.5s; background-color: #C8CFA0; border-radius: 5px; padding: 10px 20px 10px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; }
+.guestUserBarSignInLink a:hover { color: #000; text-decoration: none; background-color: #DADFBF; }
+.guestUserBarSignUpLink a, .guestUserBarSignUpLink a:link, .guestUserBarSignUpLink a:active, .guestUserBarSignUpLink a:visited { color: #000; text-decoration: none; transition: 0.5s; background-color: #78ABA8; margin-left: 10px; border-radius: 5px; padding: 10px 20px 10px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; }
+.guestUserBarSignUpLink a:hover { color: #000; text-decoration: none; background-color: #8EB4B2; }

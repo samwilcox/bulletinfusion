@@ -1,0 +1,17 @@
+{
+    "guest": "Guest",
+    "unknown": "Unknown",
+    "homeLink": "Home",
+    "membersLink" : "Members",
+    "whosOnlineLink": "Who's Online?",
+    "searchLink": "Search",
+    "helpLink": "Help",
+    "languagesLink": "Languages",
+    "themesLink": "Themes",
+    "signInLink": "Sign In",
+    "signUpLink": "Sign Up",
+    "navHomeLink": "Home",
+    "communityLeadersLink": "Community Leaders",
+    "tagsLink": "Tags",
+    "clubsLink": "Clubs"
+}
