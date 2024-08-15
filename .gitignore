@@ -1,4 +1,4 @@
 *.log
 application/Vendor
 .env
-upload/photos
+upload/photos/member-1/sam.jpg
