@@ -1,3 +1,4 @@
 *.log
 application/Vendor
 .env
+upload/photos
