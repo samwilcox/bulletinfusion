@@ -23,28 +23,56 @@
         </script>
     </head>
     <body>
+        <div class="dropDownMenu" id="ddm-languages">
+            <span class="dropDownMenuLinks">
+                {{ for $language in $languages }}
+                    <a href="{{ $language->url }}">
+                        {{ $language->selected ? '<i class="fa-solid fa-circle-check"></i>' : '' }}
+                        {{ $language->name }}
+                    </a>
+                {{ endfor }}
+            </span>
+        </div>
+        <div class="dropDownMenu" id="ddm-themes">
+            <span class="dropDownMenuLinks">
+                {{ for $theme in $themes }}
+                    <a href="{{ $theme->url }}">
+                        {{ $theme->selected ? '<i class="fa-solid fa-circle-check"></i>' : '' }}
+                        {{ $theme->name }}
+                    </a>
+                {{ endfor }}
+            </span>
+        </div>
         <header>
             <div class="topBar">
                 <div class="floater">
                     <div class="topBarGrid">
                         <div class="topBarGridLeft">
-                            <a href=""><i class="fa-solid fa-house"></i>${[global][homeLink]}</a><a href=""><i class="fa-solid fa-users"></i>${[global][membersLink]}</a><a href=""><i class="fa-solid fa-earth-americas"></i>${[global][whosOnlineLink]}</a><a href=""><i class="fa-solid fa-magnifying-glass"></i>${[global][searchLink]}</a><a href=""><i class="fa-solid fa-circle-question"></i>${[global][helpLink]}</a>
+                            <a href=""><i class="fa-solid fa-house"></i>${[global][homeLink]}</a>{{ if $membersList }}<a href="${membersLink}"><i class="fa-solid fa-users"></i>${[global][membersLink]}</a>{{ endif }}{{ if $whosOnline }}<a href="${whosOnlineLink}"><i class="fa-solid fa-earth-americas"></i>${[global][whosOnlineLink]}</a>{{ endif }}{{ if $search }}<a href="${searchLink}"><i class="fa-solid fa-magnifying-glass"></i>${[global][searchLink]}</a>{{ endif }}{{ if $help }}<a href="${helpLink}"><i class="fa-solid fa-circle-question"></i>${[global][helpLink]}</a>{{ endif }}
                         </div>
-                        <div class="topBarGridRight"><a href=""><i class="fa-solid fa-language"></i>Languages<i class="fa-solid fa-chevron-down"></i></a><a href=""><i class="fa-solid fa-palette"></i>Themes<i class="fa-solid fa-chevron-down"></i></a></div>
+                        <div class="topBarGridRight"><a href="javacript:void(0);" id="ddm-languages-link" data-menu="ddm-languages" data-link="ddm-languages-link" data-ignored="ddm-languages-icon1,ddm-languages-icon2" onclick="openDropDownMenu(this);"><i class="fa-solid fa-language" id="ddm-languages-icon1"></i>${[global][languagesLink]}<i class="fa-solid fa-chevron-down" id="ddm-languages-icon2"></i></a><a href="javascript:void(0);" id="ddm-themes-link" data-menu="ddm-themes" data-link="ddm-themes-link" data-ignored="ddm-themes-icon1,ddm-themes-icon2" onclick="openDropDownMenu(this);"><i class="fa-solid fa-palette" id="ddm-themes-icon1"></i>${[global][themesLink]}<i class="fa-solid fa-chevron-down" id="ddm-themes-icon2"></i></a></div>
                     </div>
                 </div>
             </div>
             <div class="middleBar">
                 <div class="floater">
                     <div class="middleBarGrid">
-                        <div><a href=""><img src="/public/imagesets/default/images/logo.png"></a></div>
+                        <div>
+                            <a href="${homeLink}">
+                            {{ if $logoType == 'image'}}
+                                <img src="${logoSrc}" alt="*">
+                            {{ else }}
+                                ${communityTitle}
+                            {{ endif }}
+                            </a>
+                        </div>
                         <div class="middleBarGridRight">
                             <span class="guestUserBarSignInLink">
-                                <a href=""><i class="fa-solid fa-right-to-bracket"></i>Sign In</a>
+                                <a href=""><i class="fa-solid fa-right-to-bracket"></i>${[global][signInLink]}</a>
                             </span>
                             {{ if $signUpEnabled }}
                                 <span class="guestUserBarSignUpLink">
-                                    <a href=""><i class="fa-solid fa-user-plus"></i>Sign Up</a>
+                                    <a href=""><i class="fa-solid fa-user-plus"></i>${[global][signUpLink]}</a>
                                 </span>
                             {{ endif }}
                         </div>
@@ -54,11 +82,67 @@
             <div class="bottomBar">
                 <div class="floater">
                     <div class="bottomBarGrid">
-                        <div class="bottomBarGridLeft"><i class="fa-solid fa-house"></i><a href="">Home</a></div>
-                        <div class="bottomBarGridRight"><a href=""><i class="fa-solid fa-user-shield"></i>Community Leaders</a><a href=""><i class="fa-solid fa-tags"></i>Tags</a><a href=""><i class="fa-solid fa-people-arrows"></i>Clubs</a></div>
+                        <div class="bottomBarGridLeft"><i class="fa-solid fa-house"></i>
+                        {{ for $crumb in $breadcrumbs }}
+                            {{ if $crumb->url != null }}
+                                <a href="{{ $crumb->url }}">
+                            {{ endif }}
+                            {{ $crumb->title }}
+                            {{ if $crumb->url != null }}
+                                </a>
+                            {{ endif }}
+                        {{ endfor }}
+                        </div>
+                        <div class="bottomBarGridRight">
+                            {{ if $communityLeaders }}
+                                <a href="${communityLeadersLink}"><i class="fa-solid fa-user-shield"></i>${[global][communityLeadersLink]}</a>
+                            {{ endif }}
+                            {{ if $tags }}
+                                <a href="${tagsLink}"><i class="fa-solid fa-tags"></i>${[global][tagsLink]}</a>
+                            {{ endif }}
+                            {{ if $clubs }}
+                                <a href="${clubsLink}"><i class="fa-solid fa-people-arrows"></i>${[global][clubsLink]}</a>
+                            {{ endif }}    
+                        </div>
                     </div>
                 </div>
             </div>
         </header>
+        <main>
+            <div class="floater">
+                {{ if $blocks }}
+                    {{ if $hasLeftBlocks && $hasRightBlocks }}
+                        <div class="mainGridAll">
+                            <div>${leftBlocks}</div>
+                            <div>{body}</div>
+                            <div>${rightBlocks}</div>
+                        </div>
+                    {{ endif }}
+                    {{ if !$hasLeftBlocks && $hasRightBlocks }}
+                        <div class="mainGridRightNoLeft">
+                            <div>{body}</div>
+                            <div>${rightBlocks}</div>
+                        </div>
+                    {{ endif }}
+                    {{ if $hasLeftBlocks && !$hasRightBlocks }}
+                        <div class="mainGridLeftNoRight">
+                            <div>${leftBlocks}</div>
+                            <div>{body}</div>
+                        </div>
+                    {{ endif }}
+                {{ else }}
+                    ${body}
+                {{ endif }}
+            </div>
+        </main>
+        <footer>
+            <div class="floater">
+                <div class="footerGrid">
+                    <div class="footerGridLeft"><a href="${manageCookiesLink}">${[global][manageCookiesLink]}</a>${privacyPolicyLink}${contactUsLink}</div>
+                    <div class="footerGridCenter">${[global][poweredBy]} <strong><a href="https://www.bulletinfusion.com" target="_blank">Bulletin Fusion</a></strong> ${version}</div>
+                    <div class="footerGridRight"><span>${allTimes}</span><span>${timeGenerated}</span></div>
+                </div>
+            </div>
+        </footer>
     </body>
 </html>

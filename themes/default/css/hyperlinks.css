@@ -13,3 +13,25 @@
 .guestUserBarSignInLink a:hover { color: #000; text-decoration: none; background-color: #DADFBF; }
 .guestUserBarSignUpLink a, .guestUserBarSignUpLink a:link, .guestUserBarSignUpLink a:active, .guestUserBarSignUpLink a:visited { color: #000; text-decoration: none; transition: 0.5s; background-color: #78ABA8; margin-left: 10px; border-radius: 5px; padding: 10px 20px 10px 20px; font-size: 14px; font-weight: 700; text-transform: uppercase; }
 .guestUserBarSignUpLink a:hover { color: #000; text-decoration: none; background-color: #8EB4B2; }
+.dropDownMenuLinks a, .dropDownMenuLinks a:link, .dropDownMenuLinks a:active, .dropDownMenuLinks a:visited { color: #000; text-decoration: none; transition: 0.5s; display: block; padding: 6px 16px 6px 16px; border-left: 5px solid transparent; font-size: 12px; border-right: 5px solid transparent; }
+.dropDownMenuLinks a:hover { color: #000; text-decoration: none; border-left: 5px solid #78ABA8; background-color: #F1F3E5; }
+.dropDownMenuLinks a:first-of-type { border-radius: 5px 5px 0 0; }
+.dropDownMenuLinks a:last-of-type { border-radius: 0 0 5px 5px; }
+.blockHeaderGridRight a, .blockHeaderGridRight a:link, .blockHeaderGridRight a:active, .blockHeaderGridRight a:visited { color: #000; text-decoration: none; transition: 0.5s; }
+.blockHeaderGridRight a:hover { color: #505050; text-decoration: none; }
+.blockContentLinks a, .blockContentLinks a:link, .blockContentLinks a:active, .blockContentLinks a:visited { color: #000; text-decoration: none; transition: 0.5s; display: block; padding: 8px; }
+.blockContentLinks a:hover { color: #000; text-decoration: none; background-color: #FFE8B7; }
+.blockContentLinks a:last-of-type { border-radius: 0 0 5px 5px; }
+.frontFilterButton a, .frontFilterButton a:link, .frontFilterButton a:active, .frontFilterButton a:visited { color: #F2F2F2; text-decoration: none; transition: 0.5s; border-radius: 5px; background-color: #303030; padding: 12px 20px 12px 20px; display: inline-block; }
+.frontFilterButton a:hover { color: #FFF; text-decoration: none; background-color: #000; }
+.frontTopicLink a, .frontTopicLink a:link, .frontTopicLink a:active, .frontTopicLink a:visited { color: #000; text-decoration: none; transition: 0.5s; font-weight: 700; font-size: 16px; }
+.frontTopicLink a:hover { color: #E66006; text-decoration: none; }
+a, a:link, a:active, a:visited { color: #41716E; text-decoration: none; transition: 0.5s; }
+a:hover { color: #E66006; text-decoration: none; }
+.loadMoreBar a, .loadMoreBar a:link, .loadMoreBar a:active, a:visited { color: #FFF; text-decoration: none; transition: 0.5s; border-radius: 5px; padding: 10px 20px 10px 20px; background-color: #78ABA8; }
+.loadMoreBar a:hover { color: #FFF; text-decoration: none; background-color: #A3CFCC; }
+.footerGridCenter a, .footerGridCenter a:link, .footerGridCenter a:active, .footerGridCenter a:visited { color: #000; text-decoration: none; transition: 0.5s; }
+.footerGridCenter a:hover { color: #41716E; text-decoration: none; }
+.footerGridLeft a, .footerGridLeft a:link, .footerGridLeft a:active, .footerGridLeft a:visited { color: #000; text-decoration: none; margin-left: 20px; }
+.footerGridLeft a:hover { color: #000; text-decoration: underline; }
+.footerGridLeft a:first-of-type { margin-left: 0px; }

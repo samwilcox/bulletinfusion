@@ -15,6 +15,7 @@
 // ini_set( 'display_errors', true );
 error_reporting( 0 );
 
+define('THIS_VERSION', '0.1.0');
 define('ROOT_PATH', __DIR__ . '/');
 
 require ROOT_PATH . 'application/Vendor/autoload.php';

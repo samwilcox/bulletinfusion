@@ -13,5 +13,11 @@
     "navHomeLink": "Home",
     "communityLeadersLink": "Community Leaders",
     "tagsLink": "Tags",
-    "clubsLink": "Clubs"
+    "clubsLink": "Clubs",
+    "pageGenerated": "Page generated at <strong>${time}</strong>",
+    "allTimes": "All times are <strong>${timezone}</strong> (GMT ${gmt})",
+    "poweredBy": "Powered by",
+    "manageCookiesLink": "Manage Cookies",
+    "privacyPolicyLink": "Privacy Policy",
+    "contactUsLink": "Contact Us"
 }

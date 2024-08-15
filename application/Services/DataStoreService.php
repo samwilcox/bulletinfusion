@@ -67,7 +67,7 @@ class DataStoreService {
      * @return boolean - True if exists, false otherwise.
      */
     public function __isset($key) {
-        return \array_key_exists($ke, $this->data);
+        return \array_key_exists($key, $this->data);
     }
 
     /**

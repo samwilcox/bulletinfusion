@@ -92,7 +92,7 @@ class LocalizationHelper {
      * @return string - Resulting localization string.
      */
     public static function replace($category, $stringId, $toReplace, $replacement) {
-        return UtilHelper::wordReplace(self::get($category, $stringId), $toReplace, $replacement);
+        return UtilHelper::wordReplace(self::get($category, $stringId), '${' . $toReplace . '}', $replacement);
     }
 
     /**
@@ -106,7 +106,7 @@ class LocalizationHelper {
         $words = self::get($category, $stringId);
 
         foreach ($replacements as $k => $v) {
-            $words = UtilHelper::wordReplace($words, $k, $v);
+            $words = UtilHelper::wordReplace($words, '${' . $k . '}', $v);
         }
 
         return $words;

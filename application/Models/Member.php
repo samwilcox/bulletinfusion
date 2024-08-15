@@ -21,6 +21,10 @@ if (!defined('BF_RUNTIME') || BF_RUNTIME != true) {
 use BulletinFusion\Data\Cache\CacheProviderFactory;
 use BulletinFusion\Services\SettingsService;
 use BulletinFusion\Helpers\CookieHelper;
+use BulletinFusion\Helpers\UtilHelper;
+use BulletinFusion\Helpers\LocalizationHelper;
+use BulletinFusion\Services\OutputService;
+use BulletinFusion\Models\ModelsFactory;
 
 /**
  * Member model that represents a single Bulletin Fusion member.
@@ -113,10 +117,46 @@ class Member {
     private $primaryGroupId = 6;
 
     /**
+     * Primary group model object.
+     * @var object
+     */
+    private $primaryGroup;
+
+    /**
      * Secondary groups list for member.
      * @var array
      */
     private $secondaryGroups = [];
+
+    /**
+     * Blocks data array.
+     * @var array
+     */
+    private $blockData = [];
+
+    /**
+     * The photo type.
+     * @var string
+     */
+    private $photoType;
+
+    /**
+     * The photo identifier.
+     * @var integer
+     */
+    private $photoId;
+
+    /**
+     * The preferred home filter.
+     * @var string
+     */
+    private $homeFilter;
+
+    /**
+     * Total items to display per page.
+     * @var integer
+     */
+    private $itemsPerPage;
 
     /**
      * Get the member ID.
@@ -358,6 +398,23 @@ class Member {
     }
 
     /**
+     * Get the primary group object.
+     * @return Group - Group model object.
+     */
+    public function getPrimaryGroup() {
+        return $this->primaryGroup;
+    }
+
+    /**
+     * Sets the primary group object.
+     * @param Group $primaryGroup - Group model object.
+     * @return void
+     */
+    public function setPrimaryGroup($primaryGroup) {
+        $this->primaryGroup = $primaryGroup;
+    }
+
+    /**
      * Get the members secondary groups listing.
      * @return array - Secondary groups listing.
      */
@@ -375,6 +432,91 @@ class Member {
     }
 
     /**
+     * Get the block data.
+     * @return array - Block data for blocks layout.
+     */
+    public function getBlockData() {
+        return $this->blockData;
+    }
+
+    /**
+     * Set the block data.
+     * @param array $blockData - BLock data for blocks layout.
+     * @return void
+     */
+    public function setBlockData($blockData) {
+        $this->blockData = $blockData;
+    }
+
+    /**
+     * Get the photo type.
+     * @return string - Photo type.
+     */
+    public function getPhotoType() {
+        return $this->photoType;
+    }
+
+    /**
+     * Set the photo type.
+     * @param string $photoType - Photo type.
+     * @return void
+     */
+    public function setPhotoType($photoType) {
+        $this->photoType = $photoType;
+    }
+
+    /**
+     * Get the photo identifier.
+     * @return integer - Photo identifier.
+     */
+    public function getPhotoId() {
+        return $this->photoId;
+    }
+
+    /**
+     * Set the photo identifier.
+     * @param integer $photoId - Photo identifier.
+     * @return void
+     */
+    public function setPhotoId($photoId) {
+        $this->photoId = $photoId;
+    }
+
+    /**
+     * Get the home filter setting.
+     * @return string - The home filter.
+     */
+    public function getHomeFilter() {
+        return $this->homeFilter;
+    }
+
+    /**
+     * Set the home filter setting.
+     * @param string $homeFilter - The home filter.
+     * @return void
+     */
+    public function setHomeFilter($homeFilter) {
+        $this->homeFilter = $homeFilter;
+    }
+
+    /**
+     * Get the total items per page setting.
+     * @return integer - The total items per page.
+     */
+    public function getItemsPerPage() {
+        return $this->itemsPerPage;
+    }
+
+    /**
+     * Set the total items per page setting.
+     * @param integer $itemsPerPage - The total items per page.
+     * @return void
+     */
+    public function setItemsPerPage($itemsPerPage) {
+        $this->itemsPerPage = $itemsPerPage;
+    }
+
+    /**
      * Initializes this class from the given parameters.
      * @param object $params - Parameters for initialization.
      * @return void
@@ -382,9 +524,9 @@ class Member {
     public function initialize($params) {
         if (empty($params)) {
             $guest = true;
-        } else if ($params && empty($params->memberId)) {
+        } else if ($params && empty($params->id)) {
             $guest = true;
-        } else if ($params && $params->memberId && $params->memberId < 1) {
+        } else if ($params && $params->id && $params->id < 1) {
             $guest = true;
         } else {
             $guest = false;
@@ -398,14 +540,14 @@ class Member {
             $found = false;
 
             foreach ($data as $member) {
-                if ($member->id == $params->memberId) {
+                if ($member->id == $params->id) {
                     $found = true;
                 }
             }
 
             if ($found) {
                 foreach ($data as $member) {
-                    if ($member->id == $params->memberId) {
+                    if ($member->id == $params->id) {
                         $this->setId($member->id);
                         $this->setDisplayName($member->displayName);
                         $this->setEmailAddress($member->emailAddress);
@@ -418,7 +560,13 @@ class Member {
                         $this->setTimeAgo($member->timeAgo == 1 ? true : false);
                         $this->setDisplayOnWhosOnline($member->displayOnWhosOnline == 1 ? true : false);
                         $this->setPrimaryGroupId($member->primaryGroupId);
+                        $this->setPrimaryGroup(ModelsFactory::create((object)['type' => 'group', 'id' => (integer) $member->primaryGroupId]));
                         $this->setSecondaryGroups(!empty($member->secondaryGroups) ? \unserialize($member->secondaryGroups) : []);
+                        $this->setBlockData($this->determineBlockData($member->blockData));
+                        $this->setPhotoType($member->photoType);
+                        $this->setPhotoId($member->photoId);
+                        $this->setHomeFilter($member->homeFilter);
+                        $this->setItemsPerPage((integer) $member->getItemsPerPage);
                         break;
                     }
                 }
@@ -451,6 +599,7 @@ class Member {
         $this->configs->themePath = ROOT_PATH . 'themes/' . $themeFolder . '/';
         $this->configs->themeUrl = $_ENV['BASE_URL'] . '/themes/' . $themeFolder;
         $this->configs->localizationPath = ROOT_PATH . 'localization/' . $localeFolder . '/';
+        $this->configs->imagesetUrl = $_ENV['BASE_URL'] . '/public/imagesets/' . $imagesetFolder;
     }
 
     /**
@@ -481,6 +630,152 @@ class Member {
         $this->setTimeAgo(SettingsService::getInstance()->defaultTimeAgo);
         $this->setDisplayOnWhosOnline(false);
         $this->setPrimaryGroupId(SettingsService::getInstance()->guestGroupId);
+        $this->setPrimaryGroup(ModelsFactory::create((object)['type' => 'group', 'id' => SettingsService::getInstance()->guestGroupId]));
         $this->setSecondaryGroups([]);
+        $this->setBlockData(\count(SettingsService::getInstance()->defaultBlockData) > 0 ? SettingsService::getInstance()->defaultBlockData : null);
+        $this->setPhotoType(null);
+        $this->setPhotoId(0);
+        $this->setHomeFilter(SettingsService::getInstance()->defaultHomeFilter);
+        $this->setItemsPerPage(SettingsService::getInstance()->defaultItemsPerPage);
+    }
+
+    /**
+     * Helper that determines which block data to use.
+     * @param mixed $blockData - The members block data field. 
+     * @return array|null - Block data array or null if no blocks.
+     */
+    private function determineBlockData($blockData) {
+        if ($blockData != NULL) {
+            $parsedBlockData = \unserialize($blockData);
+            if (\count($parsedBlockData) == 0) return null;
+            return $parsedBlockData;
+        }
+
+        return SettingsService::getInstance()->defaultBlockData;
+    }
+
+    /**
+     * Returns the member profile URL string.
+     * @return void
+     */
+    public function url() {
+        return UtilHelper::buildUrl('members', 'profile', ['member' => UtilHelper::urlSplitItems($this->getId(), $this->getDisplayName())]);
+    }
+
+    /**
+     * Get the member's profile photo.
+     * @param object $params - Data parameters.
+     *               Available Parameters:
+     *               => thumbnail: set to true for thumbnail
+     *               => link: set to true if to have photo inside a link
+     * @return mixed - Photo source.
+     */
+    public function profilePhoto($params) {
+        $thumbnail = false;
+        if ($params->thumbnail) $thumbnail = true;
+
+        if ($params->link && $this->getId() != 0) {
+            $beginningLink = UtilHelper::buildPartialLink(
+                LocalizationHelper::replace('member', 'viewProfileTooltip', 'displayName', $this->getDisplayName()),
+                true,
+                $this->url()
+            );
+
+            $endLink = UtilHelper::buildPartialLink(null, false);
+        } else {
+            $beginningLink = '';
+            $endLink = '';
+        }
+
+        if ($this->getId() == 0) return $this->noPhoto('G', $thumbnail);
+        $firstChar = \strtoupper(\substr($this->getDisplayName(), 0, 1));
+
+        switch ($this->getPhotoType()) {
+            case 'uploaded':
+                if ($this->getPhotoId() != null && $this->getPhotoId() != 0) {
+                    $data = CacheProviderFactory::getInstance()->get('member_photos');
+                    $found = false;
+
+                    foreach ($data as $photo) {
+                        if ($photo->id == $this->getPhotoId()) {
+                            $found = true;
+                            $filename = $photo->filename;
+                            break;
+                        }
+                    }
+
+                    if (!$found) return $this->noPhoto($firstChar, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null);
+
+                    $separator = DIRECTORY_SEPARATOR;
+                    $photoPath = ROOT_PATH . SettingsService::getInstance()->uploadDir . $separator . SettingsService::getInstance()->photosDir . $separator . "member-{$this->getId()}" . $separator . $filename;
+                    $photoUrl = $_ENV['BASE_URL'] . '/' . SettingsService::getInstance()->uploadDir . '/' . SettingsService::getInstance()->photosDir . "/member-{$this->getId()}/$filename";
+
+                    if (\file_exists($photoPath)) {
+                        return $this->photo($photoUrl, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null);
+                    } else {
+                        return $this->noPhoto($firstChar, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null);
+                    }
+
+                } else {
+                    return $this->noPhoto($firstChar, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null);
+                }
+                break;
+        }
+    }
+
+    /**
+     * Builds a no photo.
+     * @param string [$letter='G'] - The letter character.
+     * @param boolean [$thumbnail=false] - True for thumbnail, false otherwise.
+     * @param object [$link=null] - Optional link object.
+     * @return mixed - The photo source.
+     */
+    private function noPhoto($letter = 'G', $thumbnail = false, $link = null) {
+        return OutputService::getInstance()->getPartial(
+            'Member', 'ProfilePhoto', 'NoPhoto', [
+                'class' => UtilHelper::getCSSClass($thumbnail ? 'noPhotoThumbnail' : 'noPhoto'),
+                'letter' => $letter,
+                'linkBegin' => $link ? $link->begin : '',
+                'linkEnd' => $link ? $link->end : '',
+                'backgroundColor' => '#000' // TO-DO: Update this later.
+            ]
+        );
+    }
+
+    /**
+     * Builds a photo.
+     * @param string $source - The photo source.
+     * @param boolean [$thumbnail=false] - True for thumbnail, false otherwise.
+     * @param object [$link=null] - Optional link object.
+     * @return mixed - The photo source.
+     */
+    private function photo($source, $thumbnail = false, $link = null) {
+        return OutputService::getInstance()->getPartial(
+            'Member', 'ProfilePhoto', 'Photo', [
+                'class' => UtilHelper::getCSSClass($thumbnail ? 'photoThumbnail' : 'photo'),
+                'source' => $source,
+                'linkBegin' => $link ? $link->begin  : '',
+                'linkEnd' => $link ? $link->end : ''
+            ]
+        );
+    }
+
+    /**
+     * Builds the member profile link hyperlink.
+     * @param string [$tooltip=null] - Optional tooltip text.
+     * @param string [$separator=null] - Optional seperator string.
+     * @param boolean [$includeGroupColor=true] - True to include group color, false otherwise.
+     * @return mixed - Hyperlink source.
+     */
+    public function profileLink($tooltip = null, $separator = null, $includeGroupColor = true) {
+        return UtilHelper::buildLink(
+            $this->getDisplayName(),
+            $this->url(),
+            $tooltip,
+            (object) [
+                'color' => $this->getPrimaryGroup()->getColor(),
+                'emphasis' => $this->getPrimaryGroup()->getEmphasize()
+            ]
+        );
     }
 }

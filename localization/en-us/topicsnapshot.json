@@ -1,0 +1,7 @@
+{
+    "startedBy": "Started by ${displayName} ${timestamp}",
+    "replied": "${displayName} replied ${timestamp}",
+    "totalReplies": "Total replies",
+    "totalViews": "Total views",
+    "forumTooltip": "This topic belongs to the ${forumTitle} forum"
+}

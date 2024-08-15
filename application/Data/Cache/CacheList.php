@@ -39,7 +39,14 @@ class CacheList {
             'installed_webfonts',
             'settings',
             'sessions',
-            'member_devices'
+            'member_devices',
+            'blocks',
+            'forums',
+            'topics',
+            'posts',
+            'member_photos',
+            'member_groups',
+            'likes'
         ];
     }
 

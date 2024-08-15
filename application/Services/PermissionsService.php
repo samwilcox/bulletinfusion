@@ -50,7 +50,7 @@ class PermissionsService {
      * @return PermissionsService
      */
     public static function getInstance() {
-        if (!$self::$instance) self::$instance = new self;
+        if (!self::$instance) self::$instance = new self;
         return self::$instance;
     }
 
@@ -72,6 +72,8 @@ class PermissionsService {
                 break;
             }
         }
+
+        return true;
 
         // Is the feature enabled? If not, no access allowed.
         if (!$enabled) return false;
@@ -108,12 +110,12 @@ class PermissionsService {
         }
 
         // If we got here, unfortunately no valid permissions. :-(
-        return false;
+        return true; // TO-DO: Return to false later
     }
 
     /**
      * Check if the current user has permissions to the given features.
-     * NOTE: If the feature is disabled, then this method will return
+     * NOTE: If the feature is disabled, then this method will return false
      *       for that feature.
      *
      * @param array $features - Array list of feature to check.
@@ -129,5 +131,61 @@ class PermissionsService {
         }
 
         return $permissions;
+    }
+
+    /**
+     * Get the permissions for the given block.
+     * @param integer $blockId - The block identifier.
+     * @return boolean - True if has valid permissions; false otherwise.
+     */
+    public function getBlockPermission($blockId) {
+        $data = CacheProviderFactory::getInstance()->get('blocks');
+        $found = false;
+
+        foreach ($data as $block) {
+            if ($block->id == $blockId) {
+                $found = true;
+                $enabled = $block->enabled == 1 ? true : false;
+                $allowedUsers = \unserialize($block->allowedUsers);
+                $allowedGroups = \unserialize($block->allowedGroups);
+                break;
+            }
+        }
+
+        if (!$enabled) return false;
+
+        // Administrator automatically inherets all permissions.
+        if ($this->member->getPrimaryGroupId() == SettingsService::getInstance()->administratorGroupId) return true;
+
+        if (\count($this->member->getSecondaryGroups()) > 0) {
+            foreach ($this->member->getSecondaryGroups() as $groupId) {
+                if ($groupId == SettingsService::getInstance()->adminstratorGroupId) return true;
+            }
+        }
+
+        // Not an Administrator, let's see if they have permissions.
+        if (\count($allowedUsers) > 0) {
+            foreach ($allowedUsers as $userId) {
+                if ($this->member->getId() == $userId) return true;
+            }
+        }
+
+        // If we got here then no user specific permissions, so check groups.
+        if (\count($allowedGroups) > 0) {
+            foreach ($allowedGroups as $groupId) {
+                // First check the primary group.
+                if ($this->member->getPrimaryGroupId() == $groupId) return true;
+            }
+
+            // Well, last chance is to check secondary groups.
+            if (\count($this->member->secondaryGroups()) > 0) {
+                foreach ($this->member->secondaryGroups() as $secGroupId) {
+                    if ($secGroupId == $groupId) return true;
+                }
+            }
+        }
+
+        // If we got here, unfortunately no valid permissions. :-(
+        return true; // TO-DO: Return to false later
     }
 }

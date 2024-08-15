@@ -1,22 +1,33 @@
 <?php
 
-$files = [
-    'italic' => [
-        '900' => 'Lato-Black.woff2',
-        '100' => 'Lato-Thin.woff2',
-        '400' => 'Lato-Regular.woff2',
-        '300' => 'Lato-Light.woff2',
-        '700' => 'Lato-Bold.woff2'
+$blockData = (object) [
+    'all' => (object) [
+        'enabled' => false,
+        'blocks' => (object) [
+            'left' => null,
+            'right' => null
+        ]
     ],
-    'normal' => [
-        '100' => 'Lato-ThinItalic.woff2',
-        '300' => 'Lato-LightItalic.woff2',
-        '400' => 'Lato-Italic.woff2',
-        '700' => 'Lato-BoldItalic.woff2',
-        '900' => 'Lato-BlackItalic.woff2'
+    'pages' => (object) [
+        'enabled' => true,
+        'pages' => (object) [
+            'Home' => (object) [
+                'blocks' => (object) [
+                    'left' => [
+                        0 => 1,
+                        1 => 6
+                    ],
+                    'right' => [
+                        0 => 3,
+                        1 => 9,
+                        2 => 2
+                    ]
+                ]
+            ] 
+        ]
     ]
 ];
 
-$serialize = serialize($files);
-
-echo $serialize;
+echo '<pre>';
+var_dump($blockData);
+echo '</pre>';

@@ -113,6 +113,9 @@ class OutputService {
 
         if (\count($vars) > 0) {
             foreach ($vars as $k => $v) {
+                if (is_array($v)) {
+                    $v = json_encode($v); // Convert array to JSON string, or handle it as needed
+                }
                 $output = \str_replace('${' . $k . '}', $v, $output);
             }
         }
@@ -257,7 +260,12 @@ class OutputService {
         }
 
         LocalizationHelper::outputWordsReplacement($output);
-        return $output;
+        extract($vars);
+        $parsedContent = $this->parseTemplate($output);
+        \ob_start();
+        eval('?>' . $parsedContent);
+        $finalOutput = \ob_get_clean();
+        return $finalOutput;
     }
  
     /**
@@ -266,17 +274,44 @@ class OutputService {
      * @return mixed - The parsed content.
      */
     private function parseTemplate($content) {
-        // If statement parsing:
-        $content = preg_replace('/\{\{\s*if\s+(.+?)\s*\}\}/', '<?php if ($1): ?>', $content);
+        // If statement parsing with 'eq' operator:
+        $content = preg_replace_callback('/\{\{\s*if\s+(.+?)\s*\}\}/', function($matches) {
+            // Convert 'eq' to '==' and '&&' to 'and'
+            $condition = preg_replace('/\beq\b/', '==', $matches[1]);
+            $condition = preg_replace('/\band\b/', '&&', $condition);
+            return "<?php if ($condition): ?>";
+        }, $content);
+
         $content = preg_replace('/\{\{\s*else\s*\}\}/', '<?php else: ?>', $content);
         $content = preg_replace('/\{\{\s*endif\s*\}\}/', '<?php endif; ?>', $content);
-    
+
         // Loop parsing:
-        $content = preg_replace('/\{\{\s*for\s+(.+?)\s+in\s+(.+?)\s*\}\}/', '<?php foreach ($2 as $1): ?>', $content);
+        $content = preg_replace_callback('/\{\{\s*for\s+(\$\w+)\s+in\s+(\$\w+)\s*\}\}/', function($matches) {
+            $item = $matches[1];
+            $list = $matches[2];
+            return "<?php foreach ($list as $item): ?>";
+        }, $content);
         $content = preg_replace('/\{\{\s*endfor\s*\}\}/', '<?php endforeach; ?>', $content);
-    
-        // Variable parsing:
+
+        // Object property access parsing:
+        $content = preg_replace('/\{\{\s*(\$\w+)->(\w+)\s*\}\}/', '<?php echo $1->$2; ?>', $content);
+
+        // Ternary operator parsing with HTML strings:
+        $content = preg_replace_callback('/\{\{\s*(.+?)\s*\?\s*(["\'])(.+?)\2\s*:\s*(["\'])(.+?)\4\s*\}\}/', function($matches) {
+            return '<?php echo ' . $matches[1] . ' ? "' . addslashes($matches[3]) . '" : "' . addslashes($matches[5]) . '"; ?>';
+        }, $content);
+
+        // General variable parsing:
         $content = preg_replace('/\{\{\s*(.+?)\s*\}\}/', '<?php echo $1; ?>', $content);
+
+        // Variable assignment parsing:
+        $content = preg_replace('/\{\{\s*set\s+(\$\w+)\s*=\s*(.+?)\s*\}\}/', '<?php $1 = $2; ?>', $content);
+
+        // Variable increment parsing:
+        $content = preg_replace('/\{\{\s*(\$\w+)\s*\+\+\s*\}\}/', '<?php $1++; ?>', $content);
+
+        // Variable decrement parsing:
+        $content = preg_replace('/\{\{\s*(\$\w+)\s*--\s*\}\}/', '<?php $1--; ?>', $content);
 
         return $content;
     }
