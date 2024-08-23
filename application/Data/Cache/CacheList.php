@@ -46,7 +46,9 @@ class CacheList {
             'posts',
             'member_photos',
             'member_groups',
-            'likes'
+            'likes',
+            'forum_permissions',
+            'tags'
         ];
     }
 

@@ -19,6 +19,10 @@ if (!defined('BF_RUNTIME') || BF_RUNTIME != true) {
 }
 
 use BulletinFusion\Data\Cache\CacheProviderFactory;
+use BulletinFusion\Services\PermissionsService;
+use BulletinFusion\Models\ModelsFactory;
+use BulletinFusion\Services\OutputService;
+use BulletinFusion\Helpers\UtilHelper;
 
 /**
  * Services for block-related tasks.
@@ -70,6 +74,27 @@ class BlocksService {
      * @return mixed - Forums block source.
      */
     private function buildForumsBlock() {
+        $data = CacheProviderFactory::getInstance()->get('forums');
+        $forums = [];
+        $exists = false;
 
+        foreach ($data as $forum) {
+            if ($forum->visible == 1 && PermissionsService::getInstance()->getForumPermission('viewForum', $forum->id)) {
+                $forumModel = ModelsFactory::create((object)['type' => 'forum', 'id' => $forum->id]);
+                $forums[] = (object) [
+                    'title' => $forumModel->getTitle(),
+                    'url' => $forumModel->url(),
+                    'color' => $forumModel->getColor(),
+                    'textColor' => $forumModel->getTextColor(),
+                    'hoverColor' => UtilHelper::darkenColor($forumModel->getColor(), 30)
+                ];
+            }
+        }
+
+        return OutputService::getInstance()->getPartial(
+            'BlocksService', 'Block', 'Forums', [
+                'forums' => $forums
+            ]
+        );
     }
 }

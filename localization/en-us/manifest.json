@@ -3,15 +3,8 @@
         "name": "English (US-American)",
         "authorName": "Bulletin Fusion",
         "authorEmail": "sam@bulletinfusion.com",
-        "authorUrl": "https://www.bulletinfusion.com"
-    },
-    "files": [
-        "global",
-        "errors",
-        "home",
-        "member",
-        "timehelper",
-        "topicsnapshot",
-        "filterhelper"
-    ]
+        "authorUrl": "https://www.bulletinfusion.com",
+        "version": "0.1.0",
+        "lastModification": ""
+    }
 }

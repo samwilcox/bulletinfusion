@@ -18,8 +18,11 @@ if (!defined('BF_RUNTIME') || BF_RUNTIME != true) {
     die('<h1>Bulletin Fusion Error</h1>This file cannot be accessed directly!');
 }
 
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 use BulletinFusion\Services\MemberService;
 use BulletinFusion\Services\FileService;
+use BulletinFusion\Helpers\LocalizationHelper;
 
 /**
  * Services for handling theme-related tasks.
@@ -35,21 +38,19 @@ class ThemeService {
      * The theme path.
      * @var string
      */
-    private $themePath;
+    private static $themePath;
 
     /**
-     * PHP directory separator.
-     * @var string
+     * Twig template engine instance.
+     * @var Twig
      */
-    private $seperator;
+    private static $twig;
 
     /**
      * Constructor that sets up ThemeService.
      */
     public function __construct() {
-        $member = MemberService::getInstance()->getMember();
-        $this->themePath = $member->getConfigs()->themePath;
-        $this->seperator = DIRECTORY_SEPARATOR;
+        
     }
 
     /**
@@ -58,16 +59,26 @@ class ThemeService {
      * @return ThemeService
      */
     public static function getInstance() {
-        if (!self::$instance) self::$instance = new self;
+        if (!self::$instance) {
+            self::$themePath = MemberService::getInstance()->getMember()->getConfigs()->themePath;
+            $loader = new FilesystemLoader(self::$themePath . 'html/');
+            self::$twig = new Environment($loader, [
+                'cache' => false,
+                'debug' => false
+            ]);
+
+            self::$instance = new self;
+        }
+        
         return self::$instance;
     }
 
     /**
-     * Get the theme base HTML.
-     * @return mixed - Base HTML content.
+     * Returns an instance of Twig.
+     * @return Twig - Twig instance.
      */
-    public function getBase() {
-        return FileService::getInstance()->readFile($this->themePath . $this->seperator . 'html' . $this->seperator . 'Base.html');
+    public static function getTwig() {
+        return self::$twig;
     }
 
     /**
@@ -76,8 +87,11 @@ class ThemeService {
      * @param string $action - The action name.
      * @return mixed - Theme content.
      */
-    public function get($controller, $action) {
-        return FileService::getInstance()->readFile($this->themePath . $this->seperator . 'html' . $this->seperator . $controller . $this->seperator . $controller . '-' . $action . '.html');
+    public static function get($controller, $action, $vars) {
+        return (object) [
+            'twig' => self::$twig,
+            'content' => self::$twig->render($controller . '/' . $controller . '-' . $action . '.html.twig', $vars)
+        ];
     }
 
     /**
@@ -87,7 +101,7 @@ class ThemeService {
      * @param string $partial - The name of the partial.
      * @return mixed - Theme content.
      */
-    public function getPartial($controller, $action, $partial) {
-        return FileService::getInstance()->readFile($this->themePath . $this->seperator . 'html' . $this->seperator . $controller . $this->seperator . $controller . '-' . $action . '-' . $partial . '.html');
+    public static function getPartial($controller, $action, $partial, $vars) {
+        return self::$twig->render($controller . '/' . $controller . '-' . $action . '-' . $partial . '.html.twig', $vars);
     }
 }

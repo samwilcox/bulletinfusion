@@ -123,6 +123,12 @@ class Member {
     private $primaryGroup;
 
     /**
+     * Secondary groups id list.
+     * @var array
+     */
+    private $secondaryGroupsIds = [];
+
+    /**
      * Secondary groups list for member.
      * @var array
      */
@@ -157,6 +163,12 @@ class Member {
      * @var integer
      */
     private $itemsPerPage;
+
+    /**
+     * Lockout data object.
+     * @var object
+     */
+    private $lockout;
 
     /**
      * Get the member ID.
@@ -415,6 +427,23 @@ class Member {
     }
 
     /**
+     * Get the secondary group id listing.
+     * @return array - Collection of group ids.
+     */
+    public function getSecondaryGroupIds() {
+        return $this->secondaryGroupsIds;
+    }
+
+    /**
+     * Set the secondary group id listing.
+     * @param array $secondaryGroupsIds - Collection of group ids.
+     * @return void
+     */
+    public function setSecondaryGroupIds($secondaryGroupsIds) {
+        $this->secondaryGroupsIds = $secondaryGroupsIds;
+    }
+
+    /**
      * Get the members secondary groups listing.
      * @return array - Secondary groups listing.
      */
@@ -517,6 +546,23 @@ class Member {
     }
 
     /**
+     * Get the lockout object instance.
+     * @return object - The lockout object instance.
+     */
+    public function getLockout() {
+        return $this->lockout;
+    }
+
+    /**
+     * Set the lockout object instance.
+     * @param object $lockout - The lockout object instance.
+     * @return void
+     */
+    public function setLockout($lockout) {
+        $this->lockout = $lockout;
+    }
+
+    /**
      * Initializes this class from the given parameters.
      * @param object $params - Parameters for initialization.
      * @return void
@@ -561,7 +607,19 @@ class Member {
                         $this->setDisplayOnWhosOnline($member->displayOnWhosOnline == 1 ? true : false);
                         $this->setPrimaryGroupId($member->primaryGroupId);
                         $this->setPrimaryGroup(ModelsFactory::create((object)['type' => 'group', 'id' => (integer) $member->primaryGroupId]));
-                        $this->setSecondaryGroups(!empty($member->secondaryGroups) ? \unserialize($member->secondaryGroups) : []);
+                        $this->setSecondaryGroupIds(!empty($member->secondaryGroups) ? \unserialize($member->secondaryGroups) : []);
+                        $this->setLockout($member->lockout != NULL ? \unserialize($member->lockout) : null);
+
+                        $groupListing = [];
+
+                        if (!empty($member->secondaryGroups)) {
+                            foreach ($member->secondaryGroups as $groupId) {
+                                $groupListing[] = ModelsFactory::create((object)['type' => 'group', 'id' => (integer) $groupId]);
+                            }
+                        }
+
+                        $this->setSecondaryGroups($groupListing);
+
                         $this->setBlockData($this->determineBlockData($member->blockData));
                         $this->setPhotoType($member->photoType);
                         $this->setPhotoId($member->photoId);
@@ -632,11 +690,12 @@ class Member {
         $this->setPrimaryGroupId(SettingsService::getInstance()->guestGroupId);
         $this->setPrimaryGroup(ModelsFactory::create((object)['type' => 'group', 'id' => SettingsService::getInstance()->guestGroupId]));
         $this->setSecondaryGroups([]);
-        $this->setBlockData(\count(SettingsService::getInstance()->defaultBlockData) > 0 ? SettingsService::getInstance()->defaultBlockData : null);
+        $this->setBlockData(!empty(SettingsService::getInstance()->defaultBlockData) ? SettingsService::getInstance()->defaultBlockData : null);
         $this->setPhotoType(null);
         $this->setPhotoId(0);
         $this->setHomeFilter(SettingsService::getInstance()->defaultHomeFilter);
         $this->setItemsPerPage(SettingsService::getInstance()->defaultItemsPerPage);
+        $this->setLockout(null);
     }
 
     /**
@@ -687,7 +746,7 @@ class Member {
             $endLink = '';
         }
 
-        if ($this->getId() == 0) return $this->noPhoto('G', $thumbnail);
+        if ($this->getId() == 0) return $this->noPhoto('G', $thumbnail, $params->mini ? $params->mini : false);
         $firstChar = \strtoupper(\substr($this->getDisplayName(), 0, 1));
 
         switch ($this->getPhotoType()) {
@@ -711,13 +770,13 @@ class Member {
                     $photoUrl = $_ENV['BASE_URL'] . '/' . SettingsService::getInstance()->uploadDir . '/' . SettingsService::getInstance()->photosDir . "/member-{$this->getId()}/$filename";
 
                     if (\file_exists($photoPath)) {
-                        return $this->photo($photoUrl, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null);
+                        return $this->photo($photoUrl, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null, $params->mini ? $params->mini : false);
                     } else {
-                        return $this->noPhoto($firstChar, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null);
+                        return $this->noPhoto($firstChar, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null, $params->mini ? $params->mini : false);
                     }
 
                 } else {
-                    return $this->noPhoto($firstChar, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null);
+                    return $this->noPhoto($firstChar, $thumbnail, $params->link ? (object)['begin' => $beginningLink, 'end' => $endLink] : null, $params->mini ? $params->mini : false);
                 }
                 break;
         }
@@ -728,12 +787,19 @@ class Member {
      * @param string [$letter='G'] - The letter character.
      * @param boolean [$thumbnail=false] - True for thumbnail, false otherwise.
      * @param object [$link=null] - Optional link object.
+     * @param boolean [$mini=false] - True to get mini thumbnail, false to not.
      * @return mixed - The photo source.
      */
-    private function noPhoto($letter = 'G', $thumbnail = false, $link = null) {
+    private function noPhoto($letter = 'G', $thumbnail = false, $link = null, $mini = false) {
+        if ($mini) {
+            $class = UtilHelper::getCSSClass('miniNoPhoto');
+        } else {
+            $class = UtilHelper::getCSSClass($thumbnail ? 'noPhotoThumbnail' : 'noPhoto');
+        }
+
         return OutputService::getInstance()->getPartial(
             'Member', 'ProfilePhoto', 'NoPhoto', [
-                'class' => UtilHelper::getCSSClass($thumbnail ? 'noPhotoThumbnail' : 'noPhoto'),
+                'class' => $class,
                 'letter' => $letter,
                 'linkBegin' => $link ? $link->begin : '',
                 'linkEnd' => $link ? $link->end : '',
@@ -747,12 +813,19 @@ class Member {
      * @param string $source - The photo source.
      * @param boolean [$thumbnail=false] - True for thumbnail, false otherwise.
      * @param object [$link=null] - Optional link object.
+     * @param boolean [$mini=false] - True to get mini thumbnail, false to not.
      * @return mixed - The photo source.
      */
-    private function photo($source, $thumbnail = false, $link = null) {
+    private function photo($source, $thumbnail = false, $link = null, $mini = false) {
+        if ($mini) {
+            $class = UtilHelper::getCSSClass('miniPhoto');
+        } else {
+            $class = UtilHelper::getCSSClass($thumbnail ? 'photoThumbnail' : 'photo');
+        }
+
         return OutputService::getInstance()->getPartial(
             'Member', 'ProfilePhoto', 'Photo', [
-                'class' => UtilHelper::getCSSClass($thumbnail ? 'photoThumbnail' : 'photo'),
+                'class' => $class,
                 'source' => $source,
                 'linkBegin' => $link ? $link->begin  : '',
                 'linkEnd' => $link ? $link->end : ''
@@ -768,14 +841,14 @@ class Member {
      * @return mixed - Hyperlink source.
      */
     public function profileLink($tooltip = null, $separator = null, $includeGroupColor = true) {
+        if ($tooltip == null) {
+            $tooltip = LocalizationHelper::replace('member', 'viewProfileTooltip', 'displayName', $this->getDisplayName());
+        }
+
         return UtilHelper::buildLink(
             $this->getDisplayName(),
             $this->url(),
-            $tooltip,
-            (object) [
-                'color' => $this->getPrimaryGroup()->getColor(),
-                'emphasis' => $this->getPrimaryGroup()->getEmphasize()
-            ]
+            $tooltip
         );
     }
 }

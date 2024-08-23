@@ -106,4 +106,17 @@ class StringHelper {
 
         return $plainText;
     }
+
+    /**
+     * Extract the ID from the string.
+     * @param string $string - The string to exract from.
+     * @return integer - the extracted integer.
+     */
+    public static function extractIdFromString($string) {
+        if (\preg_match('/^(\d+)-/', $string, $matches)) {
+            return (integer) $matches[1];
+        }
+
+        return -1;
+    }
 }

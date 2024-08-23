@@ -1,0 +1,97 @@
+{
+    "global": {
+        "guest": "Guest",
+        "unknown": "Unknown",
+        "homeLink": "Home",
+        "forumsListLink": "Forums List",
+        "membersLink" : "Members List",
+        "whosOnlineLink": "Who's Online?",
+        "searchLink": "Search",
+        "helpLink": "Help",
+        "languagesLink": "Select Language",
+        "themesLink": "Select Theme",
+        "signInLink": "Existing member? Sign In",
+        "signUpLink": "Sign Up",
+        "navHomeLink": "Home",
+        "communityLeadersLink": "Community Leaders",
+        "tagsLink": "Tags",
+        "clubsLink": "Clubs",
+        "groupsLink": "Groups",
+        "leaderboardLink": "Leaderboard",
+        "activityStreamLink": "Activity Stream",
+        "timeNow": "Time now: <strong>${time}</strong>",
+        "allTimes": "All times are <strong>${timezone}</strong> (GMT ${gmt})",
+        "poweredBy": "Powered by",
+        "manageCookiesLink": "Manage Cookies",
+        "privacyPolicyLink": "Privacy Policy",
+        "contactUsLink": "Contact Us",
+        "ajaxLoading": "Processing your request, please wait...",
+        "ajaxRequestFailed": "AJAX Request Failed",
+        "expand": "Expand",
+        "collapse": "Collapse",
+        "search": "Search",
+        "closeDialog": "Close dialog",
+        "memberSignInDialogTitle": "Member Sign In",
+        "emailAddressPlaceholder": "Email Address",
+        "passwordPlaceholder": "Password",
+        "togglePasswordField": "Toggle hide/display password",
+        "rememberMeTitle": "Remember Me?",
+        "rememberMeInfo": "Sign me in automatically on my next visit. Not recommended for shared devices.",
+        "signInButton": "Sign In"
+    },
+    "errors": {
+        "csrfTokenMissing": "Unable to validate the CSRF security token; the token was either not saved or received properly",
+        "csrfOriginError": "CSRF security token validation failed; the received token does not match the origin of the original token",
+        "csrfTokenDoesNotMatch": "CSRF security token validation failed; the received token does not match the original token",
+        "csrfTokenExpired": "CSRF security token validation failed; the received token has expired",
+        "frontFilterNotFound": "The content filter ${filter} does not exist",
+        "userCredentialsInvalid": "Either the email address or password entered is invalid",
+        "lockedOutExpiredDisabled": "This account is currently locked out due to excessive failed sign in attempts",
+        "lockedOutExpiredEnabled": "This account is currently locked out due to excessive failed sign in attempts. Try again in <strong>${total}</strong> minutes.",
+        "signInFailedWithAttemptsRemaining": "Either the email address or password entered is invalid. This is failed sign in attempt <strong>${attempts}</strong>. After <strong>${total}</strong> failed attempts the account will be locked."
+    },
+    "filterhelper": {
+        "latest": "Latest",
+        "newest": "Newest",
+        "oldest": "Oldest",
+        "likes": "Likes"
+    },
+    "home": {
+        "noContentAvailable": "There is currently no content available. Be the first to post content!",
+        "loadMoreButton": "Load More",
+        "snapshots": "Snapshots"
+    },
+    "blocksservice": {
+        "forumsBlockTitle": "Forums"
+    },
+    "member": {
+        "viewProfileTooltip": "View ${displayName}'s profile"
+    },
+    "permissionsservice": {
+        "invalidViewForum": "You do not have valid permissions to view this forum",
+        "invalidPostTopics": "You do not have valid permissions to post topics in this forum",
+        "invalidPostReplies": "You do not have valid permissions to post replies in this forum",
+        "invalidUploadAttachments": "You do not have valid permissions to upload attachments in this forum",
+        "invalidDownloadAttachments": "You do not have valid permissions to download attachments in this forum"
+    },
+    "timehelper": {
+        "justNow": "Just now",
+        "minuteAgo": "${total} minute ago",
+        "minutesAgo": "${total} minutes ago",
+        "hourAgo": "${total} hour ago",
+        "hoursAgo": "${total} hours ago",
+        "dayAgo": "${total} day ago",
+        "daysAgo": "${total} days ago"
+    },
+    "topics": {
+        "forumsBreadcrumb": "Forums",
+        "startedBy": "<strong>Started by</strong> ${displayName}"
+    },
+    "topicsnapshot": {
+        "startedBy": "Started by ${displayName} ${timestamp}",
+        "replied": "${displayName} replied ${timestamp}",
+        "totalReplies": "Total replies",
+        "totalViews": "Total views",
+        "forumTooltip": "This topic belongs to the ${forumTitle} forum"
+    }
+}

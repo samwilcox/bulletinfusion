@@ -20,6 +20,8 @@ if (!defined('BF_RUNTIME') || BF_RUNTIME != true) {
 
 use BulletinFusion\Middleware\MiddlewareInterface;
 use BulletinFusion\Helpers\LocalizationHelper;
+use BulletinFusion\Services\OutputService;
+use BulletinFusion\Services\MemberService;
 
 /**
  * Middleware for initializing the localization.

@@ -1,0 +1,8 @@
+{{ separator }}
+<a href="{{ url }}"
+   {% if tooltip %}class="tooltip tooltip--top" data-title="{{ tooltipText }}"{% endif %}
+   {% if color %}style="color: {{ colorCode }}"{% endif %}
+   {% if target %}target="{{ targetMethod }}"{% endif %}
+>
+   {% if emphasis %}<strong>{{ title }}</strong>{% else %}{{ title }}{% endif %}
+</a>

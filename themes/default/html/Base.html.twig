@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="robots" content="noindex">
+        <title>{{ communityTitle }}</title>
+        <link rel="stylesheet" type="text/css" href="{{ wrapper }}?controller=resource&action=css&file=normalize">
+        <link rel="stylesheet" type="text/css" href="{{ baseUrl}}/public/fontawesome/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="{{ wrapper }}?controller=resource&action=css&file=common">
+        <link rel="stylesheet" type="text/css" href="{{ wrapper }}?controller=resource&action=css&file=hyperlinks">
+        <link rel="stylesheet" type="text/css" href="{{ wrapper }}?controller=resource&action=css&file=forms">
+        <script src="{{ wrapper }}?controller=resource&action=js&file=jquery.min"></script>
+        <script src="{{ wrapper }}?controller=resource&action=js&file=jquery-ui"></script>
+        <script src="{{ wrapper }}?controller=resource&action=js&file=common"></script>
+        <script src="{{ wrapper }}?controller=resource&action=js&file=ajax"></script>
+        <script type="application/json" id="json">
+            {
+                {% if csrfEnabled %}
+"csrfToken":"{{ csrfToken }}",
+                {% endif %}
+"ajaxUrl": "{{ wrapper }}",
+                "usingRewrite": {{ rewrite }},
+                "preAuthorize": {{ preAuthorize }}
+            }
+        </script>
+    </head>
+    <body>
+        <div class="backgroundDisabler" id="background-disabler" onclick="closeDialog();"></div>
+        {% if signInDialogEnabled %}
+            <div class="dialog" id="dialog-member-signin">
+                <form name="membersignindialog" id="membersignindialog" action="{{ wrapper }}" method="post" enctype="multipart/form-data">
+                    <div class="dialogHeader">
+                        <div class="dualHorizontalGrid">
+                                <div class="dialogHeaderLeft">${[global][memberSignInDialogTitle]}</div>
+                            <div class="dialogHeaderRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="${[global][closeDialog]}" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+                        </div>
+                    </div>
+                    <div class="dialogContent">
+                        <input type="email" name="email" placeholder="${[global][emailAddressPlaceholder]}" class="formFieldSpaced formFieldFull">
+                        <div class="formFieldRelative"><input type="password" name="password" id="signin-dialog-password-field" placeholder="${[global][passwordPlaceholder]}" class="formFieldSpaced formFieldFull"><span class="passwordFieldIcon"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="${[global][togglePasswordField]}" data-field="signin-dialog-password-field" data-icon="signin-dialog-password-icon" data-toggle="fa-solid fa-eye-slash" data-untoggle="fa-solid fa-eye" onclick="togglePasswordField(this);"><i class="fa-solid fa-eye-slash" id="signin-dialog-password-icon"></i></a></span></div>
+                        <div class="signInGrid">
+                            <div>
+                                <div class="checkboxContainer">
+                                <input type="checkbox" name="rememberme" value="1" id="signin-dialog-rememberme-field">
+                                <label for="signin-dialog-rememberme-field">
+                                    <div class="checkboxLabel">
+                                        <div class="checkboxOption">${[global][rememberMeTitle]}</div>
+                                        <div class="checkboxOptionInfo">${[global][rememberMeInfo]}</div>
+                                    </div>
+                                </label>
+                        </div>
+                            </div>
+                            <div>
+                                <div class="underFieldRight forgotPasswordLink"><a href="">Forgot Password?</a></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dialogFooter"><button type="submit" id="signin-dialog-button" data-loading-text="<img src='{{ imagesetUrl }}/images/preloaders/button.gif' alt='*'>">${[global][signInButton]}</button></div>
+                </form>
+            </div>
+        {% endif %}
+        {% if signUpDialogEnabled %}
+            <div class="dialog" id="dialog-signup">
+                <div class="dialogHeader">
+                    <div class="dualHorizontalGrid">
+                            <div class="dialogHeaderLeft">${[global][memberSignInDialogTitle]}</div>
+                        <div class="dialogHeaderRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="${[global][closeDialog]}" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+                    </div>
+                </div>
+                <div class="dialogContent">Content here</div>
+                <div class="dialogFooter">Here</div>
+            </div>
+        {% endif %}
+        <div class="dropDownMenu" id="ddm-languages">
+            <span class="dropDownMenuLinks">
+                {% for language in languages %}
+                    <a href="{{ language.url }}">
+                        {{ language.selected ? '<i class="fa-solid fa-circle-check"></i>'|raw : '' }}
+                        {{ language.name }}
+                    </a>
+                {% endfor %}
+            </span>
+        </div>
+        <div class="dropDownMenu" id="ddm-themes">
+            <span class="dropDownMenuLinks">
+                {% for theme in themes %}
+                    <a href="{{ theme.url }}">
+                        {{ theme.selected ? '<i class="fa-solid fa-circle-check"></i>'|raw : '' }}
+                        {{ theme.name }}
+                    </a>
+                {% endfor %}
+            </span>
+        </div>
+        <div class="sideBarMenu">
+            <div class="sideBarMenuGrid">
+                <div class="sideBarTop">
+                    <span id="sidebar-top-collapsed">
+                        <a href="{{ homeLink }}" class="tooltip tooltip--right" data-title="${[global][homeLink]}"><i class="fa-solid fa-house"></i></a>
+                        <a href="{{ forumsListLink }}" class="tooltip tooltip--right" data-title="${[global][forumsListLink]}"><i class="fa-solid fa-list-ul"></i></a>
+                        <a href="{{ membersLink }}" class="tooltip tooltip--right" data-title="${[global][membersLink]}"><i class="fa-solid fa-users"></i></a>
+                        <a href="{{ whosOnlineLink }}" class="tooltip tooltip--right" data-title="${[global][whosOnlineLink]}"><i class="fa-solid fa-earth-americas"></i></a>
+                        <a href="{{ searchLink }}" class="tooltip tooltip--right" data-title="${[global][searchLink]}"><i class="fa-solid fa-magnifying-glass"></i></a>
+                        <a href="{{ helpLink }}" class="tooltip tooltip--right" data-title="${[global][helpLink]}"><i class="fa-solid fa-circle-question"></i></a>
+                        <a href="{{ communityLeadersLink }}" class="tooltip tooltip--right" data-title="${[global][communityLeadersLink]}"><i class="fa-solid fa-user-shield"></i></a>
+                        <a href="{{ tagsLink }}" class="tooltip tooltip--right" data-title="${[global][tagsLink]}"><i class="fa-solid fa-tags"></i></a>
+                        <a href="{{ leaderboardLink }}" class="tooltip tooltip--right" data-title="${[global][leaderboardLink]}"><i class="fa-solid fa-trophy"></i></a>
+                        <a href="{{ clubsLink }}" class="tooltip tooltip--right" data-title="${[global][clubsLink]}"><i class="fa-solid fa-people-arrows"></i></a>
+                        <a href="{{ groupsLink }}" class="tooltip tooltip--right" data-title="${[global][groupsLink]}"><i class="fa-solid fa-users-viewfinder"></i></a>
+                        <a href="{{ activityStreamLink }}" class="tooltip tooltip--right" data-title="${[global][activityStreamLink]}"><i class="fa-solid fa-chart-line"></i></a>
+                    </span>
+                    <span id="sidebar-top-expanded" class="sideBarMenuExpanded">
+                        <a href="{{ homeLink }}"><i class="fa-solid fa-house"></i>${[global][homeLink]}</a>
+                        <a href="{{ forumsListLink }}"><i class="fa-solid fa-list-ul"></i>${[global][forumsListLink]}</a>
+                        <a href="{{ membersLink }}"><i class="fa-solid fa-users"></i>${[global][membersLink]}</a>
+                        <a href="{{ whosOnlineLink }}"><i class="fa-solid fa-earth-americas"></i>${[global][whosOnlineLink]}</a>
+                        <a href="{{ searchLink }}"><i class="fa-solid fa-magnifying-glass"></i>${[global][searchLink]}</a>
+                        <a href="{{ helpLink }}"><i class="fa-solid fa-circle-question"></i>${[global][helpLink]}</a>
+                        <a href="{{ communityLeadersLink }}"><i class="fa-solid fa-user-shield"></i>${[global][communityLeadersLink]}</a>
+                        <a href="{{ tagsLink }}"><i class="fa-solid fa-tags"></i>${[global][tagsLink]}</a>
+                        <a href="{{ leaderboardLink }}"><i class="fa-solid fa-trophy"></i>${[global][leaderboardLink]}</a>
+                        <a href="{{ clubsLink }}"><i class="fa-solid fa-people-arrows"></i>${[global][clubsLink]}</a>
+                        <a href="{{ groupsLink }}"><i class="fa-solid fa-users-viewfinder"></i>${[global][groupsLink]}</a>
+                        <a href="{{ activityStreamLink }}"><i class="fa-solid fa-chart-line"></i>${[global][activityStreamLink]}</a>
+                    </span>
+                </div>
+                <div class="sideBarBottom">
+                    <span id="sidebar-bottom-collapsed">
+                        <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="${[global][languagesLink]}" data-menu="ddm-languages" data-ignored="ddm-languages-icon" onclick="openSideDropDownMenu(this);"><i class="fa-solid fa-language" id="ddm-languages-icon"></i></a>
+                        <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="${[global][themesLink]}" data-menu="ddm-themes" data-ignored="ddm-themes-icon" onclick="openSideDropDownMenu(this);"><i class="fa-solid fa-palette" id="ddm-themes-icon"></i></a>
+                        <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="${[global][expand]}" onclick="toggleSideBar();"><i class="fa-solid fa-angles-right"></i></a>
+                    </span>
+                    <span id="sidebar-bottom-expanded" class="sideBarMenuExpanded">
+                        <a href="javascript:void(0);" data-menu="ddm-languages" id="ddm-languages-link" data-ignored="ddm-languages-icon1" onclick="openSideDropDownMenu(this);"><i class="fa-solid fa-language" id="ddm-languages-icon1"></i>${[global][languagesLink]}</a>
+                        <a href="javascript:void(0);" data-menu="ddm-themes" id="ddm-themes-link" data-ignored="ddm-themes-icon1" onclick="openSideDropDownMenu(this);"><i class="fa-solid fa-palette" id="ddm-themes-icon1"></i>${[global][themesLink]}</a>
+                        <a href="javascript:void(0);" onclick="toggleSideBar();"><i class="fa-solid fa-angles-left"></i>${[global][collapse]}</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <header>
+            <div class="floater">
+                <div class="headerGrid">
+                    <div>
+                        <a href="{{ homeLink }}">
+                        {% if logoType == 'image' %}
+                            <img src="{{ logoSrc }}" alt="*">
+                        {% else %}
+                            {{ communityTitle }}
+                        {% endif %}
+                        </a>
+                    </div>
+                    <div class="alignCenter">
+                        <form name="frontsearchform" id="frontsearchform" action="{{ wrapper }}" method="post" enctype="multipart/form-data">
+                            <span class="frontSearchFieldRelative"><input type="search" name="query" placeholder="${[global][search]}" class="frontSearchField"><span class="frontSearchIcon"><a href=""><i class="fa-solid fa-magnifying-glass"></i></a></span></span>
+                        </form>
+                    </div>
+                    <div class="alignRight">
+                        {% if signedIn %}
+                            <span>Member</span>
+                        {% else %}
+                        <span class="headerSignInLink"><a href="{{ signInLink }}" data-dialog="dialog-member-signin" data-width="600" onclick="openDialog(this, event);"><i class="fa-solid fa-right-to-bracket"></i>${[global][signInLink]}</a></span>{% if signUpEnabled %}<span class="headerSignUpLink"><a href="{{ signUpLink }}"><i class="fa-solid fa-user-plus"></i>${[global][signUpLink]}</a></span>{% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </header>
+        <main>
+            <div class="floater">
+                {% if blocks %}
+                    {% if hasLeftBlocks and hasRightBlocks %}
+                        <div class="mainGridAll">
+                            <div>{{ leftBlocks|raw }}</div>
+                            <div>{{ content|raw }}</div>
+                            <div>{{ rightBlocks|raw }}</div>
+                        </div>
+                    {% elseif not hasLeftBlocks and hasRightBlocks %}
+                        <div class="mainGridRightNoLeft">
+                            <div>{{ content|raw }}</div>
+                            <div>{{ rightBlocks|raw }}</div>
+                        </div>
+                    {% elseif hasLeftBlocks and not hasRightBlocks %}
+                        <div class="mainGridLeftNoRight">
+                            <div>
+                                {% for block in leftBlocks %}
+                                    {{ block|raw }}
+                                {% endfor %}
+                            </div>
+                            <div>{{ content|raw }}</div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    {{ content|raw }}
+                {% endif %}
+            </div>
+        </main>
+        <footer>
+            <div class="floater">
+                <div class="footerGrid">
+                    <div class="footerGridLeft"><a href="{{ manageCookiesLink }}">${[global][manageCookiesLink]}</a>{{ privacyPolicyLink|raw }}{{contactUsLink|raw }}</div>
+                    <div class="footerGridCenter"><span>{{ allTimes|raw }}</span><span>{{timeNow|raw }}</span></div>
+                    <div class="footerGridRight">${[global][poweredBy]} <strong><a href="https://www.bulletinfusion.com" target="_blank">Bulletin Fusion</a></strong> {{ version }}</div>
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>

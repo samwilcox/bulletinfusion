@@ -392,4 +392,72 @@ class UtilHelper {
         $decodedHtml = \htmlspecialchars_decode($html, ENT_QUOTES);
         return $decodedHtml;
     }
+
+    /**
+     * Helper that takes a given color and returns a darker color based upon
+     * the given percentage.
+     * @param string $hex - The color hex code.
+     * @param integer $percent - The percent to darken the color.
+     * @return string - Darker color code.
+     */
+    public static function darkenColor($hex, $percent) {
+        $hex = \ltrim($hex, '#');
+
+        // Conver the hex color to RGB.
+        $r = \hexdec(\substr($hex, 0, 2));
+        $g = \hexdec(\substr($hex, 2, 2));
+        $b = \hexdec(\substr($hex, 4, 2));
+
+        // Reduce each component by the given percentage.
+        $r = \max(0, \min(255, $r - ($r * $percent / 100)));
+        $g = \max(0, \min(255, $g - ($g * $percent / 100)));
+        $b = \max(0, \min(255, $b - ($b * $percent / 100)));
+
+        // Convert the RGB values back to a hex string.
+        $r = \str_pad(\dechex($r), 2, '0', STR_PAD_LEFT);
+        $g = \str_pad(\dechex($g), 2, '0', STR_PAD_LEFT);
+        $b = \str_pad(\dechex($b), 2, '0', STR_PAD_LEFT);
+
+        return "#$r$g$b";
+    }
+
+    /**
+     * Convert the given objects into an array.
+     * @param array|object $input - The input object or array.
+     * @return array - Resulting array instance.
+     */
+    public static function convertObjectsToArray($input) {
+        if (\is_array($input) || \is_object($input)) {
+            $result = [];
+
+            foreach ($input as $k => $v) {
+                if (\is_object($v)) {
+                    $result[$k] = self::convertObjectsToArray(\get_object_vars($v));
+                } elseif (\is_array($v)) {
+                    $result[$k] = self::convertObjectsToArray($v);
+                } else {
+                    $result[$k] = $v;
+                }
+            } 
+
+            return $result;
+        }
+
+        return $input;
+    }
+
+    /**
+     * Build an error box with the given parameters.
+     * @param object $params - Parameters object data.
+     * @return mixed - The error box source.
+     */
+    public static function buildErrorBox($params) {
+        return OutputService::getInstance()->getPartial(
+            'UtilHelper', 'Error', 'Box', [
+                'id' => $params->id,
+                'error' => $params->error,
+                'style' => $params->display ? '' : self::getCSSClass('displayNone')
+            ]
+        );
+    }
 }

@@ -1,0 +1,25 @@
+form { padding: 0px; margin: 0px; }
+input, select, textarea { font-family: 'Montserrat', sans-serif; font-size: 13px; color: #DBDBDB; background-color: #1c1b1e; padding: 12px 14px 12px 14px; border-radius: 8px; border: 1px solid #777779; }
+input:hover, select:hover, textarea:hover { border: 1px solid #919092; outline: 0px; }
+input:focus, select:focus, textarea:focus { border: 1px solid #919092; outline: 3px solid #919092; }
+.frontSearchField { width: 400px; padding-right: 40px; }
+.frontSearchFieldRelative { position: relative; width: fit-content; }
+.formFieldSpaced { margin-top: 12px; }
+.formFieldSpaced:first-of-type { margin-top: 0px; }
+.formFieldFull { width: 100%; box-sizing: border-box; }
+.formFieldRelative { position: relative; margin-top: 12px; }
+.formFieldRelative input { padding-right: 48px; }
+.checkboxContainer { display: flex; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+.checkboxContainer input[type="checkbox"] { display: none; }
+.checkboxContainer input[type="checkbox"] + label { cursor: pointer; display: flex; align-items: center; margin-left: 5px; flex-wrap: wrap; }
+.checkboxContainer input[type="checkbox"] + label:before { content: '\f204'; font-family: 'Font Awesome 5 Free'; font-weight: 900; font-size: 20px; color: #1590c3; margin-right: 10px; }
+.checkboxContainer input[type="checkbox"]:checked + label:before { content: '\f205'; color: #1590c3; }
+.checkboxLabel { display: flex; flex-direction: column; }
+.checkboxOption { font-weight: 700; }
+.checkboxOptionInfo { font-size: 10px; margin-top: 2px; }
+input[type=submit], input[type=button] { color: #FFF; border-radius: 8px; padding: 10px 20px 10px 20px; text-align: center; align-items: center; background-color: #1590c3; cursor: pointer; border: 0px; outline: 0px; font-weight: 600; }
+input[type=submit]:hover, input[type=button] { background-color: #0F678B; border: 0px; outline: 0px; }
+.underFieldRight { width: auto; text-align: right; font-size: 12px; margin-top: 6px; }
+.signInGrid { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: start; }
+button { color: #FFF; border-radius: 8px; padding: 10px 20px 10px 20px; text-align: center; align-items: center; background-color: #1590c3; cursor: pointer; border: 0px; outline: 0px; font-weight: 600; }
+button:hover { background-color: #0F678B; border: 0px; outline: 0px; }

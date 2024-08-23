@@ -2,32 +2,25 @@
 
 $blockData = (object) [
     'all' => (object) [
-        'enabled' => false,
+        'enabled' => true,
         'blocks' => (object) [
-            'left' => null,
+            'left' => [
+                0 => 1
+            ],
             'right' => null
         ]
     ],
     'pages' => (object) [
-        'enabled' => true,
+        'enabled' => false,
         'pages' => (object) [
             'Home' => (object) [
                 'blocks' => (object) [
-                    'left' => [
-                        0 => 1,
-                        1 => 6
-                    ],
-                    'right' => [
-                        0 => 3,
-                        1 => 9,
-                        2 => 2
-                    ]
+                    'left' => null,
+                    'right' => null
                 ]
             ] 
         ]
     ]
 ];
 
-echo '<pre>';
-var_dump($blockData);
-echo '</pre>';
+echo serialize($blockData);

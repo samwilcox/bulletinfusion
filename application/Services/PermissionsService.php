@@ -21,6 +21,8 @@ if (!defined('BF_RUNTIME') || BF_RUNTIME != true) {
 use BulletinFusion\Services\MemberService;
 use BulletinFusion\Data\Cache\CacheProviderFactory;
 use BulletinFusion\Services\SettingsService;
+use BulletinFusion\Exceptions\InvalidPermissionsException;
+use BulletinFusion\Helpers\LocalizationHelper;
 
 /**
  * Service assistance with permission-related tasks.
@@ -162,16 +164,16 @@ class PermissionsService {
                 if ($groupId == SettingsService::getInstance()->adminstratorGroupId) return true;
             }
         }
-
+    
         // Not an Administrator, let's see if they have permissions.
-        if (\count($allowedUsers) > 0) {
+        if (!empty($allowedUsers)) {
             foreach ($allowedUsers as $userId) {
                 if ($this->member->getId() == $userId) return true;
             }
         }
 
         // If we got here then no user specific permissions, so check groups.
-        if (\count($allowedGroups) > 0) {
+        if (!empty($allowedGroups)) {
             foreach ($allowedGroups as $groupId) {
                 // First check the primary group.
                 if ($this->member->getPrimaryGroupId() == $groupId) return true;
@@ -187,5 +189,92 @@ class PermissionsService {
 
         // If we got here, unfortunately no valid permissions. :-(
         return true; // TO-DO: Return to false later
+    }
+
+    /**
+     * Returns the the permission for the given permission name.
+     * @param string $permission - The permission to get.
+     * @param integer $forumId - The forum identifier.
+     * @return boolean - True if has valid permissions, false otherwise.
+     */
+    public function getForumPermission($permission, $forumId) {
+        return true;
+        $data = CacheProviderFactory::getInstance()->get('forum_permissions');
+
+        foreach ($data as $permission) {
+            switch ($permission) {
+                case 'viewForum':
+                    $permissionData = \unserialize($permission->viewForum);
+                    break;
+                case 'postTopics':
+                    $permissionData = \unserialize($permission->postTopics);
+                    break;
+                case 'postReplies':
+                    $permissionData = \unserialize($permission->postReplies);
+                    break;
+                case 'uploadAttachments':
+                    $permissionData = \unserialize($permission->uploadAttachments);
+                    break;
+                case 'downloadAttachments':
+                    $permissionData = \unserialize($permission->downloadAttachments);
+                    break;
+            }
+        }
+
+        if (!is_array($permissionData) || empty($permissionData)) return false;
+
+        foreach ($permissionData as $groupId) {
+            if ($groupId == MemberService::getInstance()->getMember()->getPrimaryGroupId()) {
+                return true;
+            }
+
+            if (!empty(MemberService::getInstance()->getMember()->getSecondaryGroupIds())) {
+                foreach (MemberService::getInstance()->getMember()->getSecondaryGroupIds() as $secId) {
+                    if ($secId == $groupId) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns all the forum permissions.
+     * @param integer $forumId - The forum identifier.
+     * @return object - Object containing all permissions.
+     */
+    public function getAllForumPermissions($forumId) {
+        $permissions = ['viewForum', 'postTopics', 'postReplies', 'uploadAttachments', 'downloadAttachments'];
+        $allPermissions = new \stdClass();
+
+        foreach ($permissions as $permission) {
+            $allPermissions->$permission = $this->getForumPermission($permission, $forumId);
+        }
+
+        return $allPermissions;
+    }
+
+    /**
+     * Performs a permissions check for the given forum and permission.
+     * @param integer $forumId - The forum identifier.
+     * @param string $permission - The permission name to check.
+     * @throws InvalidPermissionsException - Thrown on invalid permissions.
+     * @return void
+     */
+    public function forumPermissionsCheck($forumId, $permission) {
+        $result = $this->getForumPermission($permission, $forumId);
+        $permissionsLegend = [
+            'viewForum' => LocalizationHelper::get('permissionsservice', 'invalidViewForum'),
+            'postTopics' => LocalizationHelper::get('permissionsservice', 'invalidPostTopics'),
+            'postReplies' => LocalizationHelper::get('permissionsservice', 'invalidPostReplies'),
+            'uploadAttachments' => LocalizationHelper::get('permissionsservice', 'invalidUploadAttachments'),
+            'downloadAttachments' => LocalizationHelper::get('permissionsservice', 'invalidDownloadAttachments')
+        ];
+
+        if (!$result) {
+            throw new InvalidPermissionsException($permissionsLegend[$permission]);
+        }
     }
 }

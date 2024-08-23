@@ -1,0 +1,8 @@
+<div class="blockHeader" id="toggle-forums-header">${[blocksservice][forumsBlockTitle]}</div>
+<div class="blockContent" id="toggle-forums-content">
+    <span class="blockForumsLinks">
+        {% for forum in forums %}
+            <a href="{{ forum.url }}" style="background-color: {{ forum.color }}; color={{ forum.textColor}}" onmouseover="this.style.backgroundColor='{{ forum.hoverColor }}'; this.style.color='{{ forum.textColor }}';" onmouseleave="this.style.backgroundColor='{{ forum.color }}'; this.style.color='{{ forum.textColor }}';">{{ forum.title }}</a>
+        {% endfor %}
+    </span>
+</div>

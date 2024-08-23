@@ -43,18 +43,6 @@ class Group {
     private $description;
 
     /**
-     * The group color.
-     * @var string
-     */
-    private $color;
-
-    /**
-     * Flag indicating to emphasis the group link.
-     * @var boolean
-     */
-    private $emphasize;
-
-    /**
      * Flag indicating whether the group has moderator
      * permissions.
      * @var boolean
@@ -120,40 +108,6 @@ class Group {
     }
 
     /**
-     * Get the group color.
-     * @return string - Group color.
-     */
-    public function getColor() {
-        return $this->color;
-    }
-
-    /**
-     * Set the group color.
-     * @param string $color - Group color.
-     * @return void
-     */
-    public function setColor($color) {
-        $this->color = $color;
-    }
-
-    /**
-     * Get the emphasize flag.
-     * @return boolean - Whether to emphasize the group link.
-     */
-    public function getEmphasize() {
-        return $this->emphasize;
-    }
-
-    /**
-     * Set the emphasize flag.
-     * @param boolean $emphasize - Whether to emphasize the group link.
-     * @return void
-     */
-    public function setEmphasize($emphasize) {
-        $this->emphasize = $emphasize;
-    }
-
-    /**
      * Get the moderator flag.
      * @return boolean - Whether the group has moderator permissions.
      */
@@ -198,12 +152,10 @@ class Group {
 
         foreach ($data as $group) {
             if ($group->id == $this->getId()) {
-                $this->title = $group->title;
-                $this->description = $group->description;
-                $this->color = $group->color;
-                $this->emphasize = $group->emphasize == 1 ? true : false;
-                $this->isModerator = $group->isModerator == 1 ? true : false;
-                $this->isAdmin = $group->isAdmin == 1 ? true : false;
+                $this->setTitle($group->title);
+                $this->setDescription($group->description);
+                $this->setIsModerator($group->isModerator == 1 ? true : false);
+                $this->setIsAdmin($group->isAdmin == 1 ? true : false);
                 break;
             }
         }

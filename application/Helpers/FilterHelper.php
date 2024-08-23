@@ -30,9 +30,10 @@ use BulletinFusion\Exceptions\InvalidArgumentException;
 class FilterHelper {
     /**
      * Builds the home filter.
+     * @param string [$customFilter=null] - Optional custom filter name.
      * @return object - Filter object data.
      */
-    public static function buildHomeFilter() {
+    public static function buildHomeFilter($customFilter = null) {
         $filter = new \stdClass();
         $member = MemberService::getInstance()->getMember();
 
@@ -41,6 +42,8 @@ class FilterHelper {
         } else {
             $filter->name = $member->getHomeFilter();
         }
+
+        if ($customFilter) $filter->name = $customFilter;
 
         $filters = ['latest', 'newest', 'oldest', 'likes'];
         $filter->list = '';

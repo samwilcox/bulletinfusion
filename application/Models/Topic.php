@@ -69,6 +69,12 @@ class Topic {
     private $lastPostId;
 
     /**
+     * This topics tags.
+     * @var array
+     */
+    private $tags;
+
+    /**
      * Get the topic identifier.
      * @return integer - Topic identifier.
      */
@@ -202,6 +208,23 @@ class Topic {
     public function getFormattedReplies() {
         return MathHelper::formatNumber($this->getTotalReplies());
     }
+    
+    /**
+     * Get the tags.
+     * @return array - Topic tags collection.
+     */
+    public function getTags() {
+        return $this->tags;
+    }
+
+    /**
+     * Set the tags.
+     * @param array $tags - Topics tag collection.
+     * @return array
+     */
+    public function setTags($tags) {
+        $this->tags = $tags;
+    }
 
     /**
      * Returns the URL to this topic.
@@ -228,6 +251,7 @@ class Topic {
                 $this->setTotalReplies($topic->totalReplies);
                 $this->setTotalViews($topic->totalViews);
                 $this->setLastPostId($topic->lastPostId);
+                $this->setTags(!empty($topic->tags) ? \unserialize($topic->tags) : []);
             }
         }
     }

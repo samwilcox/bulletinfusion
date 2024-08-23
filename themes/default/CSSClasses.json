@@ -2,5 +2,8 @@
     "normalPhoto": "photo",
     "photoThumbnail": "photoThumbnail",
     "normalNoPhoto": "noPhoto",
-    "noPhotoThumbnail": "noPhotoThumbnail"
+    "noPhotoThumbnail": "noPhotoThumbnail",
+    "miniNoPhoto": "miniNoPhoto",
+    "miniPhoto":"miniPhoto",
+    "displayNone": "displayNone"
 }

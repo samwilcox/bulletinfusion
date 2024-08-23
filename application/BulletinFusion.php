@@ -49,10 +49,10 @@
 
         // Add in our middleware to the stack.
         $middlewareStack->addMiddleware(new DataSanitizationMiddleware());
-        $middlewareStack->addMiddleware(new RequestMiddleware());
         $middlewareStack->addMiddleware(new DatabaseMiddleware());
         $middlewareStack->addMiddleware(new CacheMiddleware());
         $middlewareStack->addMiddleware(new SettingsMiddleware());
+        $middlewareStack->addMiddleware(new RequestMiddleware());
         $middlewareStack->addMiddleware(new SessionMiddleware());
         $middlewareStack->addMiddleware(new MemberMiddleware());
         $middlewareStack->addMiddleware(new LocalizationMiddleware());

@@ -30,7 +30,7 @@ class CookieHelper {
      * @return void
      */
     public static function newCookie($name, $value, $expires = null) {
-        \setcookie("{$_ENV['COOKIE_PREFIX']}_", $value, !$expires ? (\time() * 60 * 60) : $expires, $_ENV['COOKIE_PATH'], $_ENV['COOKIE_DOMAIN']);
+        \setcookie("{$_ENV['COOKIE_PREFIX']}_", $value, !$expires ? (\time() + 31622400) : $expires, $_ENV['COOKIE_PATH'], $_ENV['COOKIE_DOMAIN']);
     }
 
     /**

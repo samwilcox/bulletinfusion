@@ -39,19 +39,28 @@ class LocalizationHelper {
      * @return void
      */
     public static function initialize() {
-        $member = MemberService::getInstance()->getMember();
-        $localizationPath = $member->getConfigs()->localizationPath;
-        $manifestFile = $localizationPath . DIRECTORY_SEPARATOR . 'manifest.json';
-        $manifestData = FileService::getInstance()->readFile($manifestFile);
-        $manifestJson = \json_decode($manifestData);
+        $localizationPath = MemberService::getInstance()->getMember()->getConfigs()->localizationPath;
+        $fileData = FileService::getInstance()->readFile($localizationPath . 'locale.json');
+        $localeJson = \json_decode($fileData);
+        $toLocale = [];
 
-        foreach ($manifestJson->files as $file) {
-            $filePath =  $localizationPath . "{$file}.json";
-            $fileData = FileService::getInstance()->readFile($filePath);
-            $localeJson = \json_decode($fileData);
+        self::parseArrayToLocaleFormat($localeJson, $toLocale);
+        self::$locale = UtilHelper::convertObjectsToArray($toLocale);
+    }
 
-            foreach ($localeJson as $k => $v) {
-                self::$locale[$file][$k] = $v;
+    /**
+     * Helper that processes the nested JSON array.
+     * @param array $array - The array containing the nested data.
+     * @param array $locale - The locale array.
+     * @param string [$prefix=''] - Optional prefix.
+     * @return void
+     */
+    private static function parseArrayToLocaleFormat($array, &$locale, $prefix = '') {
+        foreach ($array as $k => $v) {
+            if (\is_array($v)) {
+                self::parseArrayToLocaleFormat($v, $locale, $prefix . $k . '.');
+            } else {
+                $locale[$prefix . $k] = $v;
             }
         }
     }
@@ -121,17 +130,20 @@ class LocalizationHelper {
     public static function outputWordsReplacement(&$output) {
         if (!$output) return;
 
-        \preg_match_all('/\${\[([^]]+)\]\[([^]]+)\]}/', $output, $matches, PREG_SET_ORDER);
-
-        for ($i = 0; $i < \count($matches); $i++) {
-            $replacementList[] = $matches[$i][0];
+        if ($output instanceof \Twig\Template) {
+            $output = $output->render();
         }
 
-        $m = $matches;
-
-        foreach ($replacementList as $bit) {
-            \preg_match('/\${\[([^]]+)\]\[([^]]+)\]}/', $bit, $matches);
-            $output = \str_replace($bit, self::get($matches[1], $matches[2]), $output);
+        if (is_string($output) && !empty($output)) {
+            \preg_match_all('/\${\[([^]]+)\]\[([^]]+)\]}/', $output, $matches, PREG_SET_ORDER);
+    
+            foreach ($matches as $match) {
+                $placeholder = $match[0];
+                $category = $match[1];
+                $key = $match[2];
+                $replacement = self::get($category, $key);
+                $output = \str_replace($placeholder, $replacement, $output);
+            }
         }
     }
 }

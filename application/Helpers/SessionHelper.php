@@ -39,7 +39,7 @@ class SessionHelper {
      * @return mixed|null - Session data, null is not exists.
      */
     public static function getSessionData($name) {
-        return self::sessionDataExists($name) ? "{$_ENV['SESSION_PREFIX']}_" .  $_SESSION[$name] : null;
+        return self::sessionDataExists($name) ? $_SESSION[$_ENV['SESSION_PREFIX'] . '_' . $name] : null;
     }
 
     /**

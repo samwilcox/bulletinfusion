@@ -8,6 +8,11 @@
             "BulletinFusion\\": "application/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "BulletinFusion\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "samwilcox",
@@ -16,9 +21,13 @@
     ],
     "require": {
         "vlucas/phpdotenv": "^5.6",
-        "ezyang/htmlpurifier": "^4.17"
+        "ezyang/htmlpurifier": "^4.17",
+        "twig/twig": "^3.6"
     },
     "config": {
         "vendor-dir": "application/Vendor"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.3"
     }
 }

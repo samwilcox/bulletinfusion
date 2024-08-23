@@ -62,6 +62,12 @@ class Forum {
     private $color;
 
     /**
+     * The forum text color.
+     * @var string
+     */
+    private $textColor;
+
+    /**
      * Get the forum identifier.
      * @return integer - Forum identifier.
      */
@@ -164,6 +170,23 @@ class Forum {
     }
 
     /**
+     * Get the forum text color.
+     * @return string - Forum text color.
+     */
+    public function getTextColor() {
+        return $this->textColor;
+    }
+
+    /**
+     * Set the forum text color.
+     * @param string $textColor - Forum text color.
+     * @return void
+     */
+    public function setTextColor($textColor) {
+        $this->textColor = $textColor;
+    }
+
+    /**
      * Returns the URL to this forum.
      * @return string - The URL to this forum.
      */
@@ -187,6 +210,7 @@ class Forum {
                 $this->setVisible($forum->visible == 1 ? true : false);
                 $this->setCensorWords($forum->censorWords == 1 ? true : false);
                 $this->setColor($forum->color);
+                $this->setTextColor($forum->textColor);
             }
         }
     }

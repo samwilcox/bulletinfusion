@@ -1,0 +1,25 @@
+<div class="dropDownMenu" id="ddm-front-filter">
+    <span class="dropDownMenuLinks">{{ filterList }}</span>
+</div>
+<div class="pageTitleBar">
+    <div class="dualHorizontalGrid">
+        <div class="pageTitle">${[home][snapshots]}</div>
+        <div class="alignRight"><span class="frontFilterButton"><a href="javascript:void(0);" id="ddm-front-filter-link" data-menu="ddm-front-filter" data-link="ddm-front-filter-link" data-ignored="ddm-front-filter-icon,filter-name" data-movement="15" onclick="openDropDownMenu(this);"><span id="filter-name">{{ filterName }}</span><i class="fa-solid fa-caret-down" id="ddm-front-filter-icon"></i></a></span></div>
+    </div>
+</div>
+<div id="items-container">
+    {% if contentAvailable %}
+        {% for snapshot in snapshots %}
+            {{ snapshot|raw }}
+        {% endfor %}
+    {% else %}
+        <div class="snapshotItem">
+            <span class="biggerText">${[topicsnapshot][noContentAvailable]}</span>
+        </div>
+    {% endif %}
+</div>
+<div class="loadMoreBar" id="load-more">
+    {% if loadMoreButton %}
+        <a href="javascript:void(0);">${[global][loadMoreButton]}</a>
+    {% endif %}
+</div>

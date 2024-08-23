@@ -27,6 +27,7 @@ use BulletinFusion\Services\PermissionsService;
 use BulletinFusion\Services\DataStoreService;
 use BulletinFusion\Helpers\TimeHelper;
 use BulletinFusion\Helpers\LocalizationHelper;
+use BulletinFusion\Helpers\SecurityHelper;
 
 /**
  * Service for handling global accessible data.
@@ -82,6 +83,14 @@ class GlobalsService {
         $this->data['baseUrl'] = $_ENV['BASE_URL'];
         $this->data['wrapper'] = "{$_ENV['BASE_URL']}/{$_ENV['WRAPPER']}";
         $this->data['signUpEnabled'] = true;
+        $this->data['imagesetUrl'] = MemberService::getInstance()->getMember()->getConfigs()->imagesetUrl;
+        $this->data['signedIn'] = MemberService::getInstance()->getMember()->isSignedIn();
+
+        if (SettingsService::getInstance()->urlFormatMethod == 'rewrite' || SettingsService::getInstance()->urlFormatMethod == 'apache_rewrite') {
+            $this->data['rewrite'] = 'true';
+        } else {
+            $this->data['rewrite'] = 'false';
+        }
 
         $permissions = PermissionsService::getInstance()->getAllFeaturePermissions([
             'membersList', 'whosOnline', 'search', 'help', 'communityLeaders', 'tags', 'clubs'
@@ -101,7 +110,11 @@ class GlobalsService {
         $this->data['communityLeadersLink'] = UtilHelper::buildUrl('members', 'leaders');
         $this->data['tagsLink'] = UtilHelper::buildUrl('tags');
         $this->data['clubsLink'] = UtilHelper::buildUrl('clubs');
-        $this->data['manageCookiesLink'] = UtilHelper::buildUrl('home', 'cookies'); 
+        $this->data['manageCookiesLink'] = UtilHelper::buildUrl('home', 'cookies');
+        $this->data['forumsListLink'] = UtilHelper::buildUrl('forums');
+        $this->data['leaderboardLink'] = UtilHelper::buildUrl('leaderboard');
+        $this->data['groupsLink'] = UtilHelper::buildUrl('groups', 'list');
+        $this->data['activityStreamLink'] = UtilHelper::buildUrl('activitystream');
 
         $languages = [];
         $themes = [];
@@ -153,7 +166,7 @@ class GlobalsService {
             $this->data['contactUsLink'] = '';
         }
 
-        $this->data['timeGenerated'] = LocalizationHelper::replace('global', 'pageGenerated', 'time', TimeHelper::parseTimestamp(\time(), 'time'));
+        $this->data['timeNow'] = LocalizationHelper::replace('global', 'timeNow', 'time', TimeHelper::parseTimestamp(\time(), 'time'));
 
         $timeZone = new \DateTimeZone(MemberService::getInstance()->getMember()->getTimeZone());
         $gmt = new \DateTime('now', $timeZone);
@@ -164,6 +177,12 @@ class GlobalsService {
         ]);
 
         $this->data['version'] = THIS_VERSION;
+
+        $this->data['csrfToken'] = SecurityHelper::get('ajax');
+        $this->data['csrfEnabled'] = SettingsService::getInstance()->csrfEnabled;
+        $this->data['signInDialogEnabled'] = SettingsService::getInstance()->signInDialogEnabled;
+        $this->data['signUpDialogEnabled'] = SettingsService::getInstance()->signUpDialogEnabled;
+        $this->data['preAuthorize'] = SettingsService::getInstance()->signInPreAuthorizeEnabled ? 'true' : 'false';
 
         return $this->data;
     }

@@ -283,9 +283,9 @@ class TopicSnapshot {
         $replier = $post->isFirstPost() ? null :  ModelsFactory::create((object)['type' => 'member', 'id' => $post->getPostedMemberId()]);
 
         if ($replier) {
-            $photo = $replier->profilePhoto((object)['thumbnail' => true]);
+            $photo = $replier->profilePhoto((object)['thumbnail' => true, 'link' => true]);
         } else {
-            $photo = $starter->profilePhoto((object)['thumbnail' => true]);
+            $photo = $starter->profilePhoto((object)['thumbnail' => true, 'link' => true]);
         }
 
         $postContent = $post->getPostContent();
@@ -307,14 +307,16 @@ class TopicSnapshot {
                 ]),
                 'replier' => $replier ? true : false,
                 'replied' => $replier 
-                    ? LocalizationHelper::replaceAll('topicsnapshot', 'replied', ['displayName' => $replier->profileLink(), 'timestamp' => TimeHelper::parseTimestamp($post->getPosted(), 'timeAgo')])
+                    ? LocalizationHelper::replaceAll('topicsnapshot', 'replied', ['displayName' => $replier->profileLink(), 'timestamp' => TimeHelper::parseTimestamp($post->getPosted() ? $post->getPosted() : 0, 'timeAgo')])
                     : '',
                 'totalReplies' => $topic->getFormattedReplies(),
                 'totalViews' => $topic->getFormattedViews(),
                 'forumTitle' => $forum->getTitle(),
                 'forumUrl' => $forum->url(),
                 'previewText' => $postContent,
-                'forumColor' => $forum->getColor(),
+                'forumBackgroundColor' => $forum->getColor(),
+                'forumTextColor' => $forum->getTextColor(),
+                'forumDarkerBackgroundColor' => UtilHelper::darkenColor($forum->getColor(), 30),
                 'forumTooltip' => LocalizationHelper::replace('topicsnapshot', 'forumTooltip', 'forumTitle', $forum->getTitle())
             ]
         );

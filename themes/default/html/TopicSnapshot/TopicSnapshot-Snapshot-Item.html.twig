@@ -1,0 +1,23 @@
+<div class="snapshotItem">
+    <div class="snapshotItemHorizontalGrid">
+        <div>{{ photo|raw }}</div>
+        <div>
+            <div class="snapshotItemVerticalGrid">
+                <div class="snapshotItemGridTopicTitle"><a href="{{ topicUrl }}">{{ topicTitle }}</a></div>
+                <div>
+                    <span class="snapshotItemInfoBubble">{{ startedBy|raw }}</span>
+                    {% if replier %}
+                        <span class="snapshotItemInfoBubble">{{ replied|raw }}</span>
+                    {% endif %}
+                </div>
+                <div class="snapshotItemPreviewText">{{ previewText|raw }}</div>
+                <div>
+                    <div class="dualHorizontalGrid">
+                        <div class="snapshotItemStats"><span class="tooltip tooltip--top" data-title="${[topicsnapshot][totalReplies]}"><i class="fa-solid fa-reply"></i>{{ totalReplies }}</span><span class="tooltip tooltip--top" data-title="${[topicsnapshot][totalViews]}"><i class="fa-solid fa-eye"></i>{{ totalViews }}</span></div>
+                        <div class="alignRight"><span class="forumSymbolBubble tooltip tooltip--top" data-title="{{ forumTooltip }}"><a href="{{ forumUrl }}" style="background-color: {{ forumBackgroundColor }}; color: {{ forumTextColor }};" onmouseover="this.style.backgroundColor='{{ forumDarkerBackgroundColor }}'; this.style.color='{{ forumTextColor }}';" onmouseleave="this.style.backgroundColor='{{ forumBackgroundColor }}'; this.style.color='{{ forumTextColor }}';">{{ forumTitle }}</a></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1 @@
+{"version":1,"defects":{"BulletinFusion\\Tests\\Helpers\\CookieHelperTest::testCreateCookie":7},"times":{"BulletinFusion\\Tests\\Helpers\\CookieHelperTest::testCreateCookie":0.013,"BulletinFusion\\Tests\\Helpers\\MathHelperTest::testFormatNumberThousands":0.004}}

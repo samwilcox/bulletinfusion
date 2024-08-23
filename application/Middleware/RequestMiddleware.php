@@ -79,19 +79,23 @@ class RequestMiddleware {
                     $bits = \explode('/', $queryString);
                     $bits = \array_filter($bits);
                     $bits = \array_values($bits);
+                    $bits = \array_slice($bits, 1);
 
-                    $incoming['controller'] = isset($bits[0]) ? $bits[0] : 'home';
-                    $incoming['action'] = isset($bits[1]) ? $bits[1] : 'index';
+                    $incoming['controller'] = isset($bits[1]) ? $bits[0] : 'home';
+                    $incoming['action'] = isset($bits[2]) ? $bits[1] : 'index';
 
                     $bits = \array_slice($bits, 2);
 
                     for ($i = 0; $i < \count($bits); $i += 2) {
                         if (isset($bits[$i + 1])) {
-                            $incoming[$$bits[$k]] = $bits[$i + 1];
+                            $incoming[$bits[$i]] = $bits[$i + 1];
                         }
                     }
                 }
             }
+        } else {
+            foreach ($_GET as $k => $v) $incoming[$k] = \filter_var($v, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            foreach ($_POST as $k => $v) $incoming[$k] = \filter_var($v, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         }
 
         RequestService::getInstance()->setIncoming($incoming);
