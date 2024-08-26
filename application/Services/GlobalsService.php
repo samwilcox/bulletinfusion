@@ -28,6 +28,7 @@ use BulletinFusion\Services\DataStoreService;
 use BulletinFusion\Helpers\TimeHelper;
 use BulletinFusion\Helpers\LocalizationHelper;
 use BulletinFusion\Helpers\SecurityHelper;
+use BulletinFusion\Types\Features;
 
 /**
  * Service for handling global accessible data.
@@ -115,6 +116,29 @@ class GlobalsService {
         $this->data['leaderboardLink'] = UtilHelper::buildUrl('leaderboard');
         $this->data['groupsLink'] = UtilHelper::buildUrl('groups', 'list');
         $this->data['activityStreamLink'] = UtilHelper::buildUrl('activitystream');
+        $this->data['viewProfileUrl'] = MemberService::getInstance()->getMember()->url();
+        $this->data['manageProfileUrl'] = UtilHelper::buildUrl('settings', 'profile', [], true);
+        $this->data['settingsUrl'] = UtilHelper::buildUrl('settings', null, [], true);
+        $this->data['subscriptionsUrl'] = UtilHelper::buildUrl('settings', 'subscriptions', [], true);
+        $this->data['markAllReadUrl'] = UtilHelper::buildUrl('home', 'markall', [], true);
+        $this->data['moderatorCpUrl'] = UtilHelper::buildUrl('moderatorcp', null, [], true);
+        $this->data['adminCpUrl'] = $_ENV['BASE_URL'] . '/' . $_ENV['ADMINCP_FOLDER'];
+        $this->data['signOutUrl'] = UtilHelper::buildUrl('authentication', 'signout');
+        
+        $elevatedBlock = false;
+
+        if (MemberService::getInstance()->getMember()->isModerator()) {
+            $elevatedBlock = true;
+        }
+
+        if (MemberService::getInstance()->getMember()->isAdmin()) {
+            $elevatedBlock = true;
+        }
+
+        $this->data['elevatedBlock'] = $elevatedBlock;
+        $this->data['isModerator'] = MemberService::getInstance()->getMember()->isModerator();
+        $this->data['isAdmin'] = MemberService::getInstance()->getMember()->isAdmin();
+        $this->data['notificationsEnabled'] = PermissionsService::getInstance()->getFeaturePermission(Features::notifications);
 
         $languages = [];
         $themes = [];
@@ -178,11 +202,32 @@ class GlobalsService {
 
         $this->data['version'] = THIS_VERSION;
 
-        $this->data['csrfToken'] = SecurityHelper::get('ajax');
+        $this->data['csrfAjaxToken'] = SecurityHelper::get('ajax');
         $this->data['csrfEnabled'] = SettingsService::getInstance()->csrfEnabled;
         $this->data['signInDialogEnabled'] = SettingsService::getInstance()->signInDialogEnabled;
         $this->data['signUpDialogEnabled'] = SettingsService::getInstance()->signUpDialogEnabled;
         $this->data['preAuthorize'] = SettingsService::getInstance()->signInPreAuthorizeEnabled ? 'true' : 'false';
+        $this->data['forgotPasswordEnabled'] = SettingsService::getInstance()->forgotPasswordEnabled;
+        $this->data['forgotPasswordUrl'] = UtilHelper::buildUrl('authentication', 'forgotpassword');
+        $this->data['refererUrl'] = UtilHelper::getRefererUrl();
+        $this->data['csrfToken'] = SecurityHelper::get();
+        
+        if ($this->data['signInDialogEnabled'] && $this->data['preAuthorize']) {
+            $this->data['signInErrorBox'] = UtilHelper::buildErrorBox((object)[
+                'id' => 'signin',
+                'error' => '',
+                'display' => false
+            ]);
+        } else {
+            $this->data['signInErrorBox'] = '';
+        }
+
+        $notificationsData = MemberService::getInstance()->getMember()->notifications();
+
+        $this->data['haveNotifications'] = $notificationsData->total->overall > 0 ? true : false;
+        $this->data['markNotificationsUrl'] = UtilHelper::buildUrl('notifications', 'markall', [], true);
+        $this->data['allNotificationsUrl'] = UtilHelper::buildUrl('notifications', null, [], true);
+        $this->data['unreadNotificationsTotal'] = $notificationsData->total->unread;
 
         return $this->data;
     }

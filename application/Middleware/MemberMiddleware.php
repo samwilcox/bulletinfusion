@@ -45,6 +45,7 @@ class MemberMiddleware {
 
         $memberServices = MemberService::getInstance();
         $memberServices->setMember($member);
+        $memberServices->setSession($request['session']);
 
         return $next($request);
     }

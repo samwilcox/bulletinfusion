@@ -1,68 +1,34 @@
-<div class="topicViewHeaderGrid">
-    <div class="topicViewHeaderGridLeft">
-        <div class="gridAboveBelow">
-            <div class="topicViewTitle">{{ topicTitle }}</div>
-            <div class="topicViewInfo">
-                <div class="topicViewInfoGrid">
-                    <div>
-                        <div class="simpleGrid">
-                            <div>{{ startedByPhoto }}</div>
-                            <div>{{ startedBy }}</div>
-                        </div>
-                    </div>
-                    <div><i class="fa-regular fa-clock"></i>{{ started }}</div>
-                </div>
-            
-            
-            </div>
-        </div>
-    </div>
-    <div class="topicViewHeaderGridRight">
-        <div class="gridAboveBelow">
-            <div>
-                <div class="topicViewOptionsBar"><a href=""><i class="fa-regular fa-thumbs-up"></i>Like</a><a href=""><i class="fa-solid fa-check"></i>Mark Read</a><a href=""><i class="fa-solid fa-bullhorn"></i>Subscribe</a><a href=""><i class="fa-solid fa-reply"></i>Post Reply</a></div>
-            </div>
-            <div class="dataBubbleBox"><span class="dataBubbleLink"><a href="{{ forumUrl }}" style="background-color: #800080">{{ forumTitle }}</a></span><span class="dataBubble whiteDataBubble"><strong>12.5K</strong> replies</span><span class="dataBubble whiteDataBubble"><strong>12.5K</strong> views</span><span class="dataBubbleLink"><a href="">Tags<i class="fa-solid fa-caret-down"></i></a></div>
+<div class="seperatorBox">
+    <div class="dualHorizontalGrid">
+        <div class="topicTitle">{{ topicTitle }}</div>
+        <div class="alignRight">
+            {% if canPostReply %}
+                <span class="button"><a href="{{ postReplyUrl }}"><i class="fa-solid fa-reply"></i>${[topics][postReplyButton]}</a></span>
+            {% endif %}
+            {% if canPostTopics %}
+                <span class="button"><a href=""><i class="fa-solid fa-folder-plus"></i>${[topics][postTopicButton]}</a></span>
+            {% endif %}
         </div>
     </div>
 </div>
-<div class="postBox">
-    <div class="postBoxHeader">
-        <div class="postBoxHeaderGrid">
-            <div>
-                <div class="postBoxHeaderUserGrid">
-                    <div><span class="photo"><img src="http://www.bulletinfusion.com/upload/photos/member-1/photo.jpg" alt="*"></span></div>
-                    <div>
-                        <div class="gridAboveBelow biggerGap">
-                            <div class="postBoxDisplayName"><span><a href="">Sam Wilcox</a></span><span class="postBoxGroupLabel"><a href="" style="color: #FFFFFF; background-color: #800000; text-decoration: none;" onmouseover="this.style.color='#FFFFFF'; this.style.backgroundColor='#400000'; this.style.textDecoration='none';" onmouseout="this.style.color='#FFFFFF'; this.style.backgroundColor='#800000'; this.style.textDecoration='none';">Administrators</a></span></div>
-                            <div><span class="postBoxUserInfoBubble"><strong><i class="fa-regular fa-comment"></i>Posts:</strong> 11.2K</span><span class="postBoxUserInfoBubble"><strong><i class="fa-solid fa-trophy"></i>Reputation:</strong> 11.2K</span><span class="postBoxUserInfoBubble"><strong><i class="fa-solid fa-earth-americas"></i>Location:</strong> <a href="https://maps.google.com/maps?q=Boise%2CID" target="_blank">Boise, Idaho</a></span><span class="postBoxUserInfoBubble"><strong><i class="fa-solid fa-user"></i>Gender:</strong> Male</span></div>
+<div class="seperatorBox">
+    <div class="dualHorizontalGrid alignTop">
+        <div>
+            <div class="topicInfoGrid">
+                <div>
+                    <div class="leftRightGrid">
+                        <div><span class="photoThumbnail"><img src="http://www.bulletinfusion.com/upload/photos/member-1/photo.jpg"></div>
+                        <div>
+                            <div class="dualVerticalGrid">
+                                <div>{{ startedBy }}</div>
+                                <div><i class="fa-regular fa-clock"></i> {{ started }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="postBoxHeaderGridRight">
-                <div class="postBoxHeaderGridRightGrid">
-                    <div class="postBoxHeaderGridRightGridTop"><a href="" class="tooltip tooltip--top" data-title="Options"><i class="fa-solid fa-ellipsis"></i></a></div>
-                    <div class="postBoxHeaderGridRightGridBottom"><span><i class="fa-regular fa-clock"></i><strong>Posted:</strong> 2 days ago</span><span><a href=""><i class="fa-solid fa-hashtag"></i><strong>Post:</strong> 1</a></span></div>
-                </div>
+                <div><span class="forumSymbolBubble tooltip tooltip--top" data-title="This topic belongs to the Main Discussion forum"><a href="http://www.bulletinfusion.com/index.php?controller=forums&action=view&forum=1-Main-Discussion" style="background-color: #800080; color: #FFFFFF;" onmouseover="this.style.backgroundColor='#590059'; this.style.color='#FFFFFF';" onmouseleave="this.style.backgroundColor='#800080'; this.style.color='#FFFFFF';">Main Discussion</a></span></div>
             </div>
         </div>
-    </div>
-    <div class="postBoxContent">
-        Content here
-    <div class="postBoxSignature">Thanks,<br>Sam Wilcox</div>
-    <div class="postBoxAttachments"><div class="postBoxAttachmentsTitle"><i class="fa-solid fa-paperclip"></i>Attachments</div>
-        <div class="postBoxAttachmentsItem">
-            <div class="postBoxAttachmentsItemHeader">Filename</div>
-            <div class="postBoxAttachmentsItemContent"><strong>File size:</strong> 32.6MB<br><strong>Downloads:</strong> 12.7M</div>
-            <div class="postBoxAttachmentsItemFooter"><a href="">Download</a></div>
-        </div>
-    </div>
-    </div>
-    <div class="postBoxFooter">
-        <div class="postBoxFooterGrid">
-            <div class="postBoxFooterGridLeft"><a href=""><i class="fa-solid fa-quote-right"></i>Quote</a></div>
-            <div class="postBoxFooterGridRight"><a href=""><i class="fa-solid fa-trophy"></i>Thanks!<span class="rightStats">32.7K</span></span></a><a href=""><i class="fa-regular fa-thumbs-up"></i>Like<span class="rightStats">65</span></a></div>
-        </div>
+        <div class="alignRight softButton"><span id="likes-container-{{ id }}">{{ likeButton }}</span><span id="subscribe-container-{{ id }}">{{ subscribeButton }}</span></div>
     </div>
 </div>

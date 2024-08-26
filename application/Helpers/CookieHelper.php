@@ -25,12 +25,18 @@ class CookieHelper {
     /**
      * Create a new cookie.
      * @param string $name - The cookie name.
-     * @param mixed $value - The cooke value.
+     * @param mixed $value - The cookie value.
      * @param int|null [$expires=null] - The cookie expiration.
      * @return void
      */
     public static function newCookie($name, $value, $expires = null) {
-        \setcookie("{$_ENV['COOKIE_PREFIX']}_", $value, !$expires ? (\time() + 31622400) : $expires, $_ENV['COOKIE_PATH'], $_ENV['COOKIE_DOMAIN']);
+        \setcookie(
+            "{$_ENV['COOKIE_PREFIX']}_" . $name,
+            $value,
+            !$expires ? (\time() + 31622400) : $expires,
+            $_ENV['COOKIE_PATH'],
+            $_ENV['COOKIE_DOMAIN']
+        );
     }
 
     /**
@@ -41,7 +47,13 @@ class CookieHelper {
      */
     public static function deleteCookie($name, $phpCookie = false) {
         unset($_COOKIE[$name]);
-        \setcookie($phpCookie ? $name : "{$_ENV['COOKIE_PREFIX']}_", '', \time() - 3600, $phpCookie ? '' : $_ENV['COOKIE_PATH'], $phpCookie ? '' : $_ENV['COOKIE_DOMAIN']);
+        \setcookie(
+            $phpCookie ? $name : "{$_ENV['COOKIE_PREFIX']}_" . $name,
+            '',
+            \time() - 3600,
+            $phpCookie ? '' : $_ENV['COOKIE_PATH'],
+            $phpCookie ? '' : $_ENV['COOKIE_DOMAIN']
+        );
     }
 
     /**
@@ -50,7 +62,7 @@ class CookieHelper {
      * @return mixed|null - Cookie value, null if not exists.
      */
     public static function getCookie($name) {
-        return self::cookieExists(self::cookieExists($name)) ? $_COOKIE["{$_ENV['COOKIE_PREFIX']}_" + $name] : null;
+        return self::cookieExists($name) ? $_COOKIE["{$_ENV['COOKIE_PREFIX']}_" . $name] : null;
     }
 
     /**
@@ -62,8 +74,10 @@ class CookieHelper {
         $cookies = [];
 
         if (\is_array($names) && \count($names) > 0) {
-            foreach ($name as $cookie) {
-                $cookies[$cookie] = $_COOKIE[$cookie];
+            foreach ($names as $cookie) {
+                if (isset($_COOKIE[$cookie])) {
+                    $cookies[$cookie] = $_COOKIE[$cookie];
+                }
             }
         }
 
@@ -76,6 +90,6 @@ class CookieHelper {
      * @return boolean - True if exists, false otherwise.
      */
     public static function cookieExists($name) {
-        return isset($_COOKIE["{$_ENV['COOKIE_PREFIX']}" . $name]);
+        return isset($_COOKIE["{$_ENV['COOKIE_PREFIX']}_" . $name]);
     }
 }

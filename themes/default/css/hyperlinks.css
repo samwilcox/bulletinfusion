@@ -30,3 +30,19 @@ a:hover { color: #FFF; text-decoration: none; }
 .passwordFieldIcon a:hover { color: #FFF; text-decoration: none; }
 .forgotPasswordLink a, .forgotPasswordLink a:link, .forgotPasswordLink a:active, .forgotPasswordLink a:visited { color: #DBDBDB; text-decoration: none; }
 .forgotPasswordLink a:hover { color: #DBDBDB; text-decoration: underline; }
+.errorBoxClose a, .errorBoxClose a:link, .errorBoxClose a:active, .errorBoxClose a:visited { color: #FFF; text-decoration: none; transition: 0.5s; position: absolute; top: -8px; right: -8px; z-index: 20; font-size: 22px; }
+.errorBoxClose a:hover { color: #FFC0C0; text-decoration: none; }
+.userBarUserLink a, .userBarUserLink a:link, .userBarUserLink a:active, .userBarUserLink a:visited { color: #FFF; text-decoration: none; transition: 0.5s; font-weight: 600; font-size: 14px; }
+.userBarUserLink a:hover { color: #D9D9D9; text-decoration: none; }
+.userBarLeft a, .userBarLeft a:link, .userBarLeft a:active, .userBarLeft a:visited { color: #DBDBDB; text-decoration: none; position: relative; transition: 0.5s; display: inline-block; padding: 8px 12px 8px 12px; border-radius: 8px; margin-left: 6px; font-size: 16px; }
+.userBarLeft a:hover { color: #FFF; text-decoration: none; background-color: #1c1b1e; }
+.userBarLeft a:first-of-type { margin-left: 0px; }
+.dropDownMenuFooterLinks a, .dropDownMenuFooterLinks a:link, .dropDownMenuFooterLinks a:active, .dropDownMenuFooterLinks a:visited { color: #DBDBDB; text-decoration: none; transition: 0.5s; display: inline-block; padding: 8px 14px 8px 14px; border-radius: 8px; margin-left: 8px; }
+.dropDownMenuFooterLinks a:hover { color: #FFF; text-decoration: none; background-color: #313033; }
+.dropDownMenuFooterLinks a:first-of-type { margin-left: 0px; }
+.button a, .button a:link, .button a:active, .button a:visited { color: #FFF; text-decoration: none; transition: 0.5s; border-radius: 8px; padding: 10px 20px 10px 20px; font-weight: 600; background-color: #1590c3; display: inline-block; margin-left: 12px; }
+.button a:hover { color: #FFF; text-decoration: none; background-color: #0F678B; }
+.button a ~ .button a { margin-left: 0px; }
+.softButton a, .softButton a:link, .softButton a:active, .softButton a:visited { color: #DBDBDB; text-decoration: none; transition: 0.5s; border-radius: 8px; padding: 8px 20px 8px 20px; display: inline-block; background-color: #313033; margin-left: 12px; }
+.softButton a:hover { color: #FFF; text-decoration: none; background-color: #474649; }
+.softButton a ~ .softButton a { margin-left: 0px; }

@@ -28,6 +28,9 @@ use BulletinFusion\Helpers\UtilHelper;
 use BulletinFusion\Helpers\LocalizationHelper;
 use BulletinFusion\Services\MemberService;
 use BulletinFusion\Helpers\TimeHelper;
+use BulletinFusion\Types\Features;
+use BulletinFusion\Helpers\ButtonHelper;
+use BulletinFusion\Types\Button;
 
 /**
  * Topics model.
@@ -77,6 +80,13 @@ class TopicsModel {
         $this->vars['startedByPhoto'] = $starter->profilePhoto((object)['mini' => true, 'link' => true]);
         $this->vars['forumTitle'] = $forum->getTitle();
         $this->vars['forumUrl'] = $forum->url();
+        $this->vars['canPostReply'] = PermissionsService::getInstance()->getForumPermission('postReply', $forumId);
+        $this->vars['postReplyUrl'] = UtilHelper::buildUrl('post', 'reply', ['topic' => UtilHelper::urlSplitItems($topicId, $topic->getTitle())]);
+        $this->vars['canPostTopics'] = PermissionsService::getInstance()->getForumPermission('postTopics', $forumId);
+        $this->vars['postTopicUrl'] = UtilHelper::buildUrl('post', 'topic', ['forum' => UtilHelper::urlSplitItems($forumId, $forum->getTitle())]);
+        $this->vars['likeButton'] = ButtonHelper::getButton(Button::LIKE_TOPIC_BUTTON, $topicId, (object)['container' => "likes-container-$topicId"]);
+        $this->vars['subscribeButton'] = ButtonHelper::getButton(Button::SUBSCRIBE_TOPIC_BUTTON, $topicId, (object)['container' => "subscribe-container-$topicId"]);
+        $this->vars['id'] = $topicId;
 
         return $this->vars;
     }

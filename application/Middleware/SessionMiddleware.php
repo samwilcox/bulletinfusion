@@ -56,6 +56,12 @@ class SessionMiddleware {
     private $session;
 
     /**
+     * The request array.
+     * @var array
+     */
+    private $request;
+
+    /**
      * Constructor that sets up SessionMiddleware.
      */
     public function __construct() {
@@ -70,6 +76,7 @@ class SessionMiddleware {
      * @return void
      */
     public function handle($request, $next) {
+        $this->request = $request;
         $this->duration = SettingsService::getInstance()->sessionDurationMinutes * 60;
         $this->ipMatch = SettingsService::getInstance()->sessionIpMathing;
 
@@ -129,6 +136,7 @@ class SessionMiddleware {
                     if ($this->ipMatch) {
                         if ($this->session->getIpAddress() != $_SERVER['REMOTE_ADDR'] || $this->session->getUserAgent() != $_SERVER['HTTP_USER_AGENT']) {
                             $this->destroy();
+                            return $next($request);
                         } else {
                             $this->session->setMemberId($memberId);
                             $this->session->setDisplayOnWhosOnline($displayOnWhosOnline);
@@ -146,6 +154,7 @@ class SessionMiddleware {
                 }
             } else {
                 $this->destroy();
+                return $next($request);
             }
         } else {
             $data = CacheProviderFactory::getInstance()->get('sessions');
@@ -163,6 +172,7 @@ class SessionMiddleware {
                 if ($this->ipMatch) {
                     if ($this->session->getIpAddress() != $_SERVER['REMOTE_ADDR'] || $this->session->getUserAgent() != $_SERVER['HTTP_USER_AGENT']) {
                         $this->destroy();
+                        return $next($request);
                     } else {
                         $this->update();
                     }
@@ -184,50 +194,52 @@ class SessionMiddleware {
      * @return void
      */
     private function create($isMember = false) {
-        $this->session->setExpires(\time() + $this->duration);
-        $this->session->setLastClick(\time());
-        $this->session->setLocation($_SERVER['REQUEST_URI']);
+        if ($this->request['params']->controller != 'resource') {
+            $this->session->setExpires(\time() + $this->duration);
+            $this->session->setLastClick(\time());
+            $this->session->setLocation($_SERVER['REQUEST_URI']);
 
-        if (!$member) {
-            $this->session->setMemberId(0);
-            $this->session->setDisplayOnWhosOnline(false);
-            $this->session->setIsAdmin(false);
-            $this->setIpAgentAndAdmin($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT'], \gethostname(), false);
-            SessionHelper::deleteSessionData('MemberToken');
-        }
+            if (!$member) {
+                $this->session->setMemberId(0);
+                $this->session->setDisplayOnWhosOnline(false);
+                $this->session->setIsAdmin(false);
+                $this->setIpAgentAndAdmin($_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_USER_AGENT'], \gethostname(), false);
+                SessionHelper::deleteSessionData('MemberToken');
+            }
 
-        QueryBuilderProviderFactory::getInstance()->reset();
-        QueryBuilderProviderFactory::getInstance()->insert('sessions', [
-            'id',
-            'memberId',
-            'expires',
-            'lastClick',
-            'location',
-            'ipAddress',
-            'hostname',
-            'userAgent',
-            'displayOnWhosOnline',
-            'isSearchBot',
-            'searchBotName',
-            'isAdmin'
-        ])
-            ->values([
-                $this->session->getId(),
-                $this->session->getMemberId(),
-                $this->session->getExpires(),
-                $this->session->getLastClick(),
-                $this->session->getLocation(),
-                $this->session->getIpAddress(),
-                $this->session->getHostname(),
-                $this->session->getUserAgent(),
-                $this->session->getDisplayOnWhosOnline() ? 1 : 0,
-                $this->session->getIsSearchBot() ? 1 : 0,
-                $this->session->getSearchBotName(),
-                $this->session->getIsAdmin() ? 1 : 0
+            QueryBuilderProviderFactory::getInstance()->insert('sessions', [
+                'id',
+                'memberId',
+                'expires',
+                'lastClick',
+                'location',
+                'ipAddress',
+                'hostname',
+                'userAgent',
+                'displayOnWhosOnline',
+                'isSearchBot',
+                'searchBotName',
+                'isAdmin'
             ])
-            ->executeTransaction();
+                ->values([
+                    $this->session->getId(),
+                    $this->session->getMemberId(),
+                    $this->session->getExpires(),
+                    $this->session->getLastClick(),
+                    $this->session->getLocation(),
+                    $this->session->getIpAddress(),
+                    $this->session->getHostname(),
+                    $this->session->getUserAgent(),
+                    $this->session->getDisplayOnWhosOnline() ? 1 : 0,
+                    $this->session->getIsSearchBot() ? 1 : 0,
+                    $this->session->getSearchBotName(),
+                    $this->session->getIsAdmin() ? 1 : 0
+                ])
+                ->executeTransaction();
 
-        CacheProviderFactory::getInstance()->update('sessions');
+            QueryBuilderProviderFactory::getInstance()->reset();
+            CacheProviderFactory::getInstance()->update('sessions');
+        }
     }
 
     /**
@@ -236,29 +248,31 @@ class SessionMiddleware {
      * @return void
      */
     private function update($member = false) {
-        $this->session->setExpires(\time() + $this->duration);
-        $this->session->setLastClick(\time());
-        $this->session->setLocation($_SERVER['REQUEST_URI']);
+        if ($this->request['params']->controller != 'resource') {
+            $this->session->setExpires(\time() + $this->duration);
+            $this->session->setLastClick(\time());
+            $this->session->setLocation($_SERVER['REQUEST_URI']);
 
-        if (!$member) {
-            $this->session->setMemberId(0);
-            $this->session->setDisplayOnWhosOnline(false);
-            $this->session->setIsAdmin(false);
-            SessionHelper::deleteSessionData('MemberToken');
+            if (!$member) {
+                $this->session->setMemberId(0);
+                $this->session->setDisplayOnWhosOnline(false);
+                $this->session->setIsAdmin(false);
+                SessionHelper::deleteSessionData('MemberToken');
+            }
+
+            QueryBuilderProviderFactory::getInstance()->reset();
+            QueryBuilderProviderFactory::getInstance()->update('sessions')
+                ->set([
+                    'expires' => $this->session->getExpires(),
+                    'lastClick' => $this->session->getLastClick(),
+                    'location' => $this->session->getLocation(),
+                    'displayOnWhosOnline' => $this->session->getDisplayOnWhosOnline() ? 1 : 0
+                ])
+                ->where('id = ?', [$this->session->getId()])
+                ->executeTransaction();
+
+            CacheProviderFactory::getInstance()->update('sessions');
         }
-
-        QueryBuilderProviderFactory::getInstance()->reset();
-        QueryBuilderProviderFactory::getInstance()->update('sessions')
-            ->set([
-                'expires' => $this->session->getExpires(),
-                'lastClick' => $this->session->getLastClick(),
-                'location' => $this->session->getLocation(),
-                'displayOnWhosOnline' => $this->session->getDisplayOnWhosOnline() ? 1 : 0
-            ])
-            ->where('id = ?', [$this->session->getId()])
-            ->executeTransaction();
-
-        CacheProviderFactory::getInstance()->update('sessions');
     }
 
     /**
@@ -278,7 +292,6 @@ class SessionMiddleware {
             ->executeTransaction();
 
         CacheProviderFactory::getInstance()->update('sessions');
-        return $next($request);
     }
 
     /**
@@ -291,6 +304,7 @@ class SessionMiddleware {
             ->where('expires < ?', [\time()])
             ->executeTransaction();
 
+        QueryBuilderProviderFactory::getInstance()->reset();
         CacheProviderFactory::getInstance()->update('sessions');
     }
 

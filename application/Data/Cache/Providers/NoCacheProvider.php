@@ -159,6 +159,7 @@ class NoCacheProvider implements CacheProviderInterface {
     private function getForCache($table) {
         $this->qb->reset();
         $resource = $this->qb->select('*')->from($table)->execute();
+        $this->qb->reset();
         return $resource;
     }
 }

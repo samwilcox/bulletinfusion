@@ -43,6 +43,9 @@ class HomeHelper {
                 $filter = FilterHelper::homeFilterSort(CacheProviderFactory::getInstance()->get('posts'), $homeFilter->name, MemberService::getInstance()->getMember()->getItemsPerPage());
                 break;
             case 'newest':
+                $filter = FilterHelper::homeFilterSort(CacheProviderFactory::getInstance()->get('topics'), $homeFilter->name, MemberService::getInstance()->getMember()->getItemsPerPage());
+                $method = 'topics';
+                break;
             case 'oldest':
                 $filter = FilterHelper::homeFilterSort(CacheProviderFactory::getInstance()->get('topics'), $homeFilter->name, MemberService::getInstance()->getMember()->getItemsPerPage());
                 $method = 'topics';

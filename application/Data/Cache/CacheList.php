@@ -48,7 +48,10 @@ class CacheList {
             'member_groups',
             'likes',
             'forum_permissions',
-            'tags'
+            'tags',
+            'notifications',
+            'mentions',
+            'subscriptions'
         ];
     }
 

@@ -75,8 +75,8 @@ class SecurityHelper {
     public static function get($type = 'normal') {
         $extraProtection = SettingsService::getInstance()->csrfOriginCheck ? \sha1($_SERVER['REMOTE_ADDR'] . $_SERVER['HTTP_USER_AGENT']) : '';
         $token = '';
-        $tokenSession = \sprintf('CSRF%sToken', $type == 'normal' ? '' :'Ajax');
-        $tokenExistsSession = \sprintf('CSRF%sTokenExists', $type == 'normal' ? '' : 'Ajax');
+        $tokenSession = \sprintf('CSRF%s_Token', $type == 'normal' ? '' :'Ajax');
+        $tokenExistsSession = \sprintf('CSRF%s_Token_Exists', $type == 'normal' ? '' : 'Ajax');
 
         if (SettingsService::getInstance()->csrfOneTimeTokens) {
             $token = \base64_encode(\time() . $extraProtection . self::randomizeString(32));

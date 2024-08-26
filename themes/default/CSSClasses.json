@@ -5,5 +5,6 @@
     "noPhotoThumbnail": "noPhotoThumbnail",
     "miniNoPhoto": "miniNoPhoto",
     "miniPhoto":"miniPhoto",
-    "displayNone": "displayNone"
+    "displayNone": "displayNone",
+    "unreadNotification": "unreadItem"
 }

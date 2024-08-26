@@ -37,7 +37,27 @@
         "togglePasswordField": "Toggle hide/display password",
         "rememberMeTitle": "Remember Me?",
         "rememberMeInfo": "Sign me in automatically on my next visit. Not recommended for shared devices.",
-        "signInButton": "Sign In"
+        "signInButton": "Sign In",
+        "forgotPasswordLink": "Forgot Password?",
+        "preauthorizeLoadingText": "Authenticating...",
+        "manageProfileLink": "Manage Profile",
+        "settingsLink": "Account Settings",
+        "viewProfileLink": "View My Profile",
+        "markAllReadLink": "Mark all content as read",
+        "manageSubscriptionsLink": "Manage Subscriptions",
+        "moderatorCPLink": "Moderator Control Panel",
+        "adminCPLink": "Administrator Control Panel",
+        "signOutLink": "Sign Out",
+        "notificationsTooltip": "Notifications",
+        "messengerTooltip": "Private Messages",
+        "moderatorNotificationsTooltip": "Moderator Notifications",
+        "noNewNotifications": "You have no new notifications",
+        "markAllNotificationsRead": "Mark all read",
+        "allNotificationsLink": "All notifications",
+        "notificationTopicLiked": "You have liked this topic!",
+        "notificationTopicUnliked": "You have unliked this topic",
+        "notificationSubscribedTopic": "You have subscribed to this topic!",
+        "notificationUnsubscribedTopic": "You have unsubscribed from this topic"
     },
     "errors": {
         "csrfTokenMissing": "Unable to validate the CSRF security token; the token was either not saved or received properly",
@@ -85,7 +105,9 @@
     },
     "topics": {
         "forumsBreadcrumb": "Forums",
-        "startedBy": "<strong>Started by</strong> ${displayName}"
+        "startedBy": "<strong>Started by</strong> ${displayName}",
+        "postReplyButton": "Post Reply",
+        "postTopicButton": "Post Topic"
     },
     "topicsnapshot": {
         "startedBy": "Started by ${displayName} ${timestamp}",
@@ -93,5 +115,19 @@
         "totalReplies": "Total replies",
         "totalViews": "Total views",
         "forumTooltip": "This topic belongs to the ${forumTitle} forum"
+    },
+    "utilhelper": {
+        "closeErrorDialog": "Close this dialog"
+    },
+    "notification": {
+        "mentionPost": "You were mentioned in a post",
+        "mentionPostInfo": "<strong>${displayName}</strong> mentioned you in the topic <strong>${topicTitle}</strong>",
+        "newReply": "A topic your subsribed to just got a new reply"
+    },
+    "buttonhelper": {
+        "like": "Like",
+        "unlike": "Unlike",
+        "subscribe": "Subscribe",
+        "unsubscribe": "Unsubscribe"
     }
 }

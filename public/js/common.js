@@ -20,7 +20,7 @@ $(document).ready(function() {
     ajaxUrl = json.ajaxUrl;
 });
 
-$(document).click(function(e) { dropDownDetection(e); });
+$(document).off('click').on('click', function(e) { dropDownDetection(e); });
 
 /**
  * Parse the in page AJAX data.
@@ -39,6 +39,8 @@ function parseJson() {
  * @param {Object} e - Element instance. 
  */
 function dropDownDetection(e) {
+    if (!currentDropDown) return;
+
     var found = false;
 
     if (triggeredElementsList != null) {
@@ -175,11 +177,14 @@ function getSnapshotsWithFilter(e) {
     let filterName = $("#filter-name");
     let itemsContainer = $("#items-container");
     let loadMoreButton = $("#load-more");
+    let filterList = $("#filter-list");
     let formData = { filter: filter.toLowerCase() };
 
     ajaxGet('snapshots', formData, function(response) {
         itemsContainer.html(response.data.snapshots);
-        
+        console.log(response.data.filterList);
+        filterList.html(response.data.filterList);
+
         if (response.data.loadMoreButton) {
             loadMoreButton.fadeIn();
         } else {
@@ -297,31 +302,148 @@ function togglePasswordField(e) {
 function preAuthorize(event, e) {
     if (json.preAuthorize) {
         event.preventDefault();
-        var $button = $("#" + e.data('button'));
+        var $button = $("#" + $(e).data('button'));
         var originalText = $button.html();
-        var loadingText = $button.data('loading-text');
-        $button.attr('disabled', true);
+        var loadingText = json.locale_preauthorizeText;
+        $button.prop('disabled', true);
         $button.html(loadingText);
-
+ 
         var emailInput = $("#" + $(e).data('email'));
         var passwordInput = $("#" + $(e).data('password'));
         var formElement = $("#" + $(e).data('form'));
-
+        
         var formData = {
-            email: emailInput,
-            password: btoa(passwordInput)
+            email: emailInput.val(),
+            password: btoa(passwordInput.val())
         };
-
+        
         ajaxPost('preauthorize', formData, function(response) {
             if (response.status) {
-                formElement.submit();
+                document.getElementById($(e).data('form')).submit();
             } else {
                 $("#errorbox-content-signin").html(response.data.message);
                 $("#errorbox-signin").fadeIn();
+                $button.prop('disabled', false);
+                $button.html(originalText);
             }
         }, function() {
-            $button.val(originalText);
-            $button.removeAttr('disabled');
+            $button.prop('disabled', false);
+            $button.html(originalText);
         });
     }
+}
+
+/**
+ * Close the error dialog element.
+ * @param {Object} e - Element instance.
+ */
+function closeErrorDialog(e) {
+    let dialog = $("#" + $(e).data('dialog'));
+    dialog.fadeOut();
+}
+
+/**
+ * Redirects to the given URL web address.
+ * @param {Object} e - Element instance.
+ */
+function followLink(e) {
+    let url = $(e).data('url');
+    location.href = url;
+}
+
+/**
+ * Loads the notifications into the drop down element.
+ * @param {Object} e - Element instance.
+ */
+function loadNotifications(e) {
+    let notificationsContent = $("#notifications-content");
+    let notificationsNone = $("#notifications-none").html();
+
+    ajaxGet('notifications', null, function(response) {
+        if (response.status) {
+            if (response.data.contentAvailable) {
+                notificationsContent.html(response.data.list);
+            } else {
+                notificationsContent.html(notificationsNone);
+            }
+        } else {
+
+        }
+    });
+}
+
+/**
+ * Displays a notification to the user.
+ * @param {string} message - The notification message.
+ */
+function showNotification(message) {
+    const $container = $('#notification-container');
+    const $notification = $("#notification-container-inner");
+    $notification.html(message);
+    $container.fadeIn();
+
+    const $progressBar = $('<div></div>').addClass('notificationProgressBar');
+    $notification.append($progressBar);
+    $container.append($notification);
+    
+    setTimeout(() => {
+        $container.fadeOut();
+    }, 3000);
+}
+
+/**
+ * Closes the notification container.
+ */
+function closeNotificationContainer() {
+    $("#notification-container").fadeOut();
+}
+
+/**
+ * Toggles the like button for the member.
+ * @param {Object} e - Element instance.
+ */
+function toggleLike(e) {
+    let contentType = $(e).data('contenttype');
+    let contentId = $(e).data('contentid');
+    let mode = $(e).data('mode');
+    let container = $(e).data('container');
+
+    var formData = {
+        contenttype: contentType,
+        contentid: contentId,
+        mode: mode,
+        container: container
+    };
+
+    ajaxPost('togglelike', formData, function(response) {
+        if (response.status) {
+            $("#" + container).html(response.data.html);
+            showNotification(response.data.mode == 'like' ? json.localization.notificationTopicLiked : json.localization.notificationTopicUnliked);
+        }
+    });
+}
+
+/**
+ * Toggles the subscribe button for the member.
+ * @param {Object} e - Element instance.
+ */
+function toggleSubscribe(e) {
+    let contentType = $(e).data('contenttype');
+    let contentId = $(e).data('contentid');
+    let mode = $(e).data('mode');
+    let container = $(e).data('container');
+
+    var formData = {
+        contenttype: contentType,
+        contentid: contentId,
+        mode: mode,
+        container: container
+    };
+
+    ajaxPost('togglesubscribe', formData, function(response) {
+        if (response.status) {
+            $("#" + container).html(response.data.html);
+            showNotification(response.data.mode == 'subscribe' ? json.localization.notificationSubscribedTopic : json.localization.notificationUnsubscribedTopic);
+        }
+    });
 }

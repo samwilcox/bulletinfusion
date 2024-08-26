@@ -35,6 +35,12 @@ class MemberService {
     private $member;
 
     /**
+     * The member's session.
+     * @var Session
+     */
+    private $session;
+
+    /**
      * Get singleton instance of MemberServices.
      * @return MemberServices
      */
@@ -58,5 +64,22 @@ class MemberService {
      */
     public function getMember() {
         return $this->member;
+    }
+
+    /**
+     * Set the session object.
+     * @param Session $session - The session object.
+     * @return void
+     */
+    public function setSession($session) {
+        $this->session = $session;
+    }
+
+    /**
+     * Get the session object.
+     * @return Session - The session object.
+     */
+    public function getSession() {
+        return $this->session;
     }
 }

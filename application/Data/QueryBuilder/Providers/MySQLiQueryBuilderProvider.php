@@ -139,6 +139,7 @@ class MySQLiQueryBuilderProvider implements QueryBuilderProviderInterface {
         $this->parts->join .= " " . \strtoupper($type) . " JOIN {$this->prefix}{$table}" . $alias != null ? " AS {$alias}" : "" . " ON {$condition}";
         return $this;
     }
+    
     /**
      * Where clause conditions.
      * @param string $condition - The conditions for the where clause.

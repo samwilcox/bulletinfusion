@@ -40,7 +40,7 @@ footer { position: fixed; bottom: 0; left: 0; right: 0; background-color: #31303
 .mainGridRightNoLeft { display: grid; grid-template-columns: 1fr 260px; gap: 30px; }
 .photoThumbnail { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 .photoThumbnail img { width: 100%; height: 100%; display: block; object-fit: cover; }
-.miniPhoto { width: 18px; height: 18px; border-radius: 50%; overflow: hidden; display: inline-block; justify-content: center; align-items: center; }
+.miniPhoto { width: 20px; height: 20px; border-radius: 50%; overflow: hidden; display: inline-block; justify-content: center; align-items: center; }
 .miniPhoto img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .photo { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 .photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
@@ -72,4 +72,44 @@ footer { position: fixed; bottom: 0; left: 0; right: 0; background-color: #31303
 .dialogFooter { width: auto; border-radius: 0 0 8px 8px; background-color: #1c1b1e; padding: 14px; text-align: center; }
 .relative { position: relative; margin-top: 12px; }
 .displayNone { display: none; }
-.errorBox { width: auto; border-radius: 8px; background-color: #C00000; color: #FFF; padding: 14px; }
+.errorBox { width: auto; border-radius: 8px; background-color: #C00000; color: #FFF; padding: 14px; border: 1px solid #400000; position: relative; margin-bottom: 20px; }
+.errorBox i { margin-right: 5px; }
+.userBarGrid { display: grid; grid-template-columns: auto auto; gap: 30px; align-items: center; margin-left: auto; margin-right: 0; }
+.userBarUserGrid { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; }
+.userBarUserLink i { margin-left: 5px; }
+.dropDownMenuLinks strong { display: block; height: 1px; margin-top: 4px; margin-bottom: 4px; background-color: #313033; }
+.dropDownMenuLinks i { width: 22px; }
+.dropDownMenuContent { width: auto; border-radius: 8px 8px 0 0; background-color: #313033; padding: 12px; max-height: 350px; overflow-y: auto; }
+.dropDownMenuFooter { width: auto; border-radius: 0 0 8px 8px; background-color: #1c1b1e; padding: 8px; text-align: center; }
+.zeroPadding { padding: 0px; }
+.dropDownContextNone { width: auto; border-radius: 8px 8px 0 0; background-color: #313033; padding: 50px; text-align: center; align-items: center; }
+.dropDownContextNone i { font-size: 30px; display: block; margin-bottom: 10px; }
+.dropDownMenuFooterLinks i { margin-right: 5px; }
+.dropDownMenuContextItem { width: auto; display: block; padding: 8px 0 8px 0; border-top: 1px solid #474649; }
+.dropDownMenuContextItem:first-of-type { border-top: 0px; }
+.dropDownMenuContextItemContent { width: auto; border-radius: 8px; padding: 8px 10px 8px 10px; display: block; }
+.dropDownMenuContextItemContent:hover { background-color: #474649; cursor: pointer; }
+.unreadItem { background-color: #1c1b1e; }
+.notificationGrid { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; }
+.notificationGrid i { font-size: 20px; }
+.notificationVerticalGrid { display: grid; grid-template-rows: auto auto auto; gap: 10px; }
+.notificationTitle { font-weight: 700; font-size: 13px; }
+.notificationInfo { font-size: 12px; }
+.notificationTimestamp { font-size: 10px; }
+.badge { position: absolute; top: 0; right: 0; padding: 2px 4px 2px 4px; border-radius: 5px; background-color: #1590c3; color: #FFF; font-size: 8px; font-weight: bold; }
+.seperatorBox { width: auto; padding-bottom: 0; padding-top: 14px; border-top: 1px solid #474649; }
+.seperatorBox:first-of-type { padding-bottom: 14px; padding-top: 0; border-top: 0px; }
+.topicTitle { font-size: 20px; font-weight: 600; color: #FFF; }
+.topicInfoGrid { display: grid; grid-template-columns: auto auto; gap: 30px; width: fit-content; }
+.leftRightGrid { display: grid; grid-template-columns: auto auto; gap: 12px; width: fit-content; }
+.dualVerticalGrid { display: grid; grid-template-rows: auto auto; gap: 8px; }
+.dualVerticalGrid i { margin-right: 5px; }
+.button i { margin-right: 5px; }
+.softButton i { margin-right: 5px; }
+.likesBadge { border-radius: 5px; padding: 4px; font-size: 9px; color: #FFF; background-color: #1c1b1e; text-align: center; vertical-align: middle; margin-left: 6px; font-weight: bold; }
+.alignTop { align-items: start; }
+.notificationContainer { background-color: #313033; color: #FFF; font-size: 16px; border-radius: 8px; position: fixed; bottom: 100px; right: 100px; z-index: 1000; width: 350px; border: 1px solid #5f5e60; text-align: center; overflow: hidden; margin-bottom: 10px; display: none; }
+.notificationContainerInner { padding: 50px 20px 50px 20px; position: relative; width: auto; }
+.notificationContainer.show { opacity: 1; transform: translateX(0); }
+.notificationProgressBar { position: absolute; bottom: 0; left: 0; right: 0; top: 0; z-index: -1; background-color: #1590c3; animation: progressBarAnim 3s linear forwards; }
+@keyframes progressBarAnim { 0% { width: 0%; } 100% { width: 100%; } }

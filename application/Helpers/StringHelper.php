@@ -119,4 +119,14 @@ class StringHelper {
 
         return -1;
     }
+
+    /**
+     * Detects and extracts mentions from the given text.
+     * @param string $text - Text containing mentions to extract.
+     * @return array - Collection of mentions.
+     */
+    public static function extractMentions($text) {
+        \preg_match_all("/@([^\s.,!?;:()]+)/", $text, $matches);
+        return $matches[1];
+    }
 }

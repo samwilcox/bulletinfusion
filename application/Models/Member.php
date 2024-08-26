@@ -624,7 +624,7 @@ class Member {
                         $this->setPhotoType($member->photoType);
                         $this->setPhotoId($member->photoId);
                         $this->setHomeFilter($member->homeFilter);
-                        $this->setItemsPerPage((integer) $member->getItemsPerPage);
+                        $this->setItemsPerPage((integer) $member->itemsPerPage);
                         break;
                     }
                 }
@@ -850,5 +850,144 @@ class Member {
             $this->url(),
             $tooltip
         );
+    }
+
+    /**
+     * Determine if the member has moderator permissions.
+     * @return boolean - True if valid permissions, false otherwise.
+     */
+    public function isModerator() {
+        return $this->findPermission('isModerator');
+    }
+
+    /**
+     * Determine if the member has administrator permissions.
+     * @return boolean - True if valid permissions, false otherwise.
+     */
+    public function isAdmin() {
+        return $this->findPermission('isAdmin');
+    }
+
+    /**
+     * Find whether the user has the given permission.
+     * @param string $permission - The permission name.
+     * @return boolean - True if valid, false otherwise.
+     */
+    private function findPermission($permission) {
+        $primaryGroup = $this->getPrimaryGroup();
+        $secondaryGroups = $this->getSecondaryGroups();
+
+        switch ($permission) {
+            case 'isModerator':
+                if ($primaryGroup->getIsModerator()) {
+                    return true;
+                }
+                break;
+            case 'isAdmin':
+                if ($primaryGroup->getIsAdmin()) {
+                    return true;
+                }
+                break;
+            default:
+                return false;
+        }
+
+        if ($secondaryGroups && \count($secondaryGroups) > 0) {
+            foreach ($secondaryGroups as $group) {
+                switch ($permission) {
+                    case 'isModerator':
+                        if ($group->getIsModerator()) {
+                            return true;
+                        }
+                        break;
+                    case 'isAdmin':
+                        if ($group->getIsAdmin()) {
+                            return true;
+                        }
+                        break;
+                    default:
+                        return false;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns all the member notifications data.
+     * @return object - Notifications data object.
+     */
+    public function notifications() {
+        $notifications = (object) [
+            'total' => (object) [
+                'overall' => 0,
+                'unread' => 0,
+                'read' => 0
+            ],
+            'anyUnread' => false,
+            'list' => (object) [
+                'unread' => [],
+                'read' => []
+            ]
+        ];
+
+        $data = CacheProviderFactory::getInstance()->get('notifications');
+
+        foreach ($data as $notification) {
+            if ($notification->memberId == $this->getId() && $notification->isRead == 0) {
+                $notifications->total->unread++;
+                $notifications->anyUnread = true;
+                $notifications->list->unread[] = ModelsFactory::create((object)['type' => 'notification', 'id' => $notification->id]);
+            }
+
+            if ($notification->memberId == $this->getId() && $notification->isRead == 1) {
+                $notifications->total->read++;
+                $notifications->list->read[] = ModelsFactory::create((object)['type' => 'notification', 'id' => $notification->id]);
+            }
+        }
+
+        $notifications->total->overall = $notifications->total->unread + $notifications->total->read;
+
+        return $notifications;
+    }
+
+    /**
+     * Returns whether the member has liked the given content.
+     * @param string $contentType - The content type liked (e.g., topic, post, etc).
+     * @param integer $contentId - The content identifier.
+     * @return boolean - True if liked content, false otherwise.
+     */
+    public function hasLiked($contentType, $contentId) {
+        $data = CacheProviderFactory::getInstance()->get('likes');
+        $liked = false;
+
+        foreach ($data as $like) {
+            if ($like->contentType == $contentType && $like->contentId == $contentId && $like->memberId == $this->getId()) {
+                $liked = true;
+                break;
+            }
+        }
+
+        return $liked;
+    }
+
+    /**
+     * Returns whether the member has subscribed to the given content.
+     * @param string $contentType - The content type subscribed to (e.g., topic, post, etc).
+     * @param integer $contentId - The content identifier.
+     * @return boolean - True if subscribed, false otherwise.
+     */
+    public function isSubscribed($contentType, $contentId) {
+        $data = CacheProviderFactory::getInstance()->get('subscriptions');
+        $subscribed = false;
+
+        foreach ($data as $subscription) {
+            if ($subscription->contentType == $contentType && $subscription->contentId == $contentId && $subscription->memberId == $this->getId()) {
+                $subscribed = true;
+            }
+        }
+
+        return $subscribed;
     }
 }

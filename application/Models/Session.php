@@ -18,6 +18,8 @@ if (!defined('BF_RUNTIME') || BF_RUNTIME != true) {
     die('<h1>Bulletin Fusion Error</h1>This file cannot be accessed directly!');
 }
 
+use BulletinFusion\Data\Cache\CacheProviderFactory;
+
 /**
  * Model representing a single user session.
  */
@@ -312,6 +314,22 @@ class Session {
      * @return void
      */
     public function initialize($params) {
-        
+        $data = CacheProviderFactory::getInstance()->get('sessions');
+
+        foreach ($data as $session) {
+            if ($session->id == $this->getId()) {
+                $this->setMemberId($session->memberId);
+                $this->setExpires($session->expires);
+                $this->setLastClick($session->lastClick);
+                $this->setLocation($session->location);
+                $this->setIpAddress($session->ipAddress);
+                $this->setHostname($session->hostname);
+                $this->setUserAgent($session->userAgent);
+                $this->setDisplayOnWhosOnline($session->displayOnWhosOnline == 1 ? true : false);
+                $this->setIsSearchBot($session->isSearchBot == 1 ? true : false);
+                $this->setSearchBotName($session->searchBotName);
+                $this->setIsAdmin($session->isAdmin == 1 ? true : false);
+            }
+        }
     }
 }

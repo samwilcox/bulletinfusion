@@ -54,4 +54,28 @@ class AjaxController extends BaseController {
     public function preauthorize() {
         $this->outputSource(\json_encode($this->model->preauthorize()), ContentType::JSON);
     }
+
+    /**
+     * Returns the listing of current notifications.
+     * @return void
+     */
+    public function notifications() {
+        $this->outputSource(\json_encode($this->model->notifications()), ContentType::JSON);
+    }
+
+    /**
+     * Toggles likes on content.
+     * @return void
+     */
+    public function toggleLike() {
+        $this->outputSource(\json_encode($this->model->toggleLike()), ContentType::JSON);
+    }
+
+    /**
+     * Toggles subscriptions on content.
+     * @return void
+     */
+    public function toggleSubscribe() {
+        $this->outputSource(\json_encode($this->model->toggleSubscribe()), ContentType::JSON);
+    }
 }

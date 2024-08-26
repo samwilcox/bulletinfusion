@@ -19,19 +19,11 @@ if (!defined('BF_RUNTIME') || BF_RUNTIME != true) {
 }
 
 /**
- * Features enums.
+ * Button enums.
  */
-class Features {
-    const membersList = 'membersList';
-    const whosOnline = 'whosOnline';
-    const search = 'search';
-    const help = 'help';
-    const communityLoaders = 'communityLeaders';
-    const tags = 'tags';
-    const clubs = 'clubs';
-    const notifications = 'notifications';
-    const likeTopics = 'likeTopics';
-    const likePosts = 'likePosts';
-    const subscribeToForums = 'subscribeToForums';
-    const subscribeToTopics = 'subscribeToTopics';
+class Button {
+    const LIKE_TOPIC_BUTTON = 'likeTopicButton';
+    const LIKE_POST_BUTTON = 'likePostButton';
+    const SUBSCRIBE_TOPIC_BUTTON = 'subscribeTopicButton';
+    const SUBSCRIBE_FORUM_BUTTON = 'subscribeForumButton';
 }

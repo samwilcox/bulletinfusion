@@ -29,6 +29,7 @@ use BulletinFusion\Services\BlocksService;
 use BulletinFusion\Exceptions\IOException;
 use BulletinFusion\Services\FileService;
 use BulletinFusion\Services\OutputService;
+use BulletinFusion\Helpers\SecurityHelper;
 
 /**
  * Helper methods for commonly used tasks.
@@ -70,8 +71,8 @@ class UtilHelper {
                     }
                 }
 
-                if ($includeCSRF) {
-                    // TO-DO: Implement this!
+                if ($includeCSRF && SettingsService::getInstance()->csrfEnabled) {
+                    $url .= \sprintf('/token/%s', SecurityHelper::get());
                 }
 
                 return "{$_ENV['WRAPPER']}?{$url}";
@@ -85,8 +86,8 @@ class UtilHelper {
                     }
                 }
 
-                if ($includeCSRF) {
-                    // TO-DO: Implement this!
+                if ($includeCSRF && SettingsService::getInstance()->csrfEnabled) {
+                    $url .= \sprintf('/token/%s', SecurityHelper::get());
                 }
 
                 return "{$_ENV['BASE_URL']}{$url}";
@@ -113,8 +114,8 @@ class UtilHelper {
             }
         }
 
-        if ($includeCSRF) {
-            // TO-DO: Implement this!
+        if ($includeCSRF && SettingsService::getInstance()->csrfEnabled) {
+            $url .= \sprintf('&token=%s', SecurityHelper::get());
         }
 
         $url = "{$_ENV['BASE_URL']}/{$_ENV['WRAPPER']}${url}";
@@ -459,5 +460,52 @@ class UtilHelper {
                 'style' => $params->display ? '' : self::getCSSClass('displayNone')
             ]
         );
+    }
+
+    /**
+     * Helper method to get the correct referer URL.
+     * @return string - The validated referer URL or the default URL.
+     */
+    public static function getRefererUrl() {    
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            $referer = $_SERVER['HTTP_REFERER'];
+            $parsedAppUrl = \parse_url($_ENV['BASE_URL']);
+            $expectedHost = isset($parsedAppUrl['host']) ? $parsedAppUrl['host'] : '';
+            $parsedUrl = \parse_url($referer);
+            $refererDomain = isset($parsedUrl['host']) ? $parsedUrl['host'] : '';
+
+            if ($refererDomain === '') {
+                return $referer;
+            }
+        }
+
+        return UtilHelper::buildUrl('home');
+    }
+
+    /**
+     * Redirect the user to the given URL.
+     * @param string $url - URL to redirect to.
+     * @return void
+     */
+    public static function redirectUser($url) {
+        \header("Location: $url");
+        exit(0);
+    }
+
+    /**
+     * Get the total likes for the given content type and content identifier.
+     * @param string $contentType - Content type to get likes for (e.g., topic, post, etc).
+     * @param integer $contentId - The content identifier.
+     * @return integer - Total likes.
+     */
+    public static function getTotalLikes($contentType, $contentId) {
+        $data = CacheProviderFactory::getInstance()->get('likes');
+        $total = 0;
+
+        foreach ($data as $like) {
+            if ($like->contentId == $contentId && $like->contentType == $contentType) $total++;
+        }
+
+        return $total;
     }
 }

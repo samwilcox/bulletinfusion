@@ -25,6 +25,7 @@ use BulletinFusion\Models\Group;
 use BulletinFusion\Models\Forum;
 use BulletinFusion\Models\Topic;
 use BulletinFusion\Models\Post;
+use BulletinFusion\Models\Notification;
 use BulletinFusion\Exceptions\InvalidArgumentException;
 
 /**
@@ -56,6 +57,8 @@ class ModelsFactory {
                 return self::createTopicModel($params);
             case 'post':
                 return self::createPostModel($params);
+            case 'notification':
+                return self::createNotificationModel($params);
             default:
                 throw new InvalidArgumentException("Unsupported model object type {$params->type}");
         }
@@ -133,6 +136,17 @@ class ModelsFactory {
      */
     private static function createPostModel($params) {
         $obj = new Post();
+        $obj->initialize($params);
+        return $obj;
+    }
+
+    /**
+     * Creates a new notification model.
+     * @param object $params - Parameters collection.
+     * @return Notification
+     */
+    private static function createNotificationModel($params) {
+        $obj = new Notification();
         $obj->initialize($params);
         return $obj;
     }

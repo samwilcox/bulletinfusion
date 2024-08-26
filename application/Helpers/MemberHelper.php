@@ -36,12 +36,12 @@ class MemberHelper {
             'id' => null
         ];
 
-        if (CookieHelper::cookieExists('MEMBER_TOKEN')) {
+        if (CookieHelper::cookieExists('MemberToken')) {
             $cache = CacheProviderFactory::getInstance();
             $data = $cache->get('member_devices');
 
             foreach ($data as $device) {
-                if ($device->memberToken == CookieHelper::getCookie('MEMBER_TOKEN')) {
+                if ($device->token == CookieHelper::getCookie('MemberToken')) {
                     if ($_SERVER['HTTP_USER_AGENT'] == $device->userAgent) {
                         $authorizedData->authorized = true;
                         $authorizedData->id = $device->memberId;

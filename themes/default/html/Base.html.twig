@@ -19,19 +19,39 @@
         <script type="application/json" id="json">
             {
                 {% if csrfEnabled %}
-"csrfToken":"{{ csrfToken }}",
+"csrfToken":"{{ csrfAjaxToken }}",
                 {% endif %}
 "ajaxUrl": "{{ wrapper }}",
                 "usingRewrite": {{ rewrite }},
-                "preAuthorize": {{ preAuthorize }}
+                "preAuthorize": {{ preAuthorize }},
+                "locale_preauthorizeText": "${[global][preauthorizeLoadingText]}",
+                "localization": {
+                    "notificationTopicLiked": "${[global][notificationTopicLiked]}",
+                    "notificationTopicUnliked": "${[global][notificationTopicUnliked]}",
+                    "notificationSubscribedTopic": "${[global][notificationSubscribedTopic]}",
+                    "notificationUnsubscribedTopic": "${[global][notificationUnsubscribedTopic]}"
+                }
             }
         </script>
     </head>
     <body>
+        <div class="notificationContainer" id="notification-container">
+            <div class="notificationContainerInner" id="notification-container-inner"></div>
+        </div>
+        <span id="notifications-none" style="display: none;">
+            <div class="dropDownContextNone">
+                <i class="fa-solid fa-bell-slash"></i>
+                ${[global][noNewNotifications]}
+            </div>
+        </span>
+        <div class="dropDownMenu zeroPadding" style="width: 400px;" id="ddm-member-notifications">
+            <span id="notifications-content"></span>
+            <div class="dropDownMenuFooter dropDownMenuFooterLinks"><a href="{{ markNotificationsUrl }}"><i class="fa-solid fa-check"></i>${[global][markAllNotificationsRead]}</a><a href="{{ allNotificationsUrl }}"><i class="fa-solid fa-list"></i>${[global][allNotificationsLink]}</a></div>
+        </div>
         <div class="backgroundDisabler" id="background-disabler" onclick="closeDialog();"></div>
         {% if signInDialogEnabled %}
             <div class="dialog" id="dialog-member-signin">
-                <form name="membersignindialog" id="membersignindialog" action="{{ wrapper }}" method="post" enctype="multipart/form-data">
+                <form name="membersignindialog" id="membersignindialog" action="{{ wrapper }}" method="post" enctype="multipart/form-data" data-button="signin-dialog-button" data-form="membersignindialog" data-email="signin-dialog-email-field" data-password="signin-dialog-password-field" onsubmit="preAuthorize(event, this);">
                     <div class="dialogHeader">
                         <div class="dualHorizontalGrid">
                                 <div class="dialogHeaderLeft">${[global][memberSignInDialogTitle]}</div>
@@ -39,7 +59,8 @@
                         </div>
                     </div>
                     <div class="dialogContent">
-                        <input type="email" name="email" placeholder="${[global][emailAddressPlaceholder]}" class="formFieldSpaced formFieldFull">
+                        {{ signInErrorBox|raw }}
+                        <input type="email" name="email" placeholder="${[global][emailAddressPlaceholder]}" class="formFieldSpaced formFieldFull" id="signin-dialog-email-field">
                         <div class="formFieldRelative"><input type="password" name="password" id="signin-dialog-password-field" placeholder="${[global][passwordPlaceholder]}" class="formFieldSpaced formFieldFull"><span class="passwordFieldIcon"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="${[global][togglePasswordField]}" data-field="signin-dialog-password-field" data-icon="signin-dialog-password-icon" data-toggle="fa-solid fa-eye-slash" data-untoggle="fa-solid fa-eye" onclick="togglePasswordField(this);"><i class="fa-solid fa-eye-slash" id="signin-dialog-password-icon"></i></a></span></div>
                         <div class="signInGrid">
                             <div>
@@ -54,11 +75,21 @@
                         </div>
                             </div>
                             <div>
-                                <div class="underFieldRight forgotPasswordLink"><a href="">Forgot Password?</a></div>
+                                {% if forgotPasswordEnabled %}
+                                    <div class="underFieldRight forgotPasswordLink"><a href="{{ forgotPasswordUrl }}">${[global][forgotPasswordLink]}</a></div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    <div class="dialogFooter"><button type="submit" id="signin-dialog-button" data-loading-text="<img src='{{ imagesetUrl }}/images/preloaders/button.gif' alt='*'>">${[global][signInButton]}</button></div>
+                    <div class="dialogFooter">
+                        <input type="hidden" name="controller" value="authentication">
+                        <input type="hidden" name="action" value="authenticate">
+                        <input type="hidden" name="url" value="{{ refererUrl }}">
+                        {% if csrfEnabled %}
+                            <input type="hidden" name="token" value="{{ csrfToken }}">
+                        {% endif %}
+                        <button type="submit" id="signin-dialog-button">${[global][signInButton]}</button>
+                    </div>
                 </form>
             </div>
         {% endif %}
@@ -72,6 +103,29 @@
                 </div>
                 <div class="dialogContent">Content here</div>
                 <div class="dialogFooter">Here</div>
+            </div>
+        {% endif %}
+        {% if signedIn %}
+            <div class="dropDownMenu" id="ddm-member-menu">
+                <span class="dropDownMenuLinks">
+                    <a href="{{ viewProfileUrl }}"><i class="fa-regular fa-address-card"></i>${[global][viewProfileLink]}</a>
+                    <a href="{{ manageProfileUrl }}"><i class="fa-solid fa-user-pen"></i>${[global][manageProfileLink]}</a>
+                    <strong></strong>
+                    <a href="{{ settingsUrl }}"><i class="fa-solid fa-gear"></i>${[global][settingsLink]}</a>
+                    <a href="{{ subscriptionsUrl }}"><i class="fa-solid fa-table-list"></i>${[global][manageSubscriptionsLink]}</a>
+                    <a href="{{ markAllReadUrl }}"><i class="fa-regular fa-square-check"></i>${[global][markAllReadLink]}</a>
+                    {% if elevatedBlock %}
+                        <strong></strong>
+                        {% if isModerator %}
+                            <a href="{{ moderatorCpUrl }}"><i class="fa-solid fa-wrench"></i>${[global][moderatorCPLink]}</a>
+                        {% endif %}
+                        {% if isAdmin %}
+                            <a href="{{ adminCpUrl }}" target="_blank"><i class="fa-solid fa-screwdriver-wrench"></i>${[global][adminCPLink]}</a>
+                        {% endif %}
+                    {% endif %}
+                    <strong></strong>
+                    <a href="{{ signOutUrl }}"><i class="fa-solid fa-right-from-bracket"></i>${[global][signOutLink]}</a>
+                </span>
             </div>
         {% endif %}
         <div class="dropDownMenu" id="ddm-languages">
@@ -159,9 +213,27 @@
                     </div>
                     <div class="alignRight">
                         {% if signedIn %}
-                            <span>Member</span>
+                            <div class="userBarGrid">
+                                <div class="userBarLeft">
+                                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="${[global][moderatorNotificationsTooltip]}"><i class="fa-solid fa-box"></i></a>
+                                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="${[global][messengerTooltip]}"><i class="fa-solid fa-inbox"></i></a>
+                                {% if notificationsEnabled %}
+                                    <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="${[global][notificationsTooltip]}" id="ddm-member-notifications-link" data-menu="ddm-member-notifications" data-link="ddm-member-notifications-link" data-ignored="ddm-member-notifications-icon" onclick="loadNotifications(); openDropDownMenu(this);">
+                                        <i class="fa-solid fa-bell" id="ddm-member-notifications-icon"></i>
+                                        {% if unreadNotificationsTotal > 0 %}
+                                            <span class="badge">{{ unreadNotificationsTotal }}</span>
+                                        {% endif %}
+                                    </a></div>
+                                {% endif %}
+                                <div>
+                                    <div class="userBarUserGrid">
+                                        <div><span class="photoThumbnail"><img src="http://www.bulletinfusion.com/upload/photos/member-1/photo.jpg"></span></div>
+                                        <div class="userBarUserLink"><a href="javascript:void(0);" id="ddm-member-menu-link" data-menu="ddm-member-menu" data-link="ddm-member-menu-link" data-ignored="ddm-member-menu-icon" onclick="openDropDownMenu(this);">Sam Wilcox<i class="fa-solid fa-caret-down" id="ddm-member-menu-icon"></i></a></div>
+                                    </div>
+                                </div>
+                            </div>
                         {% else %}
-                        <span class="headerSignInLink"><a href="{{ signInLink }}" data-dialog="dialog-member-signin" data-width="600" onclick="openDialog(this, event);"><i class="fa-solid fa-right-to-bracket"></i>${[global][signInLink]}</a></span>{% if signUpEnabled %}<span class="headerSignUpLink"><a href="{{ signUpLink }}"><i class="fa-solid fa-user-plus"></i>${[global][signUpLink]}</a></span>{% endif %}
+                            <span class="headerSignInLink"><a href="{{ signInLink }}" data-dialog="dialog-member-signin" data-width="600" onclick="openDialog(this, event);"><i class="fa-solid fa-right-to-bracket"></i>${[global][signInLink]}</a></span>{% if signUpEnabled %}<span class="headerSignUpLink"><a href="{{ signUpLink }}"><i class="fa-solid fa-user-plus"></i>${[global][signUpLink]}</a></span>{% endif %}
                         {% endif %}
                     </div>
                 </div>

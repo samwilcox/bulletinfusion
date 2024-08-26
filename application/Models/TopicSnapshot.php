@@ -203,70 +203,50 @@ class TopicSnapshot {
 
         switch ($params->method) {
             case 'posts':
-                $this->postId = $params->id;
-
-                foreach ($data->posts as $post) {
-                    if ($post->id == $this->getPostId()) {
-                        $this->setTopicId($post->topicId);
-                        $this->setForumId($post->forumId);
-
-                        foreach ($data->topics as $topic) {
-                            if ($topic->id == $this->getTopicId()) {
-                                $this->setTotalReplies((integer) $topic->totalReplies);
-                                $this->setTotalViews((integer) $topic->totalViews);
-                                break;
-                            }
-                        }
-
-                        $this->setReplier((object) [
-                            'viable' => $post->firstPost == 1 ? false : true,
-                            'id' => $post->postedMemberId,
-                            'timestamp' => $post->posted 
-                        ]);
-                        break;
-                    }
-                }
-
-                foreach ($data->topics as $topic) {
-                    if ($topic->id == $this->topicId) {
-                        $this->setStarter((object) [
-                            'id' => $topic->createdMemberId,
-                            'timestamp' => $topic->created
-                        ]);
-                        break;
-                    }
-                }
+                $this->setPostId($params->id);
                 break;
             case 'topics':
-                $this->topicId = $params->id;
+                $this->setTopicId($params->id);
 
                 foreach ($data->topics as $topic) {
                     if ($topic->id == $this->getTopicId()) {
-                        $this->setTopicId($topic->id);
-                        $this->setForumId($topic->forumId);
-                        $this->setTotalReplies((integer) $topic->totalReplies);
-                        $this->setTotalViews((integer) $topic->totalViews);
-                        $totalPosts = 0;
-                        $timestamp = null;
-
-                        foreach ($data->posts as $post) {
-                            if ($post->topicId == $this->getTopicId()) $totalPosts++;
-                            if ($post->id == $topic->lastPostId) $timestamp = $post->posted;
-                        }
-
-                        $this->setReplier((object) [
-                            'viable' => $totalPosts > 1 ? true : false,
-                            'id' => (integer) $topic->lastPostId,
-                            'timestamp' => $timestamp
-                        ]);
-
-                        $this->setStarter((object)[
-                            'id' => $topic->createdMemberId,
-                            'timestamp' => $topic->created
-                        ]);
+                        $this->setPostId($topic->lastPostId);
+                        break;
                     }
                 }
                 break;
+        }
+
+        foreach ($data->posts as $post) {
+            if ($post->id == $this->getPostId()) {
+                $this->setTopicId($post->topicId);
+                $this->setForumId($post->forumId);
+
+                foreach ($data->topics as $topic) {
+                    if ($topic->id == $this->getTopicId()) {
+                        $this->setTotalReplies((integer) $topic->totalReplies);
+                        $this->setTotalViews((integer) $topic->totalViews);
+                        break;
+                    }
+                }
+
+                $this->setReplier((object) [
+                    'viable' => $post->firstPost == 1 ? false : true,
+                    'id' => $post->postedMemberId,
+                    'timestamp' => $post->posted 
+                ]);
+                break;
+            }
+        }
+
+        foreach ($data->topics as $topic) {
+            if ($topic->id == $this->topicId) {
+                $this->setStarter((object) [
+                    'id' => $topic->createdMemberId,
+                    'timestamp' => $topic->created
+                ]);
+                break;
+            }
         }
     }
 
