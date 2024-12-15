@@ -1,0 +1,104 @@
+{
+    "global": {
+        "homeLink": "Home",
+        "forumsListLink": "Forums List",
+        "searchLink": "Search",
+        "whosOnlineLink": "Who's Online?",
+        "tagsLink": "Tags",
+        "leaderboardLink": "Leaderboard",
+        "communityLeadersLink": "Community Leaders",
+        "membersLink": "Members",
+        "groupsLink": "Groups",
+        "clubsLink": "Clubs",
+        "helpLink": "Help",
+        "selectLanguageLink": "Select Language",
+        "selectThemeLink": "Select Theme",
+        "expandLink": "Expand",
+        "collapseLink": "Collapse",
+        "signInLink": "Sign In",
+        "signUpLink": "Sign Up",
+        "pageGenerated": "Page generated at <strong>${time}</strong>",
+        "poweredBy": "Powered by <strong>${link}</strong> ${version}",
+        "allTimes": "All times are <strong>${timezone}</strong> (GMT ${gmt})",
+        "cookieOptionsTooltip": "Manage cookie options"
+    },
+    "home": {
+        "allForums": "All Forums",
+        "modeButton": "All",
+        "sortByLastPost": "By Last Post",
+        "sortOrderAsc": "Ascending Order",
+        "sortOrderDesc": "Descending Order",
+        "timeframeAllTime": "All Time",
+        "unread": "Unread",
+        "read": "Read",
+        "hasSolution": "Has Solution",
+        "noSolution": "No Solution",
+        "sortByTopicStarter": "By Topic Starter",
+        "sortByTopicStarted": "By Topic Start Date",
+        "sortByForum": "By Forum",
+        "sortByTotalReplies": "By Total Replies",
+        "sortByTotalViews": "By Total Views",
+        "sortByTotalLikes": "By Total Likes",
+        "sortBySolution": "By Solution",
+        "loadingContent": "Loading Content..."
+    },
+    "timeHelper": {
+        "justNow": "Just now",
+        "today": "Today",
+        "yesterday": "Yesterday",
+        "allTime": "All Time",
+        "minuteAgo": "${total} minute ago",
+        "minutesAgo": "${total} minutes ago",
+        "hourAgo": "${total} hour ago",
+        "hoursAgo": "${total} hours ago",
+        "daysAgo": "${total} days ago",
+        "weekAgo": "${total} week ago",
+        "weeksAgo": "${total} weeks ago",
+        "monthAgo": "${total} month ago",
+        "monthsAgo": "${total} months ago",
+        "yearAgo": "${total} year ago",
+        "yearsAgo": "${total} years ago"
+    },
+    "blocks": {
+        "forumsListingTitle": "Forums",
+        "noForums": "No forums"
+    },
+    "postItemEntity": {
+        "hotTopicTooltip": "This topic is HOT (${total} or more replies)",
+        "hasAttachmentsTooltip": "This topic contains attachment(s)",
+        "hasSolutionTooltip": "This topic contains a solution",
+        "tagsTooltip": "Tags",
+        "startedBy": "Started by ${link}, ${timestamp}",
+        "byAuthor": "By ${link}, ${timestamp}",
+        "totalReplies": "<strong>Replies:</strong> ${total}",
+        "totalViews": "<strong>Views:</strong> ${total}",
+        "moreTags": "more tags"
+    },
+    "filterHelper": {
+        "noPostItems": "There is no content to load.",
+        "noPostItemsFilter": "There is no content to display for the current set filter."
+    },
+    "captchaHelper": {
+        "humanVerificationTitle": "Human Verification",
+        "enterCaptchaText": "Enter the text in the image into the input box",
+        "captchaReloadTooltip": "Get a new image"
+    },
+    "utilHelper": {
+        "closeErrorDialog": "Close error dialog"
+    },
+    "auth": {
+        "orSignInProvider": "Or sign in with a provider",
+        "facebookTooltip": "Facebook",
+        "googleTooltip": "Google",
+        "blueskyTooltip": "Bluesky",
+        "signInTitle": "Sign In",
+        "usernameOrEmailPlaceholder": "Username or Email Address",
+        "emailPlaceholder": "Email Address",
+        "passwordPlaceholder": "Password",
+        "togglePasswordTooltip": "Toggle password display",
+        "forgotPasswordUrl": "Forgot Password?",
+        "rememberMeTitle": "Remember Me?",
+        "rememberMeInfo": "Automatically sign me in on my next visit. Not recommended for shared devices.",
+        "signInButton": "Sign In"
+    }
+}

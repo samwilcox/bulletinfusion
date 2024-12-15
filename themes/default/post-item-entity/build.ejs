@@ -1,0 +1,72 @@
+<div class="itemBox">
+    <div class="itemBoxGrid">
+        <div><%- photo %></div>
+        <div>
+            <div class="itemBoxRowGrid">
+                <div>
+                    <div class="dualGrid">
+                        <div>
+                            <div class="postItemTitleGrid">
+                                <% if (isRead) { %>
+                                    <div class="postItemTopicLink"><a href="<%= topic.url() %>"><%= topic.getTitle() %></a></div>
+                                <% } else { %>
+                                    <div class="postItemTopicLinkUnread"><a href="<%= topic.url() %>"><%= topic.getTitle() %></a></div>
+                                <% } %>
+                                <div>
+                                    <% if (!post.isInitialPost()) { %>
+                                        <span class="infoBubble"><%- by %></span>
+                                    <% } %>
+                                    <span class="infoBubble"><%- startedBy %></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alignRight forumsSymbolLink">
+                            <a href="<%= forum.url() %>" 
+                                style="color: <%= forum.getTextColor() %>; background-color: <%= forum.getColor() %>;" 
+                                onmouseover="this.style.color='<%= forum.getDarkColor().idealTextColor %>'; this.style.backgroundColor='<%= forum.getDarkColor().darkenedColor %>';" 
+                                onmouseout="this.style.color='<%= forum.getTextColor() %>'; this.style.backgroundColor='<%= forum.getColor() %>';">
+                                 <%- forum.getIcon() %><%= forum.getTitle() %>
+                             </a>                             
+                        </div>
+                    </div>
+                </div>
+                <div class="postItemPreview"><%- content %></div>
+                <div>
+                    <div class="dualGridCentered">
+                        <div class="postItemStats">
+                            <span><i class="fa-solid fa-reply"></i><%- totalReplies %></span>
+                            <span><i class="fa-solid fa-eye"></i><%- totalViews %></span>
+                        </div>
+                        <div class="alignRight postItemBottomRight">
+                            <% if (hotTopic) { %>
+                                <span class="tooltip tooltip--top" data-title="<%= hotTooltip %>"><i class="fa-solid fa-fire"></i></span>
+                            <% } %>
+                            <% if (haveAttachments) { %>
+                                <span class="tooltip tooltip--top" data-title="<%= locale.forumEntity.hasAttachmentsTooltip %>"><i class="fa-solid fa-paperclip"></i></span>
+                            <% } %>
+                            <% if (hasSolution) { %>
+                                <span class="tooltip tooltip--top" data-title="<%= locale.forumEntity.hasSolutionTooltip %>"><i class="fa-solid fa-square-check"></i></span>
+                            <% } %>
+                            <% if (hasTags) { %>
+                                <span class="postItemBottomRightTags tooltip tooltip--top" data-title="<%= locale.forumEntity.tagsTooltip %>">
+                                    <i class="fa-solid fa-tag"></i>
+                                    <%- count = 0 %>
+                                    <% tags.forEach(tag => { %>
+                                        <% if (count > 0) { %>
+                                            , 
+                                        <% } %>
+                                        <% count = count + 1 %>
+                                        <%- tag.link() %>
+                                    <% }); %>
+                                    <% if (moreTags) { %>
+                                        [<a href="javascript:void(0);"><%= locale.postItemEntity.moreTags %></a>]        
+                                    <% } %>
+                                </span>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

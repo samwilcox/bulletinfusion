@@ -1,0 +1,17 @@
+<div class="captchaBox">
+    <div class="captchaBoxHeader relative">
+        <%= locale.captchaHelper.humanVerificationTitle %>
+        <span class="captchaReload"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.captchaHelper.captchaReloadTooltip %>" data-image="captcha-image<%= id %>" onclick="reloadCaptcha(this);"><i class="fa-solid fa-rotate-right"></i></a></span>
+    </div>
+    <div class="captchaBoxInfo"><%= locale.captchaHelper.enterCaptchaText %></div>
+    <div class="captchaBoxContent">
+        <div class="captchaBoxContentGrid">
+            <div>
+                <img src="<%- imgSource %>" alt="*" id="captcha-image<%= id %>">
+            </div>
+            <div>
+                <input type="text" name="captcha" class="captchaField">
+            </div>
+        </div>
+    </div>
+</div>

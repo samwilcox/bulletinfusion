@@ -1,0 +1,14 @@
+<div class="blockItem">
+    <div class="blockItemHeader"><%= locale.blocks.forumsListingTitle %></div>
+    <div class="blockItemBody">
+        <span class="forumsBlockItem">
+            <% if (exists) { %>
+                <% forums.forEach(forum => { %>
+                    <a href="<%= forum.url() %>" style="color: <%= forum.getTextColor() %>; background-color: <%= forum.getColor() %>" onmouseover="this.style.color='<%= forum.getDarkColor().idealTextColor %>'; this.style.backgroundColor='<%= forum.getDarkColor().darkenedColor %>';" onmouseout="this.style.color='<%= forum.getTextColor() %>'; this.style.backgroundColor='<%= forum.getColor() %>';"><%- forum.getIcon() %><%= forum.getTitle() %></a>
+                <% }); %>
+            <% } else { %>
+                <%= locale.blocks.noForums %>
+            <% } %>
+        </span>
+    </div>
+</div>

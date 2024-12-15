@@ -1,0 +1,1 @@
+<% if (separator) { %><%- separator %><% } %><a href="<% if (js) { %>javascript:void(0);<% } else { %><%= url %><% } %>"<% if (tooltip) { %> class="tooltip tooltip--top" data-title="<%= tooltip %>"<% } %><% if (onclick) { %> onclick="<%- onclick %>"<% } %><% if (target) { %> target="<%- target %>"<% } %>><% if (icon) { %><%- icon %><% } %><%- title %></a>

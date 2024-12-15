@@ -1,0 +1,91 @@
+<script>
+    loadInitialPostItems = true;
+    postItems = true;
+</script>
+<div class="dropDownMenu" id="ddm-allforums">
+    <span class="dropDownMenuLinks">
+        <a href="javascript:void(0);" data-type="forum" data-value="all" data-iconid="ddm-allforums-div2" data-titleid="ddm-allforums-div3" data-selicon="filter-forum-allforums-icon" data-seltitle="filter-forum-allforums-title" onclick="loadPostItemsOnClick(this);"><span id="filter-forum-allforums-icon"><i class="fa-solid fa-check-double"></i></span><span id="filter-forum-allforums-title"><%= locale.home.allForums %></span></a>
+        <% forums.forEach(forum => { %>
+            <a href="javascript:void(0);" data-type="forum" data-value="<%= forum.getId() %>" data-iconid="ddm-allforums-div2" data-titleid="ddm-allforums-div3" data-selicon="filter-forum-<%= forum.getId() %>-icon" data-seltitle="filter-forum-<%= forum.getId() %>-title" onclick="loadPostItemsOnClick(this);"><span id="filter-forum-<%= forum.getId() %>-icon"><%- forum.getIcon() %></span><span id="filter-forum-<%= forum.getId() %>-title"><%= forum.getTitle() %></span></a>
+        <% }); %>
+    </span>
+</div>
+<div class="dropDownMenu" id="ddm-mode">
+    <span class="dropDownMenuLinks">
+        <a href="javascript:void(0);" data-type="mode" data-value="all" data-iconid="ddm-mode-div2" data-titleid="ddm-mode-div3" data-selicon="filter-mode-all-icon" data-seltitle="filter-mode-all-title" onclick="loadPostItemsOnClick(this);"><span id="filter-mode-all-icon"><i class="fa-solid fa-comments"></i></span><span id="filter-mode-all-title"><%= locale.home.modeButton %></span></a>
+        <a href="javascript:void(0);" data-type="mode" data-value="unread" data-iconid="ddm-mode-div2" data-titleid="ddm-mode-div3" data-selicon="filter-mode-unread-icon" data-seltitle="filter-mode-unread-title" onclick="loadPostItemsOnClick(this);"><span id="filter-mode-unread-icon"><i class="fa-solid fa-eye-slash"></i></span><span id="filter-mode-unread-title"><%= locale.home.unread %></span></a>
+        <a href="javascript:void(0);" data-type="mode" data-value="read" data-iconid="ddm-mode-div2" data-titleid="ddm-mode-div3" data-selicon="filter-mode-read-icon" data-seltitle="filter-mode-read-title" onclick="loadPostItemsOnClick(this);"><span id="filter-mode-read-icon"><i class="fa-solid fa-eye"></i></span><span id="filter-mode-read-title"><%= locale.home.read %></span></a>
+        <a href="javascript:void(0);" data-type="mode" data-value="hasSolution" data-iconid="ddm-mode-div2" data-titleid="ddm-mode-div3" data-selicon="filter-mode-hassolution-icon" data-seltitle="filter-mode-hassolution-title" onclick="loadPostItemsOnClick(this);"><span id="filter-mode-hassolution-icon"><i class="fa-solid fa-check"></i></span><span id="filter-mode-hassolution-title"><%= locale.home.hasSolution %></span></a>
+        <a href="javascript:void(0);" data-type="mode" data-value="noSolution" data-iconid="ddm-mode-div2" data-titleid="ddm-mode-div3" data-selicon="filter-mode-nosolution-icon" data-seltitle="filter-mode-nosolution-title" onclick="loadPostItemsOnClick(this);"><span id="filter-mode-nosolution-icon"><i class="fa-solid fa-xmark"></i></span><span id="filter-mode-nosolution-title"><%= locale.home.noSolution %></span></a>
+    </span>
+</div>
+<div class="dropDownMenu" id="ddm-sortby">
+    <span class="dropDownMenuLinks">
+        <a href="javascript:void(0);" data-type="sortby" data-value="lastPost" data-titleid="ddm-sortby-div2" data-seltitle="filter-sortby-lastpost-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortby-lastpost-title"><%= locale.home.sortByLastPost %></span></a>
+        <a href="javascript:void(0);" data-type="sortby" data-value="topicStarter" data-titleid="ddm-sortby-div2" data-seltitle="filter-sortby-topicstarter-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortby-topicstarter-title"><%= locale.home.sortByTopicStarter %></span></a>
+        <a href="javascript:void(0);" data-type="sortby" data-value="topicStarted" data-titleid="ddm-sortby-div2" data-seltitle="filter-sortby-topicstarted-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortby-topicstarted-title"><%= locale.home.sortByTopicStarted %></span></a>
+        <a href="javascript:void(0);" data-type="sortby" data-value="forum" data-titleid="ddm-sortby-div2" data-seltitle="filter-sortby-forum-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortby-forum-title"><%= locale.home.sortByForum %></span></a>
+        <a href="javascript:void(0);" data-type="sortby" data-value="totalReplies" data-titleid="ddm-sortby-div2" data-seltitle="filter-sortby-totalreplies-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortby-totalreplies-title"><%= locale.home.sortByTotalReplies %></span></a>
+        <a href="javascript:void(0);" data-type="sortby" data-value="totalViews" data-titleid="ddm-sortby-div2" data-seltitle="filter-sortby-totalviews-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortby-totalviews-title"><%= locale.home.sortByTotalViews %></span></a>
+        <a href="javascript:void(0);" data-type="sortby" data-value="totalLikes" data-titleid="ddm-sortby-div2" data-seltitle="filter-sortby-totallikes-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortby-totallikes-title"><%= locale.home.sortByTotalLikes %></span></a>
+        <a href="javascript:void(0);" data-type="sortby" data-value="solution" data-titleid="ddm-sortby-div2" data-seltitle="filter-sortby-solution-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortby-solution-title"><%= locale.home.sortBySolution %></span></a>
+    </span>
+</div>
+<div class="dropDownMenu" id="ddm-order">
+    <span class="dropDownMenuLinks">
+        <a href="javascript:void(0);" data-type="sortorder" data-value="asc" data-iconid="ddm-order-div2" data-titleid="ddm-order-div3" data-selicon="filter-sortorder-asc-icon" data-seltitle="filter-sortorder-asc-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortorder-asc-icon"><i class="fa-solid fa-arrow-down-a-z"></i></span><span id="filter-sortorder-asc-title"><%= locale.home.sortOrderAsc %></span></a>
+        <a href="javascript:void(0);" data-type="sortorder" data-value="desc" data-iconid="ddm-order-div2" data-titleid="ddm-order-div3" data-selicon="filter-sortorder-desc-icon" data-seltitle="filter-sortorder-desc-title" onclick="loadPostItemsOnClick(this);"><span id="filter-sortorder-desc-icon"><i class="fa-solid fa-arrow-down-z-a"></i></span><span id="filter-sortorder-desc-title"><%= locale.home.sortOrderDesc %></span></a>
+    </span>
+</div>
+<div class="dropDownMenu" id="ddm-timeframe">
+    <span class="dropDownMenuLinks">
+        <div class="dropDownMenuScroller">
+            <% timeframes.forEach(timeframe => { %>
+                <a href="javascript:void(0);" data-type="timeframe" data-value="<%= timeframe.name %>" data-titleid="ddm-timeframe-div2" data-seltitle="filter-timeframe-<%= timeframe.name %>-title" onclick="loadPostItemsOnClick(this);"><span id="filter-timeframe-<%= timeframe.name %>-title"><%= timeframe.label %></span></a>
+            <% }); %>
+        </div>
+    </span>
+</div>
+<div class="bottomMarginUnder30">
+    <div class="dualGridCentered">
+        <div class="buttonOne">
+            <a href="javascript:void(0);" id="ddm-allforums-link" data-menu="ddm-allforums" data-link="ddm-allforums-link" data-ignored="ddm-allforums-div1,ddm-allforums-div2,ddm-allforums-div3,ddm-allforums-div4,ddm-allforums-icon1,ddm-allforums-icon2" data-movement="20" onclick="openDropDownMenu(this);">
+                <div class="buttonGrid3" id="ddm-allforums-div1">
+                    <div id="ddm-allforums-div2"><i class="fa-solid fa-check-double" id="ddm-allforums-icon1"></i></div>
+                    <div id="ddm-allforums-div3"><%= locale.home.allForums %></div>
+                    <div id="ddm-allforums-div4"><i class="fa-solid fa-caret-down" id="ddm-allforums-icon2"></i></div>
+                </div>
+            </a>
+        </div>
+        <div class="blockAlignRight buttonOne">
+            <a href="javascript:void(0);" id="ddm-mode-link" data-menu="ddm-mode" data-link="ddm-mode-link" data-ignored="ddm-mode-div1,ddm-mode-div2,ddm-mode-div3,ddm-mode-div4,ddm-mode-icon1,ddm-mode-icon2" data-movement="20" onclick="openDropDownMenu(this);">
+                <div class="buttonGrid3" id="ddm-mode-div1">
+                    <div id="ddm-mode-div2"><i class="fa-solid fa-comments" id="ddm-mode-icon1"></i></div>
+                    <div id="ddm-mode-div3"><%= locale.home.modeButton %></div>
+                    <div id="ddm-mode-div4"><i class="fa-solid fa-caret-down" id="ddm-mode-icon2"></i></div>
+                </div>
+            </a>
+            <a href="javascript:void(0);" id="ddm-sortby-link" data-menu="ddm-sortby" data-link="ddm-sortby-link" data-ignored="ddm-sortby-icon,ddm-sortby-div1,ddm-sortby-div2,ddm-sortby-div3" data-movement="20" onclick="openDropDownMenu(this);">
+                <div class="buttonGrid2" id="ddm-sortby-div1">
+                    <div id="ddm-sortby-div2"><%= locale.home.sortByLastPost %></div>
+                    <div id="ddm-sortby-div3"><i class="fa-solid fa-caret-down" id="ddm-sortby-icon"></i></div>
+                </div>
+            </a>
+            <a href="javascript:void(0);" id="ddm-order-link" data-menu="ddm-order" data-link="ddm-order-link" data-ignored="ddm-order-div1,ddm-order-div2,ddm-order-div3,ddm-order-div4,ddm-order-icon1,ddm-order-icon2" data-movement="20" onclick="openDropDownMenu(this);">
+                <div class="buttonGrid3" id="ddm-order-div1">
+                    <div id="ddm-order-div2"><i class="fa-solid fa-arrow-down-z-a" id="ddm-order-icon1"></i></div>
+                    <div id="ddm-order-div3"><%= locale.home.sortOrderDesc %></div>
+                    <div id="ddm-order-div4"><i class="fa-solid fa-caret-down" id="ddm-order-icon2"></i></div>
+                </div>
+            </a>
+            <a href="javascript:void(0);" id="ddm-timeframe-link" data-menu="ddm-timeframe" data-link="ddm-timeframe-link" data-ignored="ddm-timeframe-div1,ddm-timeframe-div2,ddm-timeframe-div3,ddm-timeframe-icon" data-movement="20" onclick="openDropDownMenu(this);">
+                <div class="buttonGrid2" id="ddm-timeframe-div1">
+                    <div id="ddm-timeframe-div2"><%= locale.home.timeframeAllTime %></div>
+                    <div id="ddm-timeframe-div3"><i class="fa-solid fa-caret-down" id="ddm-timeframe-icon"></i></div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+<div id="postitems-container"></div>
+<div class="contentLoading" id="postitems-loader"><img src="<%= imagesetUrl %>/images/loaders/pulse-loader.gif" alt="*"><%= locale.home.loadingContent %></div>

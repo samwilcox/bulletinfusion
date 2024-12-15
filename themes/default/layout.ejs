@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="robots" content="noindex">
+        <title><%= communityTitle %></title>
+        <link rel="stylesheet" href="<%= baseUrl %>/fontawesome/css/all.min.css">
+        <link rel="stylesheet" href="<%= themeCssUrl %>/common.css">
+        <link rel="stylesheet" href="<%= themeCssUrl %>/hyperlinks.css">
+        <link rel="stylesheet" href="<%= themeCssUrl %>/forms.css">
+        <script src="<%= baseUrl %>/js/jquery.min.js"></script>
+        <script src="<%= baseUrl %>/js/jquery-ui.js"></script>
+        <script src="<%= baseUrl %>/js/common.js"></script>
+        <script src="<%= baseUrl %>/js/ajax.js"></script>
+
+        <script type="application/json" id="json">
+            {
+                "ajaxUrl": "<%= baseUrl %>",
+                "baseUrl": "<%= baseUrl %>",
+                "css": {
+                    "alignCenter": "<%= css.alignCenter %>",
+                    "sideBarSpace": "<%= css.sideBarSpace %>"
+                },
+                "icons": {
+                    "passwordToggleOpen": "fa-solid fa-eye",
+                    "passwordToggleClosed": "fa-solid fa-eye-slash"
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <div class="wrapper">
+            <div class="sideBar" id="sidebar">
+                <div class="sideBarGrid">
+                    <div>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.homeLink %>"><i class="fa-solid fa-house sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.homeLink %></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.forumsListLink %>"><i class="fa-solid fa-list-ul sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.forumsListLink%></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.searchLink %>"><i class="fa-solid fa-magnifying-glass sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.searchLink %></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.whosOnlineLink %>"><i class="fa-solid fa-earth-americas sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.whosOnlineLink %></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.tagsLink %>"><i class="fa-solid fa-tag sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.tagsLink %></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.leaderboardLink %>"><i class="fa-solid fa-bullhorn sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.leaderboardLink%></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.communityLeadersLink %>"><i class="fa-solid fa-user-shield sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.communityLeadersLink %></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.membersLink %>"><i class="fa-solid fa-user sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.membersLink %></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.groupsLink %>"><i class="fa-solid fa-users sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.groupsLink %></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.clubsLink %>"><i class="fa-solid fa-users-line sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.clubsLink %></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.helpLink %>"><i class="fa-solid fa-circle-question sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.helpLink %></span></a>
+                    </div>
+                    <div class="sideBarGridBottom">
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.selectLanguageLink %>"><i class="fa-solid fa-language sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.selectLanguageLink %></span></a>
+                        <a href="" class="tooltip tooltip--right" data-title="<%= locale.global.selectThemeLink %>"><i class="fa-solid fa-paintbrush sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.selectThemeLink %></span></a>
+                        <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.global.expandLink %>" onclick="toggleSideBar();"><i class="fa-solid fa-angles-right sideBarIcon"></i><span class="sideBarText" style="display: none;"><%= locale.global.collapseLink %></span></a>
+                    </div>
+                </div>
+            </div>
+            <div class="floater">
+                <header>
+                    <div class="headerGrid">
+                        <div>
+                            <a href="<%= baseUrl %>" class="tooltip tooltip--right" data-title="<%= communityTitle %>">
+                                <% if (settings.communityLogoType == 'image') { %>
+                                    <img src="<%= imagesetUrl %>/images/<%= settings.communityLogo %>" alt="*">
+                                <% } else { %>
+                                    <%= settings.communityTitle %>
+                                <% } %>
+                            </a>
+                        </div>
+                        <div class="alignRight">
+                            <% if (signedIn) { %>
+                            
+                            <% } else { %>
+                                <span class="signUpLink"><a href=""><i class="fa-solid fa-user-plus"></i><%= locale.global.signUpLink %></a></span>
+                                <span class="signInLink"><a href="<%- signInUrl %>"><i class="fa-solid fa-key"></i><%= locale.global.signInLink %></a></span>
+                            <% } %>
+                        </div>
+                    </div>
+                </header>
+                <main>
+                    <% if (blocks.enabled) { %>
+                        <% if (blocks.left.enabled && blocks.right.enabled) { %>
+                            <div class="blocksGridFull">
+                                <div><%- blocks.left.blocks %></div>
+                                <div><%- body %></div>
+                                <div><%- blocks.right.blocks %></div>
+                            </div>
+                        <% } else if (blocks.left.enabled && !blocks.right.enabled) { %>
+                            <div class="blocksGridLeftNoRight">
+                                <div><%- blocks.left.blocks %></div>
+                                <div><%- body %></div>
+                            </div>
+                        <% } else { %>
+                            <div class="blocksGridRightNoLeft">
+                                <div><%- body %></div>
+                                <div><%- blocks.right.blocks %></div>
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <%- body %>
+                    <% } %>
+                </main>
+            </div>
+        </div>
+        <span class="cookieOptions"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.global.cookieOptionsTooltip %>"><i class="fa-solid fa-cookie-bite"></i></a></span>
+        <footer>
+            <div class="floater">
+                <div class="footerGrid">
+                    <div><%- pageGeneratedAt %></div>
+                    <div class="alignCenter"><%- poweredBy %></div>
+                    <div class="footerGridRight"><%- allTimes %></div>
+            </div>
+        </footer>
+    </body>
+</html>
