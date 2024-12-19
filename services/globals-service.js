@@ -19,7 +19,6 @@ const BlocksHelper = require ('../helpers/blocks-helper');
 const TimeHelper = require('../helpers/time-helper');
 const UtilHelper = require('../helpers/util-helper');
 const packageJson = require('../package.json');
-const { conditionalCSRF } = require('../middleware/csrf-middleware');
 
 /**
  * Service for handling all global data.
@@ -64,6 +63,13 @@ class GlobalsService {
         this.globals.settings = Settings.getAll();
         this.globals.imagesetUrl = member.getConfigs().imagesetUrl;
         this.globals.signedIn = member.isSignedIn();
+
+        if (DataStoreService.exists('breadcrumbs')) {
+            this.globals.breadcrumbs = DataStoreService.get('breadcrumbs');
+            DataStoreService.delete('breadcrumbs');
+        } else {
+            this.globals.breadcrumbs = null;
+        }
 
         const blocks = member.getBlocks();
         
@@ -112,6 +118,21 @@ class GlobalsService {
 
         this.globals.signInUrl = UtilHelper.buildUrl(['auth', 'signin']);
         this.globals.csrfToken = req.csrfToken();
+        this.globals.csrfEnabled = Settings.get('csrfEnabled');
+
+        if (member.isSignedIn()) {
+            this.globals.memberPhoto = member.profilePhoto({ type: 'small', link: false });
+            this.globals.memberName = member.getDisplayName();
+            this.globals.isModerator = member.isModerator();
+            this.globals.isAdmin = member.isAdmin();
+            this.globals.accountSettingsUrl = UtilHelper.buildUrl(['settings']);
+            this.globals.manageProfileUrl = UtilHelper.buildUrl(['setttings', 'profile']);
+            this.globals.viewProfileUrl = member.url();
+            this.globals.manageSubscriptionsUrl = UtilHelper.buildUrl(['settings', 'subscriptions']);
+            this.globals.signOutUrl = UtilHelper.buildUrl(['auth', 'signout']);
+            this.globals.moderatorToolboxUrl = UtilHelper.buildUrl(['mtoolbox']);
+            this.globals.administratorControlPanelUrl = `${process.env.BASE_URL}/${process.env.ADMINCP_FOLDER}`;
+        }
 
         return this.globals;
     }

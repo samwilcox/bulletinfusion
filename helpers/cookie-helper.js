@@ -24,6 +24,11 @@ class CookieHelper {
     static set(name, value, options = {}) {
         const response = DataStoreService.get('responseObject');
 
+        if (response.headersSent) {
+            console.warn('Headers already sent, cannot modify cookies.');
+            return;
+        }
+
         const cookieOptions = {
             httpOnly: process.env.COOKIE_HTTP_ONLY === 'true' ? true : false || true,
             secure: process.env.COOKIE_SECURE === 'true' ? true : false || false,
@@ -61,7 +66,7 @@ class CookieHelper {
      * 
      * @param {string} name - The cookie name to delete.
      */
-    static delete(name) {
+    static delete(name, options = {}) {
         const deleteOptions = {
             ...options,
             maxAge: 0

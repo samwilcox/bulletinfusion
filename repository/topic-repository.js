@@ -54,7 +54,7 @@ class TopicRepository {
         topic.setLocked(parseInt(data.locked, 10) == 1);
         topic.setHasSolution(parseInt(data.hasSolution, 10) == 1);
         topic.setSolutionPost(parseInt(data.solutionPostId, 10));
-        topic.setTags(data.tags ? JSON.parse(data.tags) : []);
+        topic.setTags(data.tags ? JSON.parse(data.tags) : null);
 
         return topic;
     }

@@ -136,15 +136,29 @@ class MySQLDatabaseProvider extends DatabaseInterface {
      * Deletes records from a specified table.
      * 
      * @param {string} table - The name of the table where data should be deleted.
-     * @param {string} where - The condition for which rows to delete (e.g., "id = ?").
-     * @param {Array} [params=[]] - The values to replace the placeholders in the 'where' condition. 
+     * @param {Object} where - An object representing the conditions for which rows to delete.
+     * @param {Array} [params=[]] - Additional parameters for more complex queries, if necessary.
      * @returns {Promise} A promise that resolves when the delete operation is complete.
-     * @throws {Error} If this method is not implemented.
      */
     delete(table, where, params = []) {
-        const sql = `DELETE FROM ${this.tablePrefix}${table} WHERE ${where}`;
-        return this.query(sql, params);
-    }
+        try {
+            if (typeof where !== 'object' || !where) {
+                throw new Error("The 'where' parameter must be an object");
+            }
+
+            const whereClause = Object.keys(where)
+                .map((key) => `${key} = ?`)
+                .join(' AND ');
+
+            const values = [...Object.values(where), ...params];
+            const sql = `DELETE FROM ${this.tablePrefix}${table} WHERE ${whereClause}`;
+
+            return this.query(sql, values);
+        } catch (error) {
+            console.error('Error deleting records:', error);
+            throw error;
+        }
+    } 
 
     /**
      * Closes the database connection.

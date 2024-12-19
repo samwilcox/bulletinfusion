@@ -50,8 +50,12 @@ header { margin-top: 20px; margin-bottom: 30px; border-bottom: 1px solid #2c3335
 .noPhoto { width:100px; height: 100px; border-radius: 50%; background-color: attr(data-bg); display: flex; justify-content: center; align-items: center; font-size: 90px; color: attr(data-text); }
 .noPhotoThumbnail { width: 40px; height: 40px; border-radius: 50%; background-color: attr(data-bg); display: flex; justify-content: center; align-items: center; font-size: 32px; color: attr(data-text); }
 .noPhotoThumbnailSmall { width: 24px; height: 24px; border-radius: 50%; background-color: attr(data-bg); display: flex; justify-content: center; align-items: center; font-size: 32px; color: attr(data-text); }
+.noPhotoSmallThumbnail { width: 30px; height: 30px; border-radius: 50%; background-color: attr(data-bg); display: flex; justify-content: center; align-items: center; font-size: 32px; color: attr(data-text); }
+.noPhotoSmallThumbnailSmall { width: 24px; height: 24px; border-radius: 50%; background-color: attr(data-bg); display: flex; justify-content: center; align-items: center; font-size: 32px; color: attr(data-text); }
 .photoThumbnail { width: 40px; height: 40px; border-radius: 50%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 .photoThumbnail img { width: 100%; height: 100%; display: block; object-fit: cover; }
+.photoSmallThumbnail { width: 30px; height: 30px; border-radius: 50%; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+.photoSmallThumbnail img { width: 100%; height: 100%; display: block; object-fit: cover; }
 .itemBoxRowGrid { display: grid; grid-template-rows: auto auto auto; gap: 14px; }
 .dualGrid { display: grid; grid-template-columns: auto auto; gap: 30px; }
 .inlineBlock { display: inline-block; }
@@ -84,9 +88,35 @@ footer { width: auto; background-color: #121212; border-top: 1px solid #575757; 
 .signInBoxContent { width: auto; background-color: #171e20; padding: 14px; }
 .signInBoxFooter { width: auto; border-radius: 0 0 8px 8px; background-color: #282828; padding: 14px; text-align: center; }
 .forgotPassword { text-align: right; margin-top: -10px; }
-.lineText { display: flex; align-items: center; text-align: center; margin: 40px 0; }
+.lineText { display: flex; align-items: center; text-align: center; margin: 40px 0 10px 0; }
 .lineText::before, .lineText::after { content: ''; flex: 1; border-bottom: 1px solid #5b6062; margin: 0 10px; }
 .lineText { font-size: 15px; color: #C3C3C3; }
 .signInFloater { width: 528px; margin-left: auto; margin-right: auto; }
 .signInOauth { width: auto; text-align: center; font-size: 40px; }
 .errorBox { width: auto; border-radius: 8px; background-color: #B3261E; border: 2px solid #F44336; color: #F2F2F2; padding: 14px; margin-bottom: 20px; position: relative; }
+.memberBarGrid { display: grid; grid-template-columns: auto auto; gap: 20px; align-items: center; width: fit-content; }
+.sideBySideGrid { display: grid; grid-template-columns: auto auto; gap: 10px; align-items: center; width: fit-content; margin-left: auto; margin-right: 0; }
+.dropDownMenuLinks strong { border-bottom: 1px solid #3f3f3f; margin: 8px 0; display: block; }
+.pageBannerTop { width: auto; border-radius: 8px 8px 0 0; background-color: #121212; padding: 20px 30px; position: relative; }
+.pageBannerTop .title { font-size: 26px; font-weight: 400; }
+.pageBannerBottom { width: auto; border-radius: 0 0 8px 8px; background-color: #282828; padding: 20px 30px; }
+.brightButton i { margin-right: 5px; }
+.breadcrumbs { width: auto; margin: 8px 0; font-size: 12px; margin-top: -20px; margin-bottom: 30px; }
+.blockAlignLeft { margin-left: 0; margin-right: auto; }
+.sideBySideRowGrid { display: grid; grid-template-rows: auto auto; gap: 2px; }
+.dimmedText { color: #9C9C9C; }
+.subscribeButtonTotal { width: fit-content; border-radius: 8px 0 0 8px; background-color: #121212; padding: 10px 12px; font-weight: 600; }
+.subscribeButtonText { width: auto; border-radius: 0 8px 8px 0; background-color: #575757; padding: 10px 20px; }
+.backgroundDisabler { width: 100%; box-sizing: border-box; height: 100%; position: fixed; top: 0; bottom: 0; left: 0; right: 0; z-index: 1000; background: rgba(23, 30, 32, 0.8); display: none; }
+.dialog { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 2000; border-radius: 8px; background-color: #121212; border: 1px solid #3f3f3f; box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3); display: none; text-align: left !important; }
+.dialogHeader { width: auto; border-radius: 8px 8px 0 0; background-color: #121212; border-bottom: 1px solid #3f3f3f; padding: 20px; }
+.dialogHeader .title { font-size: 18px; font-weight: 600; }
+.dialogContent { width: auto; border-radius: 0 0 8px 8px; background-color: #121212; padding: 20px; } 
+.dialogContentWithFooter { width: auto; background-color: #121212; padding: 20px; }
+.dialogFooter { width: auto; border-radius: 0 0 8px 8px; background-color: #121212; border-top: 1px solid #3f3f3f; padding: 20px; text-align: center; }
+.titleContentGrid { display: grid; grid-template-rows: auto auto; gap:12px; }
+.dialogUnder { width: auto; border-top: 1px solid #3f3f3f; padding: 14px 0 0 0; margin-top: 20px; }
+.changeNotification { position: fixed; top: 4px; left: 50%; transform: translateX(-50%); z-index: 3000; min-width: 600px; text-align: center; border-radius: 12px; background-color: #121212; padding: 20px 50px; font-size: 18px; display: none; }
+.forumsSymbolLinkTopic i { margin-right: 8px; }
+.dualRowGrid { display: grid; grid-template-rows: auto auto; gap: 4px; }
+.tagsSmallLink { font-size: 11px !important; }

@@ -10,8 +10,10 @@
  */
 
 const CacheProviderFactory = require('../data/cache/cache-provider-factory');
+const TimeHelper = require('../helpers/time-helper');
 const Settings = require('../settings');
 const path = require('path');
+const GroupRepository = require('./group-repository');
 
 /**
  * MemberReposity is responsible for handling and retrieval and construction of 'Member' entity.
@@ -37,23 +39,10 @@ class MemberRepository {
      */
     static buildMemberFromData(data) {
         const Member = require('../entities/member');
-        const member = new Member();
+        let member = new Member();
 
         if (!data) {
-            member.setId(0);
-            member.setUsername('Guest');
-            member.setUseDisplayName(false);
-            member.setDisplayName('Guest');
-            member.setEmailAddress(null);
-            member.setLocaleId(Settings.get('defaultLocaleId'));
-            member.setThemeId(Settings.get('defaultThemeId'));
-            member.setBlocks(Settings.get('defaultBlocks'));
-            member.setTimeZone(Settings.get('defaultTimeZone'));
-            member.setDateFormat(Settings.get('defaultDateFormat'));
-            member.setTimeFormat(Settings.get('defaultTimeFormat'));
-            member.setDateTimeFormat(Settings.get('defaultDateTimeFormat'));
-            member.setTimeAgo(Settings.get('defaultTimeAgo'));
-            member.setPerLoad(Settings.get('defaultTimeAgo'));
+            member = this.guestSettings(member);
         }
 
         const exists = data && Object.keys(data).length > 0;
@@ -74,22 +63,31 @@ class MemberRepository {
             member.setTimeFormat(data.timeFormat);
             member.setDateTimeFormat(data.dateTimeFormat);
             member.setTimeAgo(parseInt(data.timeAgo, 10) == 1);
-            member.setPerLoad(parseInt(data.perLoad, 10));
+            member.setPerLoad(data.perLoad ? JSON.parse(data.perLoad) : Settings.get('defaultPerLoad'));
+            member.setOauth(data.oauth ? JSON.parse(data.oauth) : null);
+            member.setJoined(parseInt(data.joined, 10) > 0 ? TimeHelper.parseDatabaseTimestamp(parseInt(data.joined, 10)) : null);
+            member.setTwoFactor(data.twoFactor ? JSON.parse(data.twoFactor) : null);
+            member.setLockout(data.lockout ? JSON.parse(data.lockout) : null);
+            member.setDisplayOnWhosOnline(parseInt(data.setDisplayOnWhosOnline, 10) == 1);
+            member.setPrimaryGroup(GroupRepository.getGroupById(parseInt(data.primaryGroupId, 10)));
+            
+            if (data.secondaryGroups) {
+                const secondaryGroups = JSON.parse(data.secondaryGroups);
+                let groupsList = [];
+
+                secondaryGroups.forEach((group) => {
+                    groupsList.push(GroupRepository.getGroupById(group));
+                });
+
+                member.setSecondaryGroups(groupsList);
+            } else {
+                member.setSecondaryGroups(null);
+            }
+
+            member.setLastOnline(parseInt(data.lastOnline, 10) > 0 ? TimeHelper.parseDatabaseTimestamp(parseInt(data.lastOnline, 10)) : null);
+            member.setSubscriptionSettings(data.subscriptionSettings ? JSON.parse(data.subscriptionSettings) : null);
         } else {
-            member.setId(0);
-            member.setUsername('Guest');
-            member.setUseDisplayName(false);
-            member.setDisplayName('Guest');
-            member.setEmailAddress(null);
-            member.setLocaleId(Settings.get('defaultLocaleId'));
-            member.setThemeId(Settings.get('defaultThemeId'));
-            member.setBlocks(Settings.get('defaultBlocks'));
-            member.setTimeZone(Settings.get('defaultTimeZone'));
-            member.setDateFormat(Settings.get('defaultDateFormat'));
-            member.setTimeFormat(Settings.get('defaultTimeFormat'));
-            member.setDateTimeFormat(Settings.get('defaultDateTimeFormat'));
-            member.setTimeAgo(Settings.get('defaultTimeAgo'));
-            member.setPerLoad(Settings.get('defaultPerLoad'));
+            member = this.guestSettings(member);
         }
 
         const cache = CacheProviderFactory.create();
@@ -111,6 +109,39 @@ class MemberRepository {
         };
         
         member.setConfigs(configs);
+
+        return member;
+    }
+
+    /**
+     * Populate the Member entity with default Guest settings.
+     * 
+     * @param {Member} member - The member entity instance.
+     */
+    static guestSettings(member) {
+        member.setId(0);
+        member.setUsername('Guest');
+        member.setUseDisplayName(false);
+        member.setDisplayName('Guest');
+        member.setEmailAddress(null);
+        member.setLocaleId(Settings.get('defaultLocaleId'));
+        member.setThemeId(Settings.get('defaultThemeId'));
+        member.setBlocks(Settings.get('defaultBlocks'));
+        member.setTimeZone(Settings.get('defaultTimeZone'));
+        member.setDateFormat(Settings.get('defaultDateFormat'));
+        member.setTimeFormat(Settings.get('defaultTimeFormat'));
+        member.setDateTimeFormat(Settings.get('defaultDateTimeFormat'));
+        member.setTimeAgo(Settings.get('defaultTimeAgo'));
+        member.setPerLoad(Settings.get('defaultPerLoad'));
+        member.setOauth(null);
+        member.setJoined(null);
+        member.setTwoFactor(null);
+        member.setLockout(null);
+        member.setDisplayOnWhosOnline(false);
+        member.setPrimaryGroup(Settings.get('guestGroupId'));
+        member.setSecondaryGroups(null);
+        member.setLastOnline(null);
+        member.setSubscriptionSettings(null);
 
         return member;
     }

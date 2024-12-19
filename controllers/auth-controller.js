@@ -34,6 +34,26 @@ class AuthController {
         const vars = this.model.signInForm(req, res);
         res.render('auth/signin', { layout: 'layout', ...globals, ...vars });
     }
+
+    /**
+     * Process the user sign in.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @param {Object} res - The response object from Express.
+     */
+    async processSignIn(req, res) {
+        await this.model.processSignIn(req, res);
+    }
+
+    /**
+     * Sign out the current member.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @param {Object} res - The response object from Express.
+     */
+    async processSignOut(req, res) {
+        await this.model.processSignOut(req, res);
+    }
 }
 
 module.exports = AuthController;

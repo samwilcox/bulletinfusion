@@ -9,8 +9,6 @@
  * https://license.bulletinfusion.com
  */
 
-const DataStoreService = require('../services/datastore-service');
-
 /**
  * Helpers for managing session data.
  */
@@ -18,40 +16,34 @@ class SessionHelper {
     /**
      * Set a session variable.
      * 
+     * @param {Object} req - The request object from Express.
      * @param {string} key - The name of the session variable.
      * @param {*} value - The value of the session variable.
      */
-    static set(key, value) {
-        const request = DataStoreService.get('requestObj');
-        console.log(request);
-        request.session[key] = value;
+    static set(req, key, value) {
+        req.session[key] = value;
     }
 
     /**
      * Get a session variable value.
      * 
+     * @param {Object} req - The request object from Express.
      * @param {string} key - The name of the session variable to get.
      * @returns {*|null} The value of the session variable or null if it does not exist.
      */
-    static get(key) {
-        const request = DataStoreService.get('requestObject');
-        return this.exists(key) ? request.session[key] : null;
+    static get(req, key) {
+        return this.exists(req, key) ? req.session[key] : null;
     }
 
     /**
      * Check if a session variable exists.
      * 
+     * @param {Object} req - The request object from Express.
      * @param {string} key - The name of the session variable to check.
      * @returns {boolean} True if session variable exists, false if it does not.
      */
-    static exists(key) {
-        const request = DataStoreService.get('requestObject');
-
-        if (request.session) {
-            return request.session.hasOwnProperty(key);
-        }
-
-        return false;
+    static exists(req, key) {
+        return req.session && req.session.hasOwnProperty(key);
     }
 
     /**
@@ -59,11 +51,9 @@ class SessionHelper {
      * 
      * @param {string} key - The name of the session variable to delete.
      */
-    static delete(key) {
-        const request = DataStoreService.get('requestObject');
-
-        if (this.exists(key)) {
-            delete request.session[key];
+    static delete(req, key) {
+        if (req.session && req.session.hasOwnProperty(key)) {
+            delete req.session[key];
         }
     }
 
@@ -72,9 +62,8 @@ class SessionHelper {
      * 
      * @returns {number} Total session variables.
      */
-    static size() {
-        const request = DataStoreService.get('requestObject');
-        return Object.keys(request.session).length;
+    static size(req) {
+        return req.session ? Object.keys(req.session).length : 0;
     }
 
     /**
@@ -82,9 +71,8 @@ class SessionHelper {
      * 
      * @returns {Object} - The session data.
      */
-    static getAll() {
-        const request = DataStoreService.get('requestObject');
-        return request.session;
+    static getAll(req) {
+        return req.session || {};
     }
 }
 

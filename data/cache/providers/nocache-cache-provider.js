@@ -78,7 +78,7 @@ class NoCacheCacheProvider extends CacheInterface {
      */
     async updateAll(tables) {
         for (const table in tables) {
-            await this.update(table);
+            await this.update(tables[table]);
         }
     }
 

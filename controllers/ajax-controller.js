@@ -29,7 +29,37 @@ class AjaxController {
      * @param {Object} res - The response object from Express.
      */
     async getPostItems(req, res) {
-        res.json(this.model.getPostItems(req, res));
+        res.json(this.model.getPostItems(req));
+    }
+
+    /**
+     * Get the subscribe button.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @param {Object} res - The response object from Express.
+     */
+    async getSubscribeButton(req, res) {
+        res.json(this.model.getSubscribeButton(req));
+    }
+
+    /**
+     * Toggles the subscription status for the given content.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @param {Object} res - The response object from Express.
+     */
+    async toggleSubscription(req, res) {
+        res.json(await this.model.toggleSubscription(req));
+    }
+
+    /**
+     * Updates the member's subscription preferences for the subscription.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @param {Object} res - The response object from Express.
+     */
+    async updateSubscriptionPreferences(req, res) {
+        res.json(await this.model.updateSubscriptionPreferences(req));
     }
 }
 

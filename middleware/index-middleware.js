@@ -12,6 +12,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 const memberMiddleware = require('../middleware/member-middleware');
@@ -27,14 +28,16 @@ const { conditionalCSRF } = require('../middleware/csrf-middleware');
  * @param {Object} app - The application object instance.
  */
 module.exports = (app) => {
+    app.use(cors());
     app.use(cookieParser());
-    app.use(bodyParser.json());
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: true }));
     app.use(express.static('public'));
     app.use(session({
         secret: process.env.SESSION_SECRET_KEY,
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: process.env.SESSION_SECURE_COOKIE || false },
+        cookie: { secure: process.env.SESSION_SECURE_COOKIE === 'true' || false },
     }));
     app.use(passport.initialize());
     app.use(passport.session());

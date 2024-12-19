@@ -13,6 +13,7 @@ const indexRoutes = require('./routes/index');
 const ajaxRoutes = require('./routes/ajax');
 const authRoutes = require('./routes/auth');
 const captchaRoutes = require('./routes/captcha');
+const topicRoutes = require('./routes/topic');
 const Settings = require('./settings/index');
 
 /**
@@ -30,6 +31,7 @@ const setupRoutes = (app) => {
     app.use('/ajax', ajaxRoutes);
     app.use('/auth', authRoutes);
     app.use('/captcha', captchaRoutes);
+    app.use('/topic', topicRoutes);
 };
 
 module.exports = setupRoutes;

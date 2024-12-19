@@ -16,6 +16,7 @@ const CookieHelper = require('../helpers/cookie-helper');
 const Settings = require('../settings/index');
 const UtilHelper = require('../helpers/util-helper');
 const DatabaseProviderFactory = require('../data/db/database-provider-factory');
+const MemberService = require('../services/member-service');
 
 /**
  * Middleware for managing user sessions.
@@ -28,7 +29,6 @@ const sessionMiddleware = async (req, res, next) => {
     await garbageCollection();
     const cache = CacheProviderFactory.create();
     const currentSession = req.session;
-    console.log(req.session);
     const session = SessionRepository.getSessionById(currentSession.id);
 
     if (CookieHelper.exists('member-auth-token')) {
@@ -40,20 +40,19 @@ const sessionMiddleware = async (req, res, next) => {
         });
 
         const deviceData = data.devices.find(obj => obj.token == token);
-        const exists = deviceData.length > 0;
+        const exists = deviceData ? true : false;
 
         if (exists) {
             const member = data.members.find(obj => obj.id == deviceData.memberId);
-            req.member = MemberRepository.getMemberById(member.id);
             const sessionData = data.sessions.find(obj => obj.memberId == req.member.getId());
-            const sessionExists = sessionData.length > 0;
-
-            session.setIpAddress(sessionData.ipAddress);
-            session.setUserAgent(sessionData.userAgent);
-            session.setHostname(sessionData.hostname);
-            session.setIsAdmin(parseInt(sessionData.isAdmin) == 1 ? true : false);
+            const sessionExists = sessionData ? true : false;
 
             if (sessionExists) {
+                session.setIpAddress(sessionData.ipAddress);
+                session.setUserAgent(sessionData.userAgent);
+                session.setHostname(sessionData.hostname);
+                session.setIsAdmin(parseInt(sessionData.isAdmin) == 1 ? true : false);
+
                 if (Settings.get('ipMatch')) {
                     if (session.getIpAddress() != UtilHelper.getUserIp() || session.getUserAgent() != req.header['user-agent']) {
                         destroy(res, res);
@@ -62,24 +61,27 @@ const sessionMiddleware = async (req, res, next) => {
                         session.setMemberId(req.member.getId());
                         session.setDisplayOnWhosOnline(req.member.getDisplayOnWhosOnline());
                         req._session = session;
+                        MemberService.setSession(session);
                         update(req, true);
                     }
                 } else {
                     session.setMemberId(req.member.getId());
                     session.setDisplayOnWhosOnline(req.member.getDisplayOnWhosOnline());
                     req._session = session;
+                    MemberService.setSession(session);
                     update(req, true);
                 }
             } else {
                 session.setMemberId(req.member.getId());
                 session.setDisplayOnWhosOnline(req.member.getDisplayOnWhosOnline());
                 req._session = session;
+                MemberService.setSession(session);
                 create(req, true);
             }
         } else {
             req.member = MemberRepository.getMemberById(0);
             destroy(req, res);
-            red.redirect(process.env.BASE_URL);
+            res.redirect(process.env.BASE_URL);
         }
     } else {
         req.member = MemberRepository.getMemberById(0);
@@ -94,10 +96,12 @@ const sessionMiddleware = async (req, res, next) => {
                     res.redirect(process.env.BASE_URL);
                 } else {
                     req._session = session;
+                    MemberService.setSession(session);
                     update(req);
                 }
             } else {
                 req._session = session;
+                MemberService.setSession(session);
                 update(req);
             }
         } else {
@@ -106,11 +110,13 @@ const sessionMiddleware = async (req, res, next) => {
             session.setHostname(req.hostname);
             session.setIsAdmin(false);
             req._session = session;
+            MemberService.setSession(session);
             create(req);
         }
     }
 
     req._session = session;
+    MemberService.setSession(session);
     next();
 };
 
@@ -234,7 +240,7 @@ async function destroy(req, res) {
 
         CookieHelper.delete('member-auth-token');
 
-        db.delete('sessions', 'id = ?', [sessionId]).then((result) => {
+        await db.delete('sessions', { id: sessionId }).then((result) => {
             console.log('Data deleted successfully:', result);
         }).catch((error) => {
             console.error('Error deleting data:', error);
@@ -256,7 +262,7 @@ async function garbageCollection() {
 
     if (expiredSessions) {
         expiredSessions.forEach((session) => {
-            db.delete('sessions', 'id = ?', [session.id]).then((result) => {
+            db.delete('sessions', { id: session.id }).then((result) => {
                 console.log('Session garbage collection succeeded:', result);
             }).catch((error) => {
                 console.error('Failed to delete expired sessions:', error);

@@ -26,14 +26,14 @@ const memberMiddleware = async (req, res, next) => {
     DataStoreService.set('requestObject', req);
     DataStoreService.set('responseObject', res);
 
-    if (SessionHelper.exists('member-auth-token')) {
+    if (SessionHelper.exists(req, 'member-auth-token')) {
         const cache = CacheProviderFactory.create();
-        const data = cache.get('member_devices').filter(obj => obj.token == SessionHelper.get('member-auth-token'));
-        const exists = data.length > 0;
+        const data = cache.get('member_devices').find(obj => obj.token == SessionHelper.get(req, 'member-auth-token'));
+        const exists = data ? true : false;
         let memberId = 0;
         
         if (exists) {
-            memberId = data[0].memberId;
+            memberId = data.memberId;
             req.member = MemberRepository.getMemberById(memberId);
             req.member.setIsSignedIn(true);
             MemberService.setMember(req.member);

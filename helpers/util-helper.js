@@ -18,6 +18,8 @@ const http = require('http');
 const CacheProviderFactory = require('../data/cache/cache-provider-factory');
 const CookieHelper = require('./cookie-helper');
 const OutputHelper = require('./output-helper');
+const { v4: uuidv4 } = require('uuid');
+const LocaleHelper = require('./locale-helper');
 
 /**
  * Helpers for the most common tasks.
@@ -134,16 +136,17 @@ class UtilHelper {
         
         if (member.isSignedIn()) {
             const cache = CacheProviderFactory.create();
-            const data = cache.get('content_tracking').filter(
+            let data = cache.get('content_tracking').find(
                 obj => 
                     obj.contentId == contentId
                     && obj.contentType == contentType
                     && obj.memberid == MemberService.getMember().getId()
             );
-            data = data[0];
-
-            if (timestamp >= parseInt(data.lastRead)) {
-                read = true;   
+            
+            if (data) {
+                if (timestamp >= parseInt(data.lastRead, 10)) {
+                    read = true;
+                }
             }
         } else {
             if (CookieHelper.exists('contentTracking')) {
@@ -208,6 +211,7 @@ class UtilHelper {
      * @param {string} [options.separator=''] - Optional link separator.
      * @param {string} [options.icon=''] - Optional icon for the link.
      * @param {string} [options.target=''] - Optional target value (e.g., '_blank').
+     * @param {Object} [options.data={}] - Optional data attributes for the element.
      * @returns {string} The resulting hyperlink. 
      */
     static buildLink(options = {}) {
@@ -219,7 +223,8 @@ class UtilHelper {
             onclick = '',
             separator = '',
             icon = '',
-            target = ''
+            target = '',
+            data = {},
         } = options;
 
         return OutputHelper.getPartial('util-helper', 'link', {
@@ -231,6 +236,8 @@ class UtilHelper {
             separator,
             icon,
             target,
+            data,
+            haveData: Object.keys(data).length > 0,
         });
     }
 
@@ -275,10 +282,75 @@ class UtilHelper {
         const { display = false } = options;
 
         return OutputHelper.getPartial('util-helper', 'errorbox', {
-            visible: options && options.display ? options.display : false,
+            visible: display,
             error,
+            id: this.generateUniqueId(),
         });
     } 
+
+    /**
+     * Get the current referer.
+     * 
+     * @param {Object} [options={}] - Options for referer.
+     * @param {boolean} [options.performCheck=true] - True to check the origin of the referer, false not to.
+     * @returns {string} The referer URL string.
+     */
+    static getReferer(options = {}) {
+        const { performCheck = true } = options;
+        const request = DataStoreService.get('requestObject');
+        const referer = request.headers.referer || request.headers.referrer;
+
+        if (performCheck) {
+            try {
+                const urlObj = new URL(referer);
+                const baseUrlObj = new URL(process.env.BASE_URL);
+
+                if (urlObj.hostname === baseUrlObj.hostname) {
+                    return referer;
+                } else {
+                    return UtilHelper.buildUrl();
+                }
+            } catch (error) {
+                console.error('Invalid URL:', error);
+                return null;
+            }
+        }
+
+        return referer;
+    }
+
+    /**
+     * Generates a new unique identifier string.
+     * 
+     * @returns {string} The unqiue identifier string.
+     */
+    static generateUniqueId() {
+        return uuidv4();
+    }
+
+    /**
+     * Build a new breadcrumbs component.
+     * 
+     * @param {Array} links - An array of links for the breadcrumbs.
+     * @returns {string} The resulting breadcrumbs source.
+     */
+    static buildBreadcrumbs(links) {
+        if (typeof links !== 'object' || !links) {
+            throw new Error(LocaleHelper.get('errors', 'buildBreadcrumbsInvalidLinks'));
+        }
+
+        let initial = true;
+
+        for (const key in links) {
+            if (initial) {
+                initial = false;
+            } else {
+                links[key].separator = true;
+            }
+        }
+
+        return OutputHelper.getPartial('util-helper', 'breadcrumbs', { links });
+    }
 } 
 
 module.exports = UtilHelper;

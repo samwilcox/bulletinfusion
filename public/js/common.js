@@ -18,6 +18,7 @@ var contentData = {
     currentPage: 0,
     isLoading: false,
 };
+var currentDialog = null;
 
 $(document).ready(function() {
     parseJson();
@@ -170,6 +171,7 @@ function loadPostItems(frm, options = {}) {
     };
 
     ajaxGet('postitems', data, function(response) {
+        console.log(response);
         let { hasItems, postItems, builtPostItems, moreItems, from } = response.postData;
         //updatePostItemSelectors();
         
@@ -322,4 +324,186 @@ function togglePassword(element) {
         icon.addClass(json.icons.passwordToggleClosed);
         passwordField.attr('type', 'text');
     }
+}
+
+/**
+ * Hide the error dialog box.
+ * 
+ * @param {Object} element - The element instance.
+ */
+function hideErrorDialog(element) {
+    $("#" + $(element).data('dialog')).fadeOut();
+}
+
+/**
+ * Opens the specified dialog element.
+ * 
+ * @param {Object} event - The event instance. 
+ * @param {Object} element - The element instance. 
+ */
+function openDialog(event, element) {
+    event.preventDefault();
+
+    let dialog = null;
+    let dialogWidth = null;
+
+    dialog = $("#" + $(element).data('dialog'));
+
+    if ($(element).data('width')) {
+        try {
+            dialogWidth = parseInt($(element).data('width'));
+        } catch (error) {
+            console.error('Failed to convert the given dialog width to a number:', error);
+        }
+    } else {
+        dialogWidth = 500;
+    }
+
+    dialog.css({ 'width': `${dialogWidth}px`});
+    closeDialog();
+
+    toggleBackgroundDisabler(true);
+    dialog.fadeIn({ queue: false, duration: 'slow' });
+    dialog.animate({ 'marginTop': '+=30px' }, 400, 'easeInQuad');
+    currentDialog = dialog.attr('id');
+}
+
+/**
+ * Toggle the background disabler.
+ * 
+ * @param {boolean} [show=false] - True to show, false to hide. 
+ */
+function toggleBackgroundDisabler(show = false) {
+    if (show) {
+        $("#background-disabler").fadeIn();
+    } else {
+        $("#background-disabler").fadeOut();
+    }
+}
+
+/**
+ * Closes the current dialog element.
+ */
+function closeDialog() {
+    if (currentDialog) {
+        $("#" + currentDialog).fadeOut({ queue: false, duration: 'slow' });
+        $("#" + currentDialog).animate({ 'marginTop': '-=30px' }, 400, 'easeInQuad');
+        toggleBackgroundDisabler();
+        currentDialog = null;
+    }
+}
+
+/**
+ * Gets the subscribe button.
+ * 
+ * @param {number} contentId - The content identifier.
+ * @param {string} contentType - The content type.
+ */
+function getSubscribeButton(contentId, contentType) {
+    const subscribeButton = $("#subscribe-button");
+    const data = {
+        contentId,
+        contentType,
+    };
+
+    ajaxGet('subscribebutton', data, function(response) {
+        if (response.success) {
+            subscribeButton.html(response.data.button);
+        }
+    });
+}
+
+/**
+ * Subscribe to the given content.
+ * 
+ * @param {Object} element - The element instance.
+ */
+function subscribeToContent(element) {
+    const subscribeButton = $("#subscribe-button");
+    const contentId = $(element).data('contentid');
+    const contentType = $(element).data('contenttype');
+    const radioName = $(element).data('radio');
+    const methodRadio = $(`input[name='${radioName}']:checked`);
+    const data = {
+        contentId,
+        contentType,
+        method: methodRadio.val(),
+    };
+
+    ajaxPost('togglesubscription', data, function(response) {
+        if (response.success) {
+            subscribeButton.html(response.data.button);
+            notifyChange(response.data.message);
+            closeDialog();
+        }
+    });
+}
+
+/**
+ * Update subscription preferences for a given subscription.
+ * 
+ * @param {Object} element - The element instance. 
+ */
+function updateSubscriptionPreferences(element) {
+    const subscribeButton = $("#subscribe-button");
+    const contentId = $(element).data('contentid');
+    const contentType = $(element).data('contenttype');
+    const radioName = $(element).data('radio');
+    const methodRadio = $(`input[name='${radioName}']:checked`);
+ 
+    const data = {
+        contentId,
+        contentType,
+        method: methodRadio.val(),
+    };
+
+    ajaxPost('updatesubscriptionpreferences', data, function(response) {
+        console.log(response);
+        if (response.success) {
+            subscribeButton.html(response.data.button);
+            notifyChange(response.data.message);
+            closeDialog();
+        }
+    });
+}
+
+/**
+ * Ubsubscribe from the given content.
+ * 
+ * @param {Object} element - The element instance.
+ */
+function unsubscribeFromContent(element) {
+    const subscribeButton = $("#subscribe-button");
+    const contentId = $(element).data('contentid');
+    const contentType = $(element).data('contenttype');
+    const data = {
+        contentId,
+        contentType,
+        method: null,
+    };
+
+    ajaxPost('togglesubscription', data, function(response) {
+        if (response.success) {
+            subscribeButton.html(response.data.button);
+            notifyChange(response.data.message);
+            closeDialog();
+        }
+    });
+}
+
+/**
+ * Displays a message to the user.
+ * 
+ * @param {string} message - The message to display.
+ */
+function notifyChange(message) {
+    const notificationBox = $("#change-notification");
+    notificationBox.html(message);
+    notificationBox.fadeIn({ queue: false, duration: 'slow' });
+    notificationBox.animate({ 'marginTop': '+=30px' }, 400, 'easeInQuad');
+
+    setTimeout(() => {
+        notificationBox.fadeOut({ queue: false, duration: 'slow' });
+        notificationBox.animate({ 'marginTop': '-=30px' }, 400, 'easeInQuad');
+    }, 3000);
 }

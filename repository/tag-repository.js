@@ -10,7 +10,7 @@
  */
 
 const CacheProviderFactory = require('../data/cache/cache-provider-factory');
-const TimeHelper = require('../helpers/time');
+const TimeHelper = require('../helpers/time-helper');
 
 /**
  * TagReposity is responsible for handling and retrieval and construction of 'Tag' entity.

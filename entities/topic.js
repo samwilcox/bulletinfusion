@@ -9,8 +9,11 @@
  * https://license.bulletinfusion.com
  */
 
+const Settings = require('../settings/index');
 const CacheProviderFactory = require('../data/cache/cache-provider-factory');
 const UtilHelper = require('../helpers/util-helper');
+const TagRepository = require('../repository/tag-repository');
+const LocaleHelper = require('../helpers/locale-helper');
 
 /**
  * Entity that represents a single topic.
@@ -268,6 +271,42 @@ class Topic {
         const cache = CacheProviderFactory.create();
         const data = cache.get('posts').filter(obj => obj.topicId == this.getId() && obj.attachments != null);
         return data.length > 0;
+    }
+
+    /**
+     * Returns a list of tags.
+     * 
+     * @returns {string|null} - The tags listing source or null if no tags.
+     */
+    getTagsListing() {
+        let initial = true;
+        const max = Settings.get('topicMaxTags');
+        const tags = this.getTags();
+
+        if (!tags || !Array.isArray(tags)) {
+            return null;
+        }
+
+        let tagEntities = tags.map(tag => TagRepository.getTagById(tag));
+        tagEntities.sort((a, b) => a.getTitle().localeCompare(b.getTitle()));
+        tagEntities = tagEntities.slice(0, max);
+
+        let tagsList = '';
+
+        tagEntities.forEach((entity) => {
+            tagsList += `${initial ? '' : ', '}${entity.buildLink()}`;
+            initial = false;
+        });
+
+        if (tags.length > max) {
+            tagsList += UtilHelper.buildLink({
+                title: LocaleHelper.get('topicEntity', 'moreTags'),
+                separator: ', ',
+                onclick: 'openDialog(event, this);'
+            });
+        }
+
+        return tagsList;
     }
 }
  

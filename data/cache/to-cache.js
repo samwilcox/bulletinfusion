@@ -28,5 +28,8 @@ module.exports = function getTablesToCache() {
         'topics',
         'posts',
         'content_tracking',
+        'groups',
+        'forum_permissions',
+        'subscriptions',
     ];
 };

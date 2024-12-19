@@ -20,7 +20,15 @@
         "pageGenerated": "Page generated at <strong>${time}</strong>",
         "poweredBy": "Powered by <strong>${link}</strong> ${version}",
         "allTimes": "All times are <strong>${timezone}</strong> (GMT ${gmt})",
-        "cookieOptionsTooltip": "Manage cookie options"
+        "cookieOptionsTooltip": "Manage cookie options",
+        "accountSettingsLink": "Account Settings",
+        "manageProfileLink": "Manage Profile",
+        "viewMyProfileLink": "View My Profile",
+        "manageSubscriptionsLink": "Manage Subscriptions",
+        "moderatorToolboxLink": "Moderator Toolbox",
+        "administratorControlPanelLink": "Administrator Control Panel",
+        "signOutLink": "Sign Out",
+        "closeDialogTooltip": "Close dialog"
     },
     "home": {
         "allForums": "All Forums",
@@ -100,5 +108,42 @@
         "rememberMeTitle": "Remember Me?",
         "rememberMeInfo": "Automatically sign me in on my next visit. Not recommended for shared devices.",
         "signInButton": "Sign In"
+    },
+    "errors": {
+        "userCredentialsInvalid": "Either the email address or password entered is invalid.",
+        "userCredentialsInvalidWithUsername": "Either the username, email address or password entered is invalid.",
+        "lockedOutExpiredDisabled": "The account you are attempting to access is currently locked. This account can be unlocked by reseting the account password.",
+        "lockedOutExpiredEnabled": "The account you are attemtping to access is currently locked. Please wait <strong>${total}</strong> minutes.",
+        "signInFailedWithAttemptsRemaining": "Either the email address or password entered is invalid. This was attempt <strong>${attempts}</strong> of <strong>${total}</strong> allowed attempts before the account gets locked out for security reasons.",
+        "topicNotFound": "The topic identifier of <strong>${topicId}</strong> does not exist.",
+        "forumPermissionsNotArray": "The forum permission parameter must be an array in getForumPermission()",
+        "buildBreadcrumbsInvalidLinks": "The links parameter must be an array in buildBreadcrumbs()",
+        "subscriptionTypeDoesNotExist": "The subscription type does not exist",
+        "errorWhileSubscribing": "An unexpected error occured while subscribing to the requested content:",
+        "errorWhileUnsubscribing": "An unexpected error occured while unsubscribing from the requested content:",
+        "errorWhileUpdatingSubscriptionPreferences": "An unexpected error occured while updating your subscription preferences:",
+        "subscriptionDoesNotExistPreferences": "The subscription you are attempting to update does not exist:"
+    },
+    "topic": {
+        "topicBy": "<strong>By</strong> ${author}"
+    },
+    "subscriptionHelper": {
+        "subscribe": "Subscribe",
+        "unSubscribe": "Unsubscribe",
+        "updatePreferences": "Update Preferences",
+        "iPrefer": "I Prefer:",
+        "onNewNotification": "A new notification when content is posted",
+        "oneEmailADay": "One email per day with all new content from that day",
+        "oneEmailAWeek": "One email per week with all new content from that week",
+        "noNotifications": "Do not send me any notifications",
+        "subscribeDialogTitle": "Subscribe to ${title}"
+    },
+    "ajax": {
+        "subscribedToContentNotify": "You have been successfully subscribed",
+        "unsubscribeFromContentNotify": "You have been successfully unsubscribed",
+        "subscriptionPrefNotify": "Your subscription preferences have been updated"
+    },
+    "topicEntity": {
+        "moreTags": "more tags"
     }
 }

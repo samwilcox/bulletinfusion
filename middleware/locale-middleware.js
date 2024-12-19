@@ -10,6 +10,7 @@
  */
 
 const LocaleHelper = require('../helpers/locale-helper');
+const DataStoreService = require('../services/datastore-service');
 
 /**
  * Middleware for initializing the locale.
@@ -19,6 +20,9 @@ const LocaleHelper = require('../helpers/locale-helper');
  * @param {Object} next - The next middleware.
  */
 const localeMiddleware = async (req, res, next) => {
+    DataStoreService.set('requestObject', req);
+    DataStoreService.set('responseObject', res);
+
     await LocaleHelper.initialize(req.member);
     req.locale = LocaleHelper.getAll();
     next();

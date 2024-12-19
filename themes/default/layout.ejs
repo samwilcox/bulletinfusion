@@ -20,6 +20,8 @@
             {
                 "ajaxUrl": "<%= baseUrl %>",
                 "baseUrl": "<%= baseUrl %>",
+                "csrfEnabled": <%= csrfEnabled %>,
+                "csrfToken": "<%= csrfToken %>",
                 "css": {
                     "alignCenter": "<%= css.alignCenter %>",
                     "sideBarSpace": "<%= css.sideBarSpace %>"
@@ -32,6 +34,29 @@
         </script>
     </head>
     <body>
+        <div class="changeNotification" id="change-notification"></div>
+        <div class="backgroundDisabler" id="background-disabler" onclick="closeDialog();"></div>
+        <% if (signedIn) { %>
+            <div class="dropDownMenu" id="ddm-membermenu">
+                <span class="dropDownMenuLinks">
+                    <a href="<%= accountSettingsUrl %>"><i class="fa-solid fa-gear"></i><%= locale.global.accountSettingsLink %></a>
+                    <a href="<%= manageProfileUrl %>"><i class="fa-solid fa-user-gear"></i><%= locale.global.manageProfileLink %></a>
+                    <a href="<%= viewProfileUrl %>"><i class="fa-regular fa-address-card"></i><%= locale.global.viewMyProfileLink %></a>
+                    <a href="<%= manageSubscriptionsUrl %>"><i class="fa-solid fa-newspaper"></i><%= locale.global.manageSubscriptionsLink %></a>
+                    <% if (isModerator || isAdmin) { %>
+                        <strong></strong>
+                    <% } %>
+                    <% if (isModerator) { %>
+                        <a href="<%= moderatorToolboxUrl %>"><i class="fa-solid fa-toolbox"></i><%= locale.global.moderatorToolboxLink %></a>
+                    <% } %>
+                    <% if (isAdmin) { %>
+                        <a href="<%= administratorControlPanelUrl %>" target="_blank"><i class="fa-solid fa-screwdriver-wrench"></i><%= locale.global.administratorControlPanelLink %></a>
+                    <% } %>
+                    <strong></strong>
+                    <a href="<%= signOutUrl %>"><i class="fa-solid fa-right-from-bracket"></i><%= locale.global.signOutLink %></a>
+                </span>
+            </div>
+        <% } %>
         <div class="wrapper">
             <div class="sideBar" id="sidebar">
                 <div class="sideBarGrid">
@@ -69,7 +94,15 @@
                         </div>
                         <div class="alignRight">
                             <% if (signedIn) { %>
-                            
+                                <div class="memberGrid">
+                                    <div></div>
+                                    <div>
+                                        <div class="sideBySideGrid">
+                                            <div><%- memberPhoto %></div>
+                                            <div class="memberMenuLink"><a href="javascript:void(0);" id="ddm-membermenu-link" data-menu="ddm-membermenu" data-link="ddm-membermenu-link" data-ignored="ddm-membermenu-icon" data-movement="5" onclick="openDropDownMenu(this);"><%= memberName %><i class="fa-solid fa-caret-down" id="ddm-membermenu-icon"></i></a></div>
+                                        </div>
+                                    </div>
+                                </div>
                             <% } else { %>
                                 <span class="signUpLink"><a href=""><i class="fa-solid fa-user-plus"></i><%= locale.global.signUpLink %></a></span>
                                 <span class="signInLink"><a href="<%- signInUrl %>"><i class="fa-solid fa-key"></i><%= locale.global.signInLink %></a></span>
@@ -78,6 +111,9 @@
                     </div>
                 </header>
                 <main>
+                    <% if (breadcrumbs) { %>
+                        <%- breadcrumbs %>
+                    <% } %>
                     <% if (blocks.enabled) { %>
                         <% if (blocks.left.enabled && blocks.right.enabled) { %>
                             <div class="blocksGridFull">

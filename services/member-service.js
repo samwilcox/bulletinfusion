@@ -24,6 +24,7 @@ class MemberService {
      */
     constructor() {
         this.member = null;
+        this.session = null;
     }
 
     /**
@@ -55,6 +56,24 @@ class MemberService {
      */
     setMember(member) {
         this.member = member;
+    }
+
+    /**
+     * Get the current session entity instance.
+     * 
+     * @returns {Session} The session entity instance.
+     */
+    getSession() {
+        return this.session;
+    }
+
+    /**
+     * Set the current session entity instance.
+     * 
+     * @param {Session} session - The session entity instance. 
+     */
+    setSession(session) {
+        this.session = session;
     }
 
     /**

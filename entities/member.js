@@ -15,6 +15,7 @@ const Settings = require('../settings/index');
 const UtilHelper = require('../helpers/util-helper');
 const OutputHelper = require('../helpers/output-helper');
 const TimeHelper = require('../helpers/time-helper');
+const GroupRepository = require('../repository/group-repository');
 
 /**
  * Entity that represents a single member.
@@ -44,6 +45,13 @@ class Member {
         this.perLoad = {};
         this.oauth = {};
         this.joined = null;
+        this.twoFactor = {};
+        this.lockout = {};
+        this.displayOnWhosOnline = false;
+        this.primaryGroup = null;
+        this.secondaryGroups = {};
+        this.lastOnline = null;
+        this.subscriptionSettings = {};
     }
 
     /**
@@ -409,84 +417,131 @@ class Member {
     setJoined(joined) {
         this.joined = joined;
     }
-
+    
     /**
-     * Initialize this entity.
+     * Get the member's two-factor authentication settings.
      * 
-     * @param {Object} params - Entity data parameters.
+     * @returns {Object} Object containing the two factor auth settings.
      */
-    initialize(params) {
-        const EntityFactory = require('./entity-factory');
-        this.setId(params.id);
-        const cache = CacheProviderFactory.create();
-        const data = cache.get('members').filter(obj => obj.id == this.getId());
-        const exists = data.length > 0;
-
-        if (exists) {
-            this.setUsername(data.username);
-            this.setDisplayName(data.displayName);
-            this.setUseDisplayName(parseInt(data.useDisplayName) == 1);
-            this.setEmailAddress(data.emailAddress);
-            this.setLocaleId(parseInt(data.localeId));
-            this.setThemeId(parseInt(data.themeId));
-            this.setBlocks(data.blocks ? JSON.parse(data.blocks) : null);
-            this.setPhotoType(data.photoType);
-            this.setPhotoId(parseInt(data.photoId));
-            this.setTimeZone(data.timeZone);
-            this.setDateFormat(data.dateFormat);
-            this.setTimeFormat(data.timeFormat);
-            this.setDateTimeFormat(data.dateTimeFormat);
-            this.setTimeAgo(parseInt(data.timeAgo) == 1);
-            this.setPerLoad(parseInt(data.perLoad));
-            this.setOauth(data.oauth ? JSON.parse(data.oauth) : null);
-            this.setJoined(TimeHelper.parseDatabaseTimestamp(data.joined));
-        } else {
-            this.guestSetup();
-        }
-
-        this.configsSetup();
+    getTwoFactor() {
+        return this.twoFactor;
     }
 
     /**
-     * Setup the class properties for a guest.
+     * Set the member's two-factor authentication settings.
+     * 
+     * @param {Object} twoFactor - Object containing the two factor auth settings.
      */
-    guestSetup() {
-        this.setUsername('Guest');
-        this.setDisplayName('Guest');
-        this.setUseDisplayName(false);
-        this.setEmailAddress(null);
-        this.setLocaleId(Settings.get('defaultLocaleId'));
-        this.setThemeId(Settings.get('defaultThemeId'));
-        this.setBlocks(Settings.get('defaultBlocks'));
-        this.setTimeZone(Settings.get('defaultTimeZone'));
-        this.setDateFormat(Settings.get('defaultDateFormat'));
-        this.setDateTimeFormat(Settings.get('defaultDateTimeFormat'));
-        this.setTimeAgo(Settings.get('defaultTimeAgo'));
-        this.setPerLoad(Settings.get('defaultPerLoad'));
-        this.setOauth(null);
-        this.setJoined(null);
+    setTwoFactor(twoFactor) {
+        this.twoFactor = twoFactor;
     }
 
     /**
-     * Sets up the configurations.
+     * Get the member's lockout data object.
+     * 
+     * @returns {Object} The lockout data object.
      */
-    configsSetup() {
-        const cache = CacheProviderFactory.create();
-        const data = cache.getAll({
-            locales: 'locales',
-            themes: 'themes',
-        });
+    getLockout() {
+        return this.lockout;
+    }
 
-        const locales = data.locales.filter(obj => obj.id == this.getLocaleId());
-        const themes = data.themes.filter(obj => obj.id == this.getThemeId());
-        const localeFolder = locales[0].folder;
-        const themeFolder = themes[0].folder;
-        const imagesetFolder = themes[0].imagesetFolder;
+    /**
+     * Set the member's lockout data object.
+     * 
+     * @param {Object} lockout - The lockout data object.
+     */
+    setLockout(lockout) {
+        this.lockout = lockout;
+    }
 
-        this.configs.localePath = path.join(__dirname, '..', 'locale', localeFolder);
-        this.configs.themePath = path.join(__dirname, '..', 'themes', themeFolder);
-        this.configs.themeCssUrl = `${process.env.BASE_URL}/css/${themeFolder}`;
-        this.configs.imagesetUrl = `${process.env.BASE_URL}/imagesets/${imagesetFolder}`;
+    /**
+     * Get whether to display the member on the Who's Online list.
+     * 
+     * @returns {boolean} True to display on list, false to not display on list.
+     */
+    getDisplayOnWhosOnline() {
+        return this.displayOnWhosOnline;
+    }
+
+    /**
+     * Set whether to display the member on the Who's Online list.
+     * 
+     * @param {boolean} displayOnWhosOnline - True to display on list, false to not display on list.
+     */
+    setDisplayOnWhosOnline(displayOnWhosOnline) {
+        this.displayOnWhosOnline = displayOnWhosOnline;
+    }
+
+    /**
+     * Get the primary group entity instance.
+     * 
+     * @returns {Group} The primary group entity instance.
+     */
+    getPrimaryGroup() {
+        return this.primaryGroup;
+    }
+
+    /**
+     * Set the primary group entity instance.
+     * 
+     * @param {Group} primaryGroup - The primary group entity instance. 
+     */
+    setPrimaryGroup(primaryGroup) {
+        this.primaryGroup = primaryGroup;
+    }
+
+    /**
+     * Get the secondary group entity array.
+     * 
+     * @returns {Array} An array of all the secondary group entities.
+     */
+    getSecondaryGroups() {
+        return this.secondaryGroups;
+    }
+
+    /**
+     * Set the secondary group entity array.
+     * 
+     * @param {Array} secondaryGroups - An array of all the secondary group entities.
+     */
+    setSecondaryGroups(secondaryGroups) {
+        this.secondaryGroups = secondaryGroups;
+    }
+
+    /**
+     * Get the timestamp of when the member was last online.
+     * 
+     * @returns {number} The timestamp the member was last online.
+     */
+    getLastOnline() {
+        return this.lastOnline;
+    }
+
+    /**
+     * Set the timestamp of when the member was last online.
+     * 
+     * @param {number} lastOnline - The timestamp the member was last online.
+     */
+    setLastOnline(lastOnline) {
+        this.lastOnline = lastOnline;
+    }
+
+    /**
+     * Get the member's subscription settings.
+     * 
+     * @returns {Object} Member subscription settings data object.
+     */
+    getSubscriptionSettings() {
+        return this.subscriptionSettings;
+    }
+
+    /**
+     * Set the member's subscription settings.
+     * 
+     * @param {Object} subscriptionSettings - Member subscription settings data object.
+     */
+    setSubscriptionSettings(subscriptionSettings) {
+        this.subscriptionSettings = subscriptionSettings;
     }
 
     /**
@@ -589,6 +644,48 @@ class Member {
             name: (this.getUseDisplayName() && Settings.get('useDisplayNames')) ? this.getDisplayName() : this.getUsername(),
         });
     }
+
+    /**
+     * Check if the member is a moderator.
+     * 
+     * @returns {boolean} True if a moderator, false if not a moderator.
+     */
+    isModerator() {
+        if (this.getPrimaryGroup().isGroupModerator) {
+            return true;
+        }
+
+        if (this.getSecondaryGroups()) {
+            const isModerator = this.getSecondaryGroups().filter(obj => obj.isGroupModerator()).length > 0;
+
+            if (isModerator) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the member is an administrator.
+     * 
+     * @returns {boolean} True if an admin, false if not an admin.
+     */
+    isAdmin() {
+        if (this.getPrimaryGroup().isAdmin) {
+            return true;
+        }
+
+        if (this.getSecondaryGroups()) {
+            const isAdmin = this.getSecondaryGroups().filter(obj => obj.isAdmin()).length > 0;
+            
+            if (isAdmin) {
+                return true;
+            }
+        }
+
+        return false;
+    }   
 }
 
 module.exports = Member;

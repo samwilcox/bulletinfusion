@@ -18,6 +18,7 @@ const initializeSettings = require('./services/settings-service');
 const initializeMiddleware = require('./middleware/index-middleware');
 const initializeRoutes = require('./services/routes-service');
 const startServer = require('./services/server-service');
+const PluginService = require('./services/plugin-service');
 
 /**
  * Initialize the Bulletin Fusion application.
@@ -26,7 +27,8 @@ module.exports = () => {
     initializeDatabase()
         .then(() => initializeCache())
         .then(() => {
-            initializeSettings()
+            initializeSettings();
+            PluginService.loadPlugins();
             initializeMiddleware(app);
             initializeRoutes(app);
             startServer(app);

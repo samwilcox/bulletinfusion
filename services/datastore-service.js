@@ -62,7 +62,25 @@ class DataStoreService {
      * @returns {boolean} True if key exists, false if key does not exist.
      */
     exists(key) {
-        return key in this.data;
+        return this.data.hasOwnProperty(key);
+    }
+
+    /**
+     * Delete a key from the datastore.
+     * 
+     * @param {string} key - The name of the key to delete.
+     */
+    delete(key) {
+        delete this.data[key];
+    }
+
+    /**
+     * Get the entire datastore data.
+     * 
+     * @returns {Object} The data store object.
+     */
+    getAll() {
+        return this.data;
     }
 
     /**

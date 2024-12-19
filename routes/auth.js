@@ -15,6 +15,7 @@ const AuthController = require('../controllers/auth-controller');
 const UtilHelper = require('../helpers/util-helper');
 const PassportOAuth = require('../services/passport-service');
 const passport = require('passport');
+const { conditionalCSRF } = require('../middleware/csrf-middleware');
 
 const authController = new AuthController();
 
@@ -61,5 +62,7 @@ router.get('/oauth/google/callback',
         )(req, res, next);
     }
 );
+router.post('/signin', conditionalCSRF, authController.processSignIn.bind(authController));
+router.get('/signout', authController.processSignOut.bind(authController));
 
 module.exports = router;

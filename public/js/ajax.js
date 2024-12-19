@@ -30,6 +30,7 @@ function ajaxGet(action, data = null, successCallback) {
     $.ajax({
         url,
         type: 'GET',
+        contentType: 'application/json',
         success: function(response) {
             successCallback(response);
         },
@@ -46,15 +47,23 @@ function ajaxGet(action, data = null, successCallback) {
  * @param {Object} data - Optional data object parameters.
  * @param {CallableFunction} successCallback - Callback when response received.
  */
-function ajaxPort(action, data, successCallback) {
+function ajaxPost(action, data, successCallback) {
     const url = `${json.ajaxUrl}/ajax/${action}`;
+    let headers = {};
+
+    if (json.csrfEnabled) {
+        headers['X-CSRF-Token'] = json.csrfToken;
+    }
 
     $.ajax({
         url,
-        type: 'GET',
-        data,
+        type: 'POST',
+        data: JSON.stringify(data),
         processData: false,
-        contentType: false,
+        contentType: 'application/json',
+        headers: {
+            ...headers,
+        },
         success: function(response) {
             successCallback(response);
         },

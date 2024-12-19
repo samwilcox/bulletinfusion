@@ -246,6 +246,47 @@ class TimeHelper {
         const gmtOffset = now.offset / 60;
         return `${gmtOffset >= 0 ? '+' : ''}${gmtOffset}:00`;
     }
+
+    /**
+     * Compares two timestamps.
+     * 
+     * @param {Date|number|string} timeA - The first timestamp value.
+     * @param {Date|number|string} timeB - The second timestamp value.
+     * @returns {number} Returns -1 if timeA < timeB,
+     *                   0 if timeA === timeB,
+     *                   1 if timeA > timeB. 
+     */
+    static timeCompare(timeA, timeB, comparison = '==') {
+        const normalize = (timestamp) => {
+            if (timestamp instanceof Date) {
+                return timestamp.getTime();
+            } else if (typeof timestamp === 'number') {
+                if (timestamp.toString().length === 14) {
+                    const year = parseInt(timestamp.toString().slice(0, 4), 10);
+                    const month = parseInt(timestamp.toString().slice(4, 6), 10) - 1;
+                    const day = parseInt(timestamp.toString().slice(6, 8), 10);
+                    const hours = parseInt(timestamp.toString().slice(8, 10), 10);
+                    const minutes = parseInt(timestamp.toString().slice(10, 12), 10);
+                    const seconds = parseInt(timestamp.toString().slice(12, 14), 10);
+                    return new Date(year, month, day, hours, minutes, seconds).getTime();
+                } else {
+                    // If we made it here, we can assume its a UNIX timestamp.
+                    return timestamp * 1000;
+                }
+            } else if (typeof timestamp === 'string') {
+                return new Date(timestamp).getTime();
+            } else {
+                throw new Error('Invalid timestamp format');
+            }
+        };
+
+        const timestamp1 = normalize(timeA);
+        const timestamp2 = normalize(timeB);
+
+        if (timestamp1 < timestamp2) return -1;
+        if (timestamp1 < timestamp2) return 1;
+        return 0;
+    }
 }
 
 module.exports = TimeHelper;

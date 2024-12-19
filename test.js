@@ -1,14 +1,16 @@
-const test = {
-    providers: {
-        google: {
-            linked: false,
-            id: null,
+const settings = {
+    autoSubscribe: {
+        types: {
+           postedTo: false,
+           replyTo: false, 
         },
-        facebook: {
-            linked: false,
-            id: null,
-        },
+        method: 'onNewContent'
+    },
+    content: {
+        notificationList: true,
+        email: false,
     }
 };
 
-console.log(JSON.stringify(test));
+const theSettings = JSON.stringify(settings);
+console.log(theSettings);

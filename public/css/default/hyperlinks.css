@@ -31,6 +31,23 @@ a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; }
 .forgotPassword a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; }
 .signInOauth a, .signInOauth a:link, .signInOauth a:active, .signInOauth a:visited { color:#0085FF; text-decoration: none; transition: 0.5s ease; margin-left: 30px; }
 .signInOauth a:hover { color: #00488C; text-decoration: none; transition: 0.5s ease; } 
-.signInOauth:first-of-type { margin-left: 0; }
+.signInOauth a:first-of-type { margin-left: 0; }
 .errorBoxClose a, .errorBoxClose a:link, .errorBoxClose a:active, .errorBoxClose a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; position: absolute; top: -8px; right: -8px; z-index: 100; font-size: 20px; }
 .errorBoxClose a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.memberMenuLink a, .memberMenuLink a:link, .memberMenuLink a:active, .memberMenuLink a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; font-size: 15px; font-weight: 600; padding: 12px 0; }
+.memberMenuLink a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.memberMenuLink a i { margin-left: 8px; }
+.brightButton a, .brightButton a:link, .brightButton a:active, .brightButton a:visited { color: #000; text-decoration: none; transition: 0.5s ease; display: inline-block; border-radius: 8px; font-weight: 500; padding: 13px 26px; background-color: #5dafc0; font-size: 14px; }
+.brightButton a:hover { color: #000; text-decoration: none; transition: 0.5s ease; background-color: #8fc5d1; }
+.buttonsGroup a { margin-left: 14px; }
+.breadcrumbs a, .breadcrumbs a:link, .breadcrumbs a:active, .breadcrumbs a:visited { color: #C3C3C3; text-decoration: none; margin-left: 6px; margin-right: 6px; }
+.breadcrumbs a:hover { color: #C3C3C3; text-decoration: underline; }
+.breadcrumbs a:last-of-type { margin-right: 0; }
+.subscribeButton a, .subscribeButton a:link, .subscribeButton a:active, .subscribeButton a:visited { color: inherit; text-decoration: none; transition: 0.5s ease; opacity: 1; border-radius: 8px; display: inline-block; }
+.subscribeButton a:hover { color: inherit; text-decoration: none; transition: 0.5s ease; opacity: 0.7; }
+.dialogHeader a, .dialogHeader a:link, .dialogHeader a:active, .dialogHeader a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; font-size: 20px; }
+.dialogHeader a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.forumsSymbolLinkTopic a, .forumsSymbolLinkTopic a:link, .forumsSymbolLinkTopic a:active, .forumsSymbolLinkTopic a:visited { color: inherit; text-decoration: none; transition: 0.5s ease; background-color: inherit; border-radius: 0 0 8px 8px; padding: 8px 20px; position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 200; }
+.forumsSymbolLinkTopic a:hover { color: inherit; text-decoration: none; transition: 0.5s ease; background-color: inherit; }
+.tagsSmallLink a, .tagsSmallLink a:link, .tagsSmallLink a:active, .tagsSmallLink a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; font-size: 11px !important; }
+.tagsSmallLink a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
