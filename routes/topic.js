@@ -16,5 +16,6 @@ const TopicController = require('../controllers/topic-controller');
 const topicController = new TopicController();
 
 router.get('/:topicId/:slug', topicController.viewTopic.bind(topicController));
+router.get('/:topicId/:slug/page/:page', topicController.viewTopic.bind(topicController));
 
 module.exports = router;

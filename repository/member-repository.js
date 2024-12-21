@@ -70,6 +70,7 @@ class MemberRepository {
             member.setLockout(data.lockout ? JSON.parse(data.lockout) : null);
             member.setDisplayOnWhosOnline(parseInt(data.setDisplayOnWhosOnline, 10) == 1);
             member.setPrimaryGroup(GroupRepository.getGroupById(parseInt(data.primaryGroupId, 10)));
+            member.setTotalPosts(parseInt(data.totalPosts, 10));
             
             if (data.secondaryGroups) {
                 const secondaryGroups = JSON.parse(data.secondaryGroups);
@@ -86,6 +87,11 @@ class MemberRepository {
 
             member.setLastOnline(parseInt(data.lastOnline, 10) > 0 ? TimeHelper.parseDatabaseTimestamp(parseInt(data.lastOnline, 10)) : null);
             member.setSubscriptionSettings(data.subscriptionSettings ? JSON.parse(data.subscriptionSettings) : null);
+            member.setPronouns(data.pronouns ? JSON.parse(data.pronouns) : null);
+            member.setReputation(parseInt(data.reputation, 10));
+            member.setDisplayJoined(parseInt(data.displayJoined, 10) == 1);
+            member.setLocation(data.location ? JSON.parse(data.location) : null);
+            member.setGender(data.gender ? JSON.parse(data.gender) : null);
         } else {
             member = this.guestSettings(member);
         }
@@ -142,6 +148,12 @@ class MemberRepository {
         member.setSecondaryGroups(null);
         member.setLastOnline(null);
         member.setSubscriptionSettings(null);
+        member.setTotalPosts(0);
+        member.setPronouns(null);
+        member.setReputation(null);
+        member.setDisplayJoined(false);
+        member.setLocation(null);
+        member.setGender(null);
 
         return member;
     }

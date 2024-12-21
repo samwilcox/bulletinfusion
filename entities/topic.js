@@ -302,7 +302,10 @@ class Topic {
             tagsList += UtilHelper.buildLink({
                 title: LocaleHelper.get('topicEntity', 'moreTags'),
                 separator: ', ',
-                onclick: 'openDialog(event, this);'
+                onclick: 'openTagsDialog(this);',
+                data: {
+                    topicid: this.getId(),
+                }
             });
         }
 

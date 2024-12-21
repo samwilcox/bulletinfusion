@@ -31,5 +31,6 @@ module.exports = function getTablesToCache() {
         'groups',
         'forum_permissions',
         'subscriptions',
+        'tags',
     ];
 };

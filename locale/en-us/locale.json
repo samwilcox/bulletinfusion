@@ -28,7 +28,19 @@
         "moderatorToolboxLink": "Moderator Toolbox",
         "administratorControlPanelLink": "Administrator Control Panel",
         "signOutLink": "Sign Out",
-        "closeDialogTooltip": "Close dialog"
+        "closeDialogTooltip": "Close dialog",
+        "heHimHis": "He/Him/His",
+        "sheHerHers": "She/Her/Hers",
+        "theyThemTheirs": "They/Them/Theirs",
+        "sheThey": "She/They",
+        "theyHe": "They/He",
+        "theyShe": "They/She",
+        "zeZirZirs": "Ze/Zir/Zirs",
+        "xeXemXyrs": "Xe/Xem/Xyrs",
+        "eyEmEirs": "Ey/Em/Eirs",
+        "veVerVers": "Ve/Ver/Vers",
+        "faerFaerFaers": "Faer/Faer/Faers",
+        "huHumHums": "He/Hum/Hums"
     },
     "home": {
         "allForums": "All Forums",
@@ -84,7 +96,8 @@
     },
     "filterHelper": {
         "noPostItems": "There is no content to load.",
-        "noPostItemsFilter": "There is no content to display for the current set filter."
+        "noPostItemsFilter": "There is no content to display for the current set filter.",
+        "invalidPostFilter": "Invalid filter mode"
     },
     "captchaHelper": {
         "humanVerificationTitle": "Human Verification",
@@ -122,10 +135,19 @@
         "errorWhileSubscribing": "An unexpected error occured while subscribing to the requested content:",
         "errorWhileUnsubscribing": "An unexpected error occured while unsubscribing from the requested content:",
         "errorWhileUpdatingSubscriptionPreferences": "An unexpected error occured while updating your subscription preferences:",
-        "subscriptionDoesNotExistPreferences": "The subscription you are attempting to update does not exist:"
+        "subscriptionDoesNotExistPreferences": "The subscription you are attempting to update does not exist:",
+        "postsFilterInvalidDateRange": "The given date range for filtering posts is invalid",
+        "postsSortingInvalidSortBy": "The given sort order is invalid for sorting posts"
     },
     "topic": {
-        "topicBy": "<strong>By</strong> ${author}"
+        "topicBy": "<strong>By</strong> ${author}",
+        "tagsTooltip": "Tags",
+        "filterAll": "All",
+        "sortNewestOldest": "Newest/Oldest",
+        "sortAscending": "Ancending Order",
+        "sortDescending": "Descending Order",
+        "postSingular": "post",
+        "postPlural": "posts"
     },
     "subscriptionHelper": {
         "subscribe": "Subscribe",
@@ -145,5 +167,30 @@
     },
     "topicEntity": {
         "moreTags": "more tags"
+    },
+    "postEntity": {
+        "postOptionsTooltip": "Post options",
+        "totalPosts": "Total Posts",
+        "pronouns": "Pronouns",
+        "reputation": "Reputation",
+        "joined": "Joined",
+        "location": "Location",
+        "gender": "Gender",
+        "age": "Age"
+    },
+    "paginationHelper": {
+        "page": "Page",
+        "pageSingular": "page",
+        "pagePlural": "pages",
+        "ofPages": "of <strong>${total}</strong> ${pages}",
+        "previous": "Prev",
+        "previousTooltip": "Previous page",
+        "next": "Next",
+        "nextTooltip": "Next page",
+        "firstTooltip": "First page",
+        "lastTooltip": "Last page",
+        "displayingItems": "Displaying <strong>${start}</strong> to <strong>${end}</strong> of <strong>${total}</strong> ${locale}",
+        "postSingular": "post",
+        "postPlural": "posts"
     }
 }

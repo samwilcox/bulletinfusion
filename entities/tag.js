@@ -10,8 +10,8 @@
  */
 
 const CacheProviderFactory = require('../data/cache/cache-provider-factory');
-const OutputHelper = require('../helpers/output');
-const UtilHelper = require('../helpers/util');
+const OutputHelper = require('../helpers/output-helper');
+const UtilHelper = require('../helpers/util-helper');
 
 /**
  * Entity that represents a single tag.
@@ -105,9 +105,9 @@ class Tag {
      * @returns {string} The link source.
      */
     buildLink() {
-        return OutputHelper.getPartial('tagEntity', 'link', {
+        return OutputHelper.getPartial('tag-entity', 'link', {
             title: this.getTitle(),
-            url: `${process.env.BASE_URL}/tag/${this.getId()}/${UtilHelper.slugifyUrl(this.getId(), this.getTitle())}`,
+            url: `${process.env.BASE_URL}/tag/${UtilHelper.slugifyUrl(this.getId(), this.getTitle())}`,
         });
     }
 }

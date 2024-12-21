@@ -53,6 +53,7 @@ class PostRepository {
         post.setIpAddress(data.ipAddress);
         post.setHostname(data.hostname);
         post.setUserAgent(data.userAgent);
+        post.setAnnouncment(parseInt(data.announcment, 10) == 1);
 
         return post;
     }

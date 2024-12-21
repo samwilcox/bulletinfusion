@@ -52,6 +52,12 @@ class Member {
         this.secondaryGroups = {};
         this.lastOnline = null;
         this.subscriptionSettings = {};
+        this.totalPosts = 0;
+        this.pronouns = {};
+        this.reputation = 0;
+        this.displayJoined = false;
+        this.location = {};
+        this.gender = {};
     }
 
     /**
@@ -542,6 +548,114 @@ class Member {
      */
     setSubscriptionSettings(subscriptionSettings) {
         this.subscriptionSettings = subscriptionSettings;
+    }
+
+    /**
+     * Get the member's total posts.
+     * 
+     * @returns {number} The total posts.
+     */
+    getTotalPosts() {
+        return this.totalPosts;
+    }
+
+    /**
+     * Set the member's total posts.
+     * 
+     * @param {number} totalPosts - The total posts.
+     */
+    setTotalPosts(totalPosts) {
+        this.totalPosts = totalPosts;
+    }
+
+    /**
+     * Get the pronouns for the member.
+     * 
+     * @returns {Object} Object containing the pronouns data.
+     */
+    getPronouns() {
+        return this.pronouns;
+    }
+
+    /**
+     * Set the pronouns for the member.
+     * 
+     * @param {Object} pronouns Object containing the pronouns data.
+     */
+    setPronouns(pronouns) {
+        this.pronouns = pronouns;
+    }
+
+    /**
+     * Get the member's reputation.
+     * 
+     * @returns {number} - The member's reputation value.
+     */
+    getReputation() {
+        return this.reputation;
+    }
+
+    /**
+     * Set the member's reputation.
+     * 
+     * @param {number} reputation - The member's reputation value.
+     */
+    setReputation(reputation) {
+        this.reputation = reputation;
+    }
+
+    /**
+     * Get whether the member wants to display the date they joined.
+     * 
+     * @returns {boolean} True to display joined date, false not to.
+     */
+    getDisplayJoined() {
+        return this.displayJoined;
+    }
+
+    /**
+     * Set whether the member wants to display the date they joined.
+     * 
+     * @param {boolean} displayJoined - True to display joined date, false not to.
+     */
+    setDisplayJoined(displayJoined) {
+        this.displayJoined = displayJoined;
+    }
+
+    /**
+     * Get the member's location data object.
+     * 
+     * @returns {Object} The members location data object.
+     */
+    getLocation() {
+        return this.location;
+    }
+
+    /**
+     * Set the member's location data object.
+     * 
+     * @param {Object} location - The members location data object.
+     */
+    setLocation(location) {
+        this.location = location;
+    }
+
+    /**
+     * Get the member's gender data object.
+     * 
+     * @returns {Object} - The members gender data object.
+     */
+    getGender() {
+        return this.gender;
+    }
+
+    /**
+     * Set the member's gender data object.
+     * 
+     * @param {Object} gender - The members gender data object.
+     */
+    setGender(gender) {
+        this.gender = gender;
     }
 
     /**

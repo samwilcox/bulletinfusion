@@ -19,6 +19,7 @@ var contentData = {
     isLoading: false,
 };
 var currentDialog = null;
+var posts = null;
 
 $(document).ready(function() {
     parseJson();
@@ -28,13 +29,7 @@ $(document).ready(function() {
         initialPostItemsLoad();
     }
 
-    $(window).on('scroll', function() {
-        if (postItems) {
-            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-                loadPostItems(filterData.postItems.from);
-            }
-        }
-    });
+    loadPosts();
 });
 
 /**
@@ -489,6 +484,30 @@ function unsubscribeFromContent(element) {
             closeDialog();
         }
     });
+}
+
+/**
+ * Loads the posts for the given topic.
+ */
+function loadPosts() {
+    if (posts && posts.hasOwnProperty('enabled')) {
+        const postsContainer = $("#posts-container");
+
+        const data = {
+            topicId: posts.topicId,
+            currentPage: posts.currentPage,
+        };
+
+        ajaxPost('posts', data, function(response) {
+            if (response.success) {
+                if (posts.currentPage == 1) {
+                    postsContainer.html(response.data.posts);
+                } else {
+                    postsContainer.append(response.data.posts);
+                }
+            }
+        });
+    }
 }
 
 /**

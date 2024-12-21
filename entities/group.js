@@ -9,6 +9,8 @@
  * https://license.bulletinfusion.com
  */
 
+const UtilHelper = require("../helpers/util-helper");
+
 /**
  * Entity that represents a single group.
  */
@@ -112,6 +114,15 @@ class Group {
      */
     setAdmin(isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    /**
+     * Get the URL string for this group.
+     * 
+     * @returns {string} URL string.
+     */
+    url() {
+        return `${process.env.BASE_URL}/group/${UtilHelper.slugifyUrl(this.getId(), this.getTitle())}`;
     }
 }
 

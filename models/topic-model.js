@@ -18,6 +18,8 @@ const ForumRepository = require('../repository/forum-repository');
 const DataStoreService = require('../services/datastore-service');
 const MemberRepository = require('../repository/member-repository');
 const TimeHelper = require('../helpers/time-helper');
+const PaginationHelper = require('../helpers/pagination-helper');
+const PostRepository = require('../repository/post-repository');
 
 /**
  * Model for the topic-related tasks.
@@ -67,6 +69,27 @@ class TopicModel {
         this.vars.topicCreated = TimeHelper.formatDate(topic.getCreatedAt(), { timeAgo: true });
         this.vars.contentId = topic.getId();
         this.vars.contentType = 'topic';
+        this.vars.tags = topic.getTagsListing();
+        
+        const member = req.member;
+        const postsData = cache.get('posts').filter(obj => obj.topicId === topic.getId());
+        const entities = postsData.map(obj => PostRepository.getPostById(obj.id));
+        const totalItems = entities.length;
+        const perLoad = member.getPerLoad().posts;
+
+        this.vars.paginationBar = PaginationHelper.generate(
+            totalItems,
+            perLoad,
+            {
+                singular: LocaleHelper.get('topic', 'postSingular'),
+                plural: LocaleHelper.get('topic', 'postPlural'),
+            },
+            member.getPerLoad().links.posts,
+            UtilHelper.getCurrentPageNumber(req),
+            topic.url()
+        );
+
+        this.vars.currentPage = UtilHelper.getCurrentPageNumber(req);
 
         return this.vars;
     }

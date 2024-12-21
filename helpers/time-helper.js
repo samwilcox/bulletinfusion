@@ -149,7 +149,7 @@ class TimeHelper {
         }
 
         if (dateOnly) {
-            return DateTime.fromJSDate(timestamp).setZone(timezone).toFormat(member.getTimeFormat());
+            return DateTime.fromJSDate(timestamp).setZone(timezone).toFormat(member.getDateFormat());
         }
 
         return DateTime.fromJSDate(timestamp).setZone(timezone).toFormat(member.getDateTimeFormat());
@@ -231,7 +231,8 @@ class TimeHelper {
         const minute = parseInt(str.substring(10, 12), 10);
         const second = parseInt(str.substring(12, 14), 10);
 
-        return DateTime.fromObject({ year, month, day, hour, minute, second }); 
+        const dateTime = DateTime.fromObject({ year, month, day, hour, minute, second }); 
+        return dateTime.toJSDate();
     }
 
     /**

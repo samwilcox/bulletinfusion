@@ -1,11 +1,18 @@
+<script>
+    var posts = {
+        enabled: true,
+        topicId: <%= topic.getId() %>,
+        currentPage: <%= currentPage %>,
+    };
+</script>
 <div class="pageBannerTop">
     <span class="forumsSymbolLinkTopic"><a href="<%= forum.url() %>" style="color: <%= forum.getTextColor() %>; background-color: <%= forum.getColor() %>" onmouseover="this.style.color='<%= forum.getDarkColor().idealTextColor %>'; this.style.backgroundColor='<%= forum.getDarkColor().darkenedColor %>';" onmouseout="this.style.color='<%= forum.getTextColor() %>'; this.style.backgroundColor='<%= forum.getColor() %>';"><%- forum.getIcon() %><%= forum.getTitle() %></a></span>
     <div class="dualGridCentered">
         <div class="title">
-            <% if (tags) { %>
+            <% if (tags && tags.length > 0) { %>
                 <div class="dualRowGrid">
                     <div><%= topic.getTitle() %></div>
-                    <div class="tagsSmallLink">tags</div>
+                    <div class="tagsSmallLink"><span class="tooltip tooltip--top" data-title="<%= locale.topic.tagsTooltip %>"><i class="fa-solid fa-tags"></i><i class="fa-solid fa-arrow-right"></i></span><%- tags %></div>
                 </div>
             <% } else { %>
                 <%= topic.getTitle() %>
@@ -44,3 +51,5 @@
         </div>
     </div>
 </div>
+<%- paginationBar %>
+<div id="posts-container"></div>

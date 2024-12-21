@@ -17,6 +17,8 @@ const OutputHelper = require('../helpers/output-helper');
 const LocaleHelper = require('../helpers/locale-helper');
 const DatabaseProviderFactory = require('../data/db/database-provider-factory');
 const MemberService = require('../services/member-service');
+const PostHelper = require('../helpers/post-helper');
+const PostRepository = require('../repository/post-repository');
 
 /**
  * Model for AJAX-related tasks.
@@ -166,6 +168,39 @@ class AjaxModel {
             this.vars.success = false;
             this.vars.data.message = LocaleHelper.get('errors', 'subscriptionDoesNotExistPreferences');
         }
+
+        return this.vars;
+    }
+
+    /**
+     * Get the specified posts.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @returns {Array} The vars array.
+     */
+    getPosts(req) {
+        const { topicId, currentPage } = req.body;
+        const cache = CacheProviderFactory.create();
+        this.vars.success = true;
+
+        const data = cache.get('posts').filter(obj => obj.topicId === parseInt(topicId, 10));
+        const entities = data.map(obj => PostRepository.getPostById(obj.id));
+        entities.sort((a, b) => a.getCreatedAt() - b.getCreatedAt());
+
+        const startIndex = (currentPage - 1) * req.member.getPerLoad().posts;
+        const endIndex = startIndex + req.member.getPerLoad().posts;
+        const posts = entities.slice(startIndex, endIndex);
+        let builtPosts = '';
+
+        posts.forEach((post) => {
+            builtPosts += post.build();
+        });
+
+        if (!this.vars.data) {
+            this.vars.data = {};
+        }
+
+        this.vars.data.posts = builtPosts;
 
         return this.vars;
     }

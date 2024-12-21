@@ -9,8 +9,13 @@
  * https://license.bulletinfusion.com
  */
 
+const Settings = require('../settings/index');
 const CacheProviderFactory = require('../data/cache/cache-provider-factory');
+const OutputHelper = require('../helpers/output-helper');
 const UtilHelper = require('../helpers/util-helper');
+const MemberRepository = require('../repository/member-repository');
+const LocaleHelper = require('../helpers/locale-helper');
+const TimeHelper = require('../helpers/time-helper');
 
 /**
  * Entity that represents a single post.
@@ -33,6 +38,7 @@ class Post {
         this.ipAddress = null;
         this.hostname = null;
         this.userAgent = null;
+        this.announcment = false;
     }
 
     /**
@@ -246,10 +252,62 @@ class Post {
     }
 
     /**
+     * Get whether this post is an announcement.
+     * 
+     * @returns {boolean} True if an announcement, false if not.
+     */
+    isAnnouncment() {
+        return this.announcment;
+    }
+
+    /**
+     * Set whether this post is an announcement.
+     * 
+     * @param {boolean} announcement - True if an announcement, false if not.
+     */
+    setAnnouncment(announcement) {
+        this.announcment = announcement;
+    }
+
+    /**
      * Get the total likes for this post.
      */
     getTotalLikes() {
         return UtilHelper.getTotalLikes(this.getId(), 'post');``
+    }
+
+    /**
+     * Build this entity component.
+     * 
+     * @returns {string} The component source HTML.
+     */
+    build() {
+        const creator = MemberRepository.getMemberById(this.getCreatedBy());
+        const creatorGroup = creator.getPrimaryGroup();
+        const pronoun = Settings.get('pronounsList').find(pronoun => pronoun);
+        let pronounContent = null;
+        
+        if (pronoun) {
+            pronounContent = LocaleHelper.get('global', pronoun);
+        } else {
+            pronounContent = pronoun;
+        }
+
+        return OutputHelper.getPartial('post-entity', 'post', {
+            authorName: creator.getDisplayName(),
+            authorUrl: creator.url(),
+            authorPhoto: creator.profilePhoto({ link: true }),
+            authorGroup: creatorGroup,
+            totalPosts: UtilHelper.formatNumber(creator.getTotalPosts()),
+            pronouns: creator.getPronouns(),
+            pronounContent,
+            reputation: UtilHelper.formatNumber(creator.getReputation()),
+            displayJoined: creator.getDisplayJoined(),
+            joined: TimeHelper.formatDate(creator.getJoined(), { timeAgo: false, dateOnly: true }),
+            showLocation: creator.getLocation().display,
+            location: creator.getLocation().content,
+            locationUrl: `https://www.google.com/maps?q=${encodeURIComponent(creator.getLocation().content)}`,
+        });
     }
 }
 

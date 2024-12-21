@@ -351,6 +351,24 @@ class UtilHelper {
 
         return OutputHelper.getPartial('util-helper', 'breadcrumbs', { links });
     }
+
+    /**
+     * Get the current page number.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @returns {number} The current page number.
+     */
+    static getCurrentPageNumber(req) {
+        const currentUrl = req.url;
+        const pagePattern = /\/page\/(\d+)(?:\/|$)/;
+        const match = currentUrl.match(pagePattern);
+
+        if (match) {
+            return parseInt(match[1], 10);
+        } else {
+            return 1;
+        }
+    }
 } 
 
 module.exports = UtilHelper;

@@ -61,6 +61,16 @@ class AjaxController {
     async updateSubscriptionPreferences(req, res) {
         res.json(await this.model.updateSubscriptionPreferences(req));
     }
+
+    /**
+     * Get the specified posts.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @param {Object} res - The response object from Express.
+     */
+    async getPosts(req, res) {
+        res.json(this.model.getPosts(req));
+    }
 }
 
 module.exports = AjaxController;

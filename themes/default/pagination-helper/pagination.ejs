@@ -1,0 +1,25 @@
+<div class="paginationBar">
+    <div class="paginationBarGrid">
+        <div class="paginationLinks">
+            <% if (paginationData.hasFirst) { %>
+                <a href="<%= paginationData.firstLink %>" class="tooltip tooltip--top" data-title="<%= locale.paginationHelper.firstTooltip %>"><i class="fa-solid fa-angles-left"></i></a>
+            <% } %>
+            <% if (paginationData.hasPrevious) { %>
+                <a href="<%= paginationData.previousLink %>" class="tooltip tooltip--top" data-title="<%= locale.paginationHelper.previousTooltip %>"><%= locale.paginationHelper.previous %></a>
+            <% } %>
+            <% paginationData.pageLinks.forEach(item => { %>
+                <span<% if (item.isActive) { %> class="selected"<% } %>><a href="<%= item.url %>"><%= item.page %></a></span>
+            <% }); %>
+            <% if (paginationData.hasNext) { %>
+                <a href="<%= paginationData.nextLink %>" class="tooltip tooltip--top" data-title="<%= locale.paginationHelper.nextTooltip %>"><%= locale.paginationHelper.next %></a>
+            <% } %>
+            <% if (paginationData.hasLast) { %>
+                <a href="<%= paginationData.previousLink %>" class="tooltip tooltip--top" data-title="<%= locale.paginationHelper.lastTooltip %>"><i class="fa-solid fa-angles-right"></i></a>
+            <% } %>
+        </div>
+        <div class="alignCenter"><%- displayingItems %></div>
+        <div class="alignRight">
+            <%= locale.paginationHelper.page %> <input type="number" name="page" id="pagination-page-number" class="pageNumberInput" min="1" max="99" value="1"> <%- pageOfPages %>
+        </div>
+    </div>
+</div> 

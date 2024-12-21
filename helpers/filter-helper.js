@@ -19,6 +19,7 @@ const ForumRepository = require('../repository/forum-repository');
 const TopicRepository = require('../repository/topic-repository');
 const PostRepository = require('../repository/post-repository');
 const LocaleHelper = require('./locale-helper');
+const PostHelper = require('../helpers/post-helper');
 
 /**
  * Helpers for filter-related tasks.
@@ -215,6 +216,144 @@ class FilterHelper {
             moreItems,
             from: hasItems ? from + perLoad : 0,
             selectors,
+        };
+    }
+
+    /**
+     * Filter the posts.
+     * 
+     * @param {Array} items - The post items to filter.
+     * @param {number} from - THe index at which to start.
+     * @param {Object} mode - The select items mode object.
+     * @param {string} sortBy - The item to sort by.
+     * @param {string} sortOrder - The sorting order. 
+     * @param {string} timeframe - The timeframe.
+     */
+    static filterPosts(items, from, mode, sortBy, sortOrder, timeframe) {
+        let entities = items.map(
+            obj => 
+                PostRepository.getPostById(obj.id)
+        );
+
+        const hadEntities = entities.length > 0;
+        let status = hadEntities > 0 ? 'all' : 'none';
+        from = parseInt(from, 10);
+        
+        switch (mode.type) {
+            case 'all':
+                // All means all, so no assignment right here
+                break;
+            case 'tags':
+                const tags = [];
+
+                if (entities) {
+                    entities.forEach((entity) => {
+                        mode.tags.forEach((tag) => {
+                            if (PostHelper.hasTag(entities.getId(), tag)) {
+                                tags.push(entity);
+                            }
+                        });
+                    });
+                }
+
+                entities = tags;
+                break;
+            case 'date':
+                const { startDate, endDate } = mode.dateRange;
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+                    throw new Error(LocaleHelper.get('errors', 'postsFilterInvalidDateRange'));
+                }
+
+                if (entities) {
+                    entities = entities.filter((entity) => {
+                        const postDate = entity.getCreatedAt();
+                        return postDate >= start && postDate <= end;
+                    });
+                }
+                break;
+            case 'announcement':                
+                if (entities) {
+                    entities = entities.filter(obj => obj.isAnnouncement());
+                }
+                break;
+            case 'member':
+                const members = [];
+
+                if (entities) {
+                    entities.forEach((entity) => {
+                        mode.members.forEach((member) => {
+                            if (entity.getCreatedBy() === member) {
+                                members.push(entity);
+                            }
+                        });
+                    });
+                }
+
+                entities = members;
+                break;
+            default:
+                throw new Error(LocaleHelper.get('errors', 'invalidPostFilter'));
+        }
+        
+        if (entities.length === 0) {
+            status = hadEntities ? 'noneByFilter' : 'none';
+        }
+
+        switch (sortBy) {
+            case 'newesttooldest':
+                entities.sort((a, b) => sortOrder == 'asc'
+                    ? a.getCreatedAt() - b.getCreatedAt()
+                    : b.getCreatedAt() - a.getCreatedAt()
+                );
+                break;
+            case 'likes':
+                entities.sort((a, b) => sortOrder == 'asc'
+                    ? a.getTotalLikes() - b.getTotalLikes()
+                    : b.getTotalLikes() - a.getTotalLikes()
+                );
+                break;
+            default:
+                throw new Error(LocaleHelper.get('errors', 'postsSortingInvalidSortBy'));
+        }
+        
+        const { start, end } = TimeHelper.getTimeRange(timeframe);
+
+        entities = entities.filter((entity) => {
+            return entity.getCreatedAt() >= start && entity.getCreatedAt() < end;
+        });
+        
+        if (entities.length === 0) {
+            status = hadEntities ? 'noneByFilter' : 'none';
+        }
+
+        const member = DataStoreService.get('currentMember');
+        const perLoad = member.getPerLoad().posts;
+        const slicedEntities = entities.slice(from, from + perLoad);
+        const moreItems = entities.length > from + perLoad;
+        const finalItems = [];
+        let builtPostItems = [];
+
+        slicedEntities.forEach((entity) => {
+            builtPostItems.push(entity.build());
+        });
+
+        if (status == 'none') {
+            slicedEntities = OutputHelper.getPartial('filter-helper', 'no-posts');
+        } else if (status == 'noneByFilter') {
+            slicedEntities = OutputHelper.getPartial('filter-helper', 'no-posts-filter');
+        }
+
+        let hasItems = Array.isArray(slicedEntities) && slicedEntities.length > 0;
+
+        return {
+            hasItems,
+            posts: slicedEntities,
+            builtPostItems,
+            moreItems,
+            from: hasItems ? from + perLoad : 0,
         };
     }
 }

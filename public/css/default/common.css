@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
-html, body { height: 100%; display: flex; flex-direction: column; }
+html, body { height: 100%; }
 body { font-family: 'Poppins', sans-serif; font-size: 13px; color: #C3C3C3; background-color: #171e20; padding: 0px; margin: 0px; }
 .sideBar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 100; background-color: #121212; padding: 10px; border-right: 1px solid #575757; }
 .sideBarGrid { display: grid; grid-template-rows: auto 1fr; gap: 30px; height: 100vh; }
@@ -71,7 +71,7 @@ header { margin-top: 20px; margin-bottom: 30px; border-bottom: 1px solid #2c3335
 .postItemBottomRight span:first-of-type { margin-left: 0; }
 .postItemBottomRightTags i { margin-right: 8px; }
 .wrapper { flex: 1; }
-footer { width: auto; background-color: #121212; border-top: 1px solid #575757; padding: 10px 0; font-size: 12px; }
+footer { position: fixed; bottom: 0; left: 0; right: 0; z-index: 800; width: auto; background-color: #121212; border-top: 1px solid #575757; padding: 10px 0; font-size: 12px; }
 .footerGrid { display: grid; grid-template-columns: 33% 34% 33%; gap: 30px; align-items: center; }
 .footerGridRight { text-align: right; }
 .contentLoading { text-align: center; margin-top: 30px; margin-bottom: 30px; font-size: 18px; display: flex; align-items: center; align-self: center; align-content: center; justify-content: center; justify-items: center; display: none; }
@@ -120,3 +120,48 @@ footer { width: auto; background-color: #121212; border-top: 1px solid #575757; 
 .forumsSymbolLinkTopic i { margin-right: 8px; }
 .dualRowGrid { display: grid; grid-template-rows: auto auto; gap: 4px; }
 .tagsSmallLink { font-size: 11px !important; }
+.tagsSmallLink i { margin-right: 5px; }
+.topBottomMargin30 { margin-top: 30px; margin-bottom: 30px; }
+.postsGrid { display: grid; grid-template-columns: 1fr 150px; gap: 20px; }
+.postsGridRight { position: relative; width: 150px; min-width: 150px; }
+.postBox { width: auto; border-radius: 8px; border-top: 2px solid #121212; border-left: 2px solid #121212; border-right: 2px solid #282828; border-bottom: 2px solid #282828; margin-top: 14px; }
+.postBox:first-of-type { margin-top: 0; }
+.postBoxGrid { display: grid; grid-template-columns: 200px 1fr; }
+.postBoxGridLeft { background-color: #282828; padding: 20px; border-radius: 8px 0 0 8px; }
+.postBoxGridRight { background-color: #121212; padding: 20px; border-radius: 0 8px 8px 0; }
+.postBoxLeftUpperGrid { display: grid; grid-auto-rows: auto; gap: 12px; }
+.postBoxLeftUpperGrid div { text-align: center; }
+.blockAlignCenter { margin-left: auto; margin-right: auto; }
+.postBoxInfoItem { width: auto; border-radius: 8px; background-color: #171e20; border: 1px solid #5b6062; padding: 8px 8px 4px 8px; font-size: 9px; margin-top: 10px; position: relative; }
+.postBoxInfoItem:first-of-type { margin-top: 10px; }
+.postBoxInfoItemTitle { position: absolute; top: -8.5px; left: 50%; transform: translateX(-50%); z-index: 100; font-weight: 700; font-size: 10px; text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5); }
+.postBoxRightFlex { display: flex; flex-direction: column; justify-content: space-between; gap: 30px; height: 100%; }
+.postBoxRightTop { font-size: 12px; }
+.postBoxRightCenter { align-self: stretch; text-align: start; display: block; flex-grow: 1; font-size: 14px; }
+.postBoxRightBottom { font-size: 12px; }
+.iconSpace i { margin-right: 5px; }
+.postBoxRightTopRight span { margin-left: 20px; }
+.postBoxRightTopRight span:first-of-type { margin-left: 0; }
+.likeLinkGrid { display: grid; grid-template-columns: auto auto; width: fit-content; gap: 0; align-items: center; font-size: 11px; }
+.likeLinkGridLeft { font-weight: 700; padding: 5px 10px; background-color: #171e20; border-radius: 8px 0 0 8px; }
+.likeLinkGridRight { padding: 5px 10px; background-color: #282828; border-radius: 0 8px 8px 0; }
+.likeLinkGridRight i { margin-right: 5px; }
+.postModInfo { font-size: 10px; }
+.postModInfo span { margin-left: 20px; }
+.postModInfo span:first-of-type { margin-left: 0; }
+.tripleGridCentered { display: grid; grid-template-columns: 32% 32% 32%; gap: 2%; align-items: center; }
+.signatureBox { width: auto; margin-top: 30px; border-top: 1px dashed #3f3f3f; padding: 20px 0 0 0; }
+.attachmentsGrid { display: grid; grid-template-rows: auto auto; gap: 20px; margin-top: 30px; }
+.attachmentsGridTitle { font-size: 14px; font-weight: 600; border-bottom: 1px dashed #3f3f3f; padding: 0 0 8px 0; }
+.attachmentsGridContent { display: flex; gap: 10px; flex-direction: row; flex-wrap: wrap; align-items: flex-start; width: fit-content; }
+.attachmentsGridTitle i { margin-right: 5px; }
+.attachmentItem { border-radius: 8px; width: fit-content; display: flex; flex-grow: 1; flex-shrink: 1; align-items: center; justify-content: center; text-align: center; }
+.attachmentItemGrid { display: grid; grid-template-rows: auto auto auto; gap: 0px; }
+.attachmentItemGridTop { border-radius: 8px 8px 0 0; font-weight: 700; padding: 10px; background-color: #282828; border-bottom: 1px solid #121212; font-size: 12px; border-bottom: 1px solid #171e20; }
+.attachmentItemGridCenter { padding: 0; font-size: 11px; background-color: #282828; }
+.attachmentItemGridBottom { border-radius: 0 0 8px 8px; padding: 10px; font-size: 11px; text-align: center; background-color: #282828; border-top: 1px solid #171e20; }
+.attachmentItemGridCenterGrid { display: grid; grid-template-columns: auto auto; gap: 0; align-items: center; }
+.attachmentItemGridCenterGridLeft { padding: 10px; background-color: #3f3f3f; }
+.attachmentItemGridCenterGridRight { padding: 10px; }
+.paginationBar { width: auto; border-radius: 8px; background-color: #121212; padding: 20px; margin-top: 30px; margin-bottom: 30px; }
+.paginationBarGrid { display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: center; }

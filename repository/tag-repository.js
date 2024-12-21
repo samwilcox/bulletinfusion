@@ -54,7 +54,7 @@ class TagRepository {
      * @param {number} tagId - The ID of the tag to fetch.
      * @returns {Tag|null} The 'Tag' entity or null if not found.
      */
-    static getTagById(postId) {
+    static getTagById(tagId) {
         const data = this.loadTagDataById(tagId);
         return this.buildTagFromData(data);
     }

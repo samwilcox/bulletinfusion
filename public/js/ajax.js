@@ -15,8 +15,13 @@
  * @param {string} action - The action to perform.
  * @param {Object} data - Optional data object parameters.
  * @param {CallableFunction} successCallback - Callback when response received.
+ * @param {Object} [options={}] - Options for the AJAX get request.
+ * @param {boolean} [options.onError=false] - True to execute a given function on error.
+ * @param {any} [options.value=null] - The value to set on error.
+ * @param {Function} [options.fn=null] - The function to execute on error.
  */
-function ajaxGet(action, data = null, successCallback) {
+function ajaxGet(action, data = null, successCallback, options = {}) {
+    const { onError = false, value = null, fn = null } = options;
     let queryString = '';
 
     if (data) {
@@ -36,6 +41,10 @@ function ajaxGet(action, data = null, successCallback) {
         },
         error: function(xhr, status, error) {
             handleAjaxError(xhr, status, error);
+            
+            if (onError && typeof fn === 'function' && value) {
+                fn(value);
+            }
         }
     });
 }
@@ -46,8 +55,12 @@ function ajaxGet(action, data = null, successCallback) {
  * @param {string} action - The action to perform.
  * @param {Object} data - Optional data object parameters.
  * @param {CallableFunction} successCallback - Callback when response received.
+ * @param {boolean} [options.onError=false] - True to execute a given function on error.
+ * @param {any} [options.value=null] - The value to set on error.
+ * @param {Function} [options.fn=null] - The function to execute on error.
  */
-function ajaxPost(action, data, successCallback) {
+function ajaxPost(action, data, successCallback, options = {}) {
+    const { onError = false, value = null, fn = null } = options;
     const url = `${json.ajaxUrl}/ajax/${action}`;
     let headers = {};
 
@@ -69,6 +82,10 @@ function ajaxPost(action, data, successCallback) {
         },
         error: function(xhr, status, error) {
             handleAjaxError(xhr, status, error);
+
+            if (onError && typeof fn === 'function' && value) {
+                fn(value);
+            }
         }
     });
 }

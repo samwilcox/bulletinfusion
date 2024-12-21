@@ -19,5 +19,6 @@ router.get('/postitems', ajaxController.getPostItems.bind(ajaxController));
 router.get('/subscribebutton', ajaxController.getSubscribeButton.bind(ajaxController));
 router.post('/togglesubscription', ajaxController.toggleSubscription.bind(ajaxController));
 router.post('/updatesubscriptionpreferences', ajaxController.updateSubscriptionPreferences.bind(ajaxController));
+router.post('/posts', ajaxController.getPosts.bind(ajaxController));
 
 module.exports = router;
