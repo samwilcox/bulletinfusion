@@ -1,0 +1,73 @@
+.sideBar a, .sideBar a:link, .sideBar a:active, .sideBar a:visited { color: #C3C3C3; text-decoration: none; font-size: 14px; transition: 0.5s ease; display: block; border-radius: 8px; padding: 8px 12px; margin-top: 4px; }
+.sideBar a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #3f3f3f; }
+.sideBar a:first-of-type { margin-top: 0; }
+.signInLink a, .signInLink a:link, .signInLink a:active, .signInLink a:visited { color: #000; text-decoration: none; transition: 0.5s ease; display: inline-block; border-radius: 8px; padding: 10px 20px; background-color: #77bac8; font-size: 14px; margin-left: 20px; font-weight: 500; }
+.signInLink a:hover { color: #000; text-decoration: none; transition: 0.5s ease; background-color: #a6d1da; }
+.signUpLink a, .signUpLink a:link, .signUpLink a:active, .signUpLink a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; display: inline-block; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 500; }
+.signUpLink a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #121212; }
+.buttonOne a, .buttonOne a:link, .buttonOne a:active, .buttonOne a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; display: inline-block; margin-left: 10px; border-radius: 8px; padding: 12px 20px; background-color: #43494b; }
+.buttonOne a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #3f3f3f; }
+.buttonOne a:first-of-type { margin-left: 0; }
+.dropDownMenuLinks a, .dropDownMenuLinks a:link, .dropDownMenuLinks a:active, .dropDownMenuLinks a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; display: block; border-radius: 8px; padding: 10px; }
+.dropDownMenuLinks a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #3f3f3f; }
+.forumsBlockItem a, .forumsBlockItem a:link, .forumsBlockItem a:active, .forumsBlockItem a:visited { color: inherit; text-decoration: none; transition: 0.5s ease; border-radius: 8px; padding: 10px 20px; background-color: inherit; display: block; margin-top: 4px; }
+.forumsBlockItem a:hover { color: inherit; text-decoration: none; transition: 0.5s ease; }
+.forumsBlockItem a:first-of-type { margin-top: 0; }
+.forumsSymbolLink a, .forumsSymbolLink a:link, .forumsSymbolLink a:active, .forumsSymbolLink a:visited { color: inherit; text-decoration: none; transition: 0.5s ease; border-radius: 8px; padding: 10px 20px; background-color: inherit; display: inline-block; }
+.forumsSymbolLink a:hover { color: inherit; text-decoration: none; transition: 0.5s ease; }
+.postItemTopicLink a, .postItemTopicLink a:link, .postItemTopicLink a:active, .postItemTopicLink a:visited { color: #5dafc0; text-decoration: none; transition: 0.5s ease; font-weight: normal; font-size: 15px; }
+.postItemTopicLink a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; }
+.postItemTopicLinkUnread a, .postItemTopicLinkUnread a:link, .postItemTopicLinkUnread a:active, .postItemTopicLinkUnread a:visited { color: #5dafc0; text-decoration: none; transition: 0.5s ease; font-weight: 700; font-size: 15px; }
+.postItemTopicLinkUnread a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; }
+a, a:link, a:active, a:visited { color: #5dafc0; text-decoration: none; transition: 0.5s ease; }
+a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; }
+.cookieOptions a, .cookieOptions a:link, .cookieOptions a:active, .cookieOptions a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; position: fixed; bottom: 50px; right: 50px; z-index: 100; font-size: 90px; }
+.cookieOptions a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.captchaReload a, .captchaReload a:link, .captchaReload a:active, .captchaReload a:visited { color: #0098ae; text-decoration: none; transition: 0.5s ease; width: 26px; height: 26px; border: 1px solid #8b8b8b; border-radius: 50%; position: absolute; top: -10px; right: -10px; z-index: 100; display: flex; align-items: center; justify-content: center; background-color: #2c3335; }
+.captchaReload a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; background-color: #43494b; }
+.passwordToggle a, .passwordToggle a:link, .passwordToggle a:active, .passwordToggle a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; position: absolute; top: 50%; right: 20px; z-index: 500; transform: translateY(-50%); font-size: 24px; }
+.passwordToggle a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.forgotPassword a, .forgotPassword a:link, .forgotPassword a:active, .forgotPassword a:visited { color: #77bac8; text-decoration: none; transition: 0.5s ease; font-size: 11px; }
+.forgotPassword a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; }
+.signInOauth a, .signInOauth a:link, .signInOauth a:active, .signInOauth a:visited { color:#0085FF; text-decoration: none; transition: 0.5s ease; margin-left: 30px; }
+.signInOauth a:hover { color: #00488C; text-decoration: none; transition: 0.5s ease; } 
+.signInOauth a:first-of-type { margin-left: 0; }
+.errorBoxClose a, .errorBoxClose a:link, .errorBoxClose a:active, .errorBoxClose a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; position: absolute; top: -8px; right: -8px; z-index: 100; font-size: 20px; }
+.errorBoxClose a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.memberMenuLink a, .memberMenuLink a:link, .memberMenuLink a:active, .memberMenuLink a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; font-size: 15px; font-weight: 600; padding: 12px 0; }
+.memberMenuLink a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.memberMenuLink a i { margin-left: 8px; }
+.brightButton a, .brightButton a:link, .brightButton a:active, .brightButton a:visited { color: #000; text-decoration: none; transition: 0.5s ease; display: inline-block; border-radius: 8px; font-weight: 500; padding: 13px 26px; background-color: #5dafc0; font-size: 14px; }
+.brightButton a:hover { color: #000; text-decoration: none; transition: 0.5s ease; background-color: #8fc5d1; }
+.buttonsGroup a { margin-left: 14px; }
+.breadcrumbs a, .breadcrumbs a:link, .breadcrumbs a:active, .breadcrumbs a:visited { color: #C3C3C3; text-decoration: none; margin-left: 6px; margin-right: 6px; }
+.breadcrumbs a:hover { color: #C3C3C3; text-decoration: underline; }
+.breadcrumbs a:last-of-type { margin-right: 0; }
+.subscribeButton a, .subscribeButton a:link, .subscribeButton a:active, .subscribeButton a:visited { color: inherit; text-decoration: none; transition: 0.5s ease; opacity: 1; border-radius: 8px; display: inline-block; }
+.subscribeButton a:hover { color: inherit; text-decoration: none; transition: 0.5s ease; opacity: 0.7; }
+.dialogHeader a, .dialogHeader a:link, .dialogHeader a:active, .dialogHeader a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; font-size: 20px; }
+.dialogHeader a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.forumsSymbolLinkTopic a, .forumsSymbolLinkTopic a:link, .forumsSymbolLinkTopic a:active, .forumsSymbolLinkTopic a:visited { color: inherit; text-decoration: none; transition: 0.5s ease; background-color: inherit; border-radius: 0 0 8px 8px; padding: 8px 20px; position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 200; }
+.forumsSymbolLinkTopic a:hover { color: inherit; text-decoration: none; transition: 0.5s ease; background-color: inherit; }
+.tagsSmallLink a, .tagsSmallLink a:link, .tagsSmallLink a:active, .tagsSmallLink a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; font-size: 11px !important; }
+.tagsSmallLink a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.memberPostLink a, .memberPostLink a:link, .memberPostLink a:active, .memberPostLink a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; font-size: 18px; font-weight: 700; }
+.memberPostLink a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.memberPostGroupLink a, .memberPostGroupLink a:link, .memberPostGroupLink a:active, .memberPostGroupLink a:visited { color: #77bac8; text-decoration: none; transition: 0.5s ease; font-size: 16px; font-weight: 600; }
+.memberPostGroupLink a:hover { color: #a6d1da; text-decoration: none; transition: 0.5s ease; }
+.postBoxInfoItem a, .postBoxInfoItem a:link, .postBoxInfoItem a:active, .postBoxInfoItem a:visited { color: #C3C3C3; text-decoration: none; }
+.postBoxInfoItem a:hover { color: #C3C3C3; text-decoration: underline; }
+.postBoxRightTopRight a, .postBoxRightTopRight a:link, .postBoxRightTopRight a:active, .postBoxRightTopRight a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; padding: 4px 6px; }
+.postBoxRightTopRight a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; }
+.likeLink a, .likeLink a:link, .likeLink a:active, .likeLink a:visited { color: inherit; text-decoration: none; transition: 0.5s ease; border-radius: 8px; opacity: 1; display: inline-block; border-radius: 8px; border: 1px solid #717171; }
+.likeLink a:hover { color: inherit; text-decoration: none; transition: 0.5s ease; opacity: 0.7; } 
+.paginationLinks a, .paginationLinks a:link, .paginationLinks a:active, .paginationLinks a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; padding: 4px 10px; border-radius: 4px; font-weight: 700; }
+.paginationLinks a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #282828; }
+.paginationLinks .selected a, .paginationLinks .selected a:link, .paginationLinks .selected a:active, .paginationLinks .selected a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; padding: 4px 10px; border-radius: 4px; font-weight: 700; background-color: #007182; }
+.paginationLinks .selected a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #0098ae; }
+.pollAction a, .pollAction a:link, .pollAction a:active, .pollAction a:visited { color: #000; text-decoration: none; transition: 0.5s ease; border-radius: 8px; padding: 8px 20px; font-size: 11px; font-weight: 600; display: inline-block; background-color: #77bac8; }
+.pollAction a:hover { color: #000; text-decoration: none; transition: 0.5s ease; background-color: #a6d1da; }
+.nextPreviousTopicBar a, .nextPreviousTopicBar a:link, .nextPreviousTopicBar a:active, .nextPreviousTopicBar a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; border-radius: 8px; padding: 10px 20px; background-color: #43494b; display: inline-block; }
+.nextPreviousTopicBar a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #2c3335; }
+.nextPreviousTopicBar .left i { margin-right: 5px; }
+.nextPreviousTopicBar .right i { margin-left: 5px; }

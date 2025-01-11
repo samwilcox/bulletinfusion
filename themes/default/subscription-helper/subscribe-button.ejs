@@ -1,0 +1,42 @@
+<div class="dialog" style="width: 600px;" id="dialog-subscription-options">
+    <div class="dialogHeader">
+        <div class="dualGridCentered">
+            <div class="title"><%= dialogTitle %></div>
+            <div class="alignRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.global.closeDialogTooltip %>" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+        </div>
+    </div>
+    <div class="dialogContentWithFooter">
+        <div class="titleContentGrid">
+            <div><strong><%= locale.subscriptionHelper.iPrefer %></strong></div>
+            <div>
+                <div class="radio">
+                    <input id="notificationoption-1" type="radio" name="notificationoption" value="1"<% if (selectedOption == 1) { %> checked<% } %>>
+                    <label for="notificationoption-1"><%= locale.subscriptionHelper.onNewNotification %></span></label>
+                  </div>
+                  <div class="radio">
+                    <input id="notificationoption-2" type="radio" name="notificationoption" value="2"<% if (selectedOption == 2) { %> checked<% } %>>
+                    <label for="notificationoption-2"><%= locale.subscriptionHelper.oneEmailADay %></span></label>
+                  </div>
+                  <div class="radio">
+                    <input id="notificationoption-3" type="radio" name="notificationoption" value="3"<% if (selectedOption == 3) { %> checked<% } %>>
+                    <label for="notificationoption-3"><%= locale.subscriptionHelper.oneEmailAWeek %></span></label>
+                  </div>
+                  <div class="radio">
+                    <input id="notificationoption-4" type="radio" name="notificationoption" value="4"<% if (selectedOption == 4) { %> checked<% } %>>
+                    <label for="notificationoption-4"><%= locale.subscriptionHelper.noNotifications %></span></label>
+                  </div>
+            </div>
+        </div>
+        <% if (subscribed) { %>
+            <div class="dialogUnder"><a href="javascript:void(0);" data-contentid="<%= contentId %>" data-contenttype="<%= contentType %>" onclick="unsubscribeFromContent(this);"><%= locale.subscriptionHelper.unSubscribe %></a></div>
+        <% } %>
+    </div>
+    <div class="dialogFooter">
+        <input type="button" name="subscribebutton" value="<%= buttonText %>" data-contentid="<%= contentId %>" data-contenttype="<%= contentType %>" data-radio="notificationoption" onclick="<%- jsFunction %>">
+    </div>
+</div>
+<span class="subscribeButton">
+    <a href="javascript:void(0);" data-dialog="dialog-subscription-options" data-width="500" onclick="openDialog(event, this);">
+        <span class="subscribeButtonTotal"><%- total %></span><span class="subscribeButtonText"><%= text %></span>
+    </a>
+</span>

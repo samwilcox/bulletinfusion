@@ -1,0 +1,13 @@
+<% if (link) { %>
+    <a href="<%= link %>">
+<% } %>
+<% if (type == 'normal') { %>
+    <span class="photo"><img src="<%= photo %>" alt="*"></span>
+<% } else if (type == 'thumbnail') { %>
+    <span class="photoThumbnail"><img src="<%= photo %>" alt="*"></span>
+<% } else if (type == 'small') { %>
+    <span class="photoSmallThumbnail"><img src="<%= photo %>" alt="*"></span>
+<% } %>
+<% if (link) { %>
+    </a>
+<% } %>

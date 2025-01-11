@@ -1,0 +1,13 @@
+<% if (member && link) { %>
+    <a href="<%= link %>">
+<% } %>
+    <% if (type == 'normal') { %>
+        <span class="noPhoto" style="color: <%= textColor %>; background-color: <%= backgroundColor %>;"><%= letter %></span>
+    <% } else if (type == 'thumbnail') { %>
+        <span class="noPhotoThumbnail" style="color: <%= textColor %>; background-color: <%= backgroundColor %>;"><%= letter %></span>
+    <% } else if (type == 'small') { %>
+        <span class="noPhotoSmallThumbnail" style="color: <%= textColor %>; background-color: <%= backgroundColor %>;"><%= letter %></span>
+    <% } %>
+<% if (member && link) { %>
+    </a>
+<% } %>

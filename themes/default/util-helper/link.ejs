@@ -1,0 +1,29 @@
+<% if (separator) { %>
+    <%- separator %>
+<% } %>
+
+<a href="<% if (js) { %>javascript:void(0);<% } else { %><%= url %><% } %>"
+   <% if (id) { %>
+        id="<%= id %>" 
+   <% } %>
+   <% if (tooltip) { %> 
+       class="tooltip tooltip--top" 
+       data-title="<%= tooltip %>" 
+   <% } %>
+   <% if (haveData) { %>
+       <% for (let key in data) { %>
+             data-<%= data[key] %>
+       <% } %>
+   <% } %>
+   <% if (onclick) { %> 
+       onclick="<%- onclick %>" 
+   <% } %>
+   <% if (target) { %> 
+       target="<%- target %>" 
+   <% } %>
+>
+   <% if (icon) { %> 
+       <%- icon %> 
+   <% } %>
+   <%- title %>
+</a>

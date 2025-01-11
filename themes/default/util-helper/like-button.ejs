@@ -1,0 +1,14 @@
+<span class="likeLink">
+    <a href="javascript:void(0);"<% if (signedIn) { %> data-content="like-button-content-<%- contentId %>" data-contentid="<%= contentId %>" data-contenttype="<%= contentType %>" data-method="<% if (liked) { %>unlike<% } else { %>like<% } %>" onclick="likeUnlikeContent(this);"<% } %>>
+        <div class="likeLinkGrid">
+            <div class="likeLinkGridLeft"><%- total %></div>
+            <div class="likeLinkGridRight">
+                <% if (liked) { %>
+                    <i class="fa-solid fa-xmark"></i><%= locale.utilHelper.unlike %>
+                <% } else { %>
+                    <i class="fa-regular fa-thumbs-up"></i><%= locale.utilHelper.like %>
+                <% } %>
+            </div>
+        </div>
+    </a>
+</span>

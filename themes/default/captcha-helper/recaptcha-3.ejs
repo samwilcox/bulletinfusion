@@ -1,0 +1,11 @@
+<script src="https://www.google.com/recaptcha/api.js?render=<%= siteKey %>" async defer></script>
+<script>
+    function onSubmit() {
+        grecaptcha.ready(function () {
+            grecaptcha.execute('<%= siteKey %>', { action: 'submit' }).then(function (token) {
+                document.getElementById('captcha-token').value = token;
+                document.getElementById('captcha-form').submit();
+            });
+        });
+    }
+</script>

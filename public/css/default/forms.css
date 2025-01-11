@@ -1,0 +1,64 @@
+form { padding: 0; margin: 0; }
+input, select, textarea { font-family: 'Poppins', sans-serif; font-size: 13px; border-radius: 8px; background-color: #121212; color: #C3C3C3; padding: 8px; border: 1px solid #3f3f3f; outline: none; }
+.captchaField { width: 100px; }
+.fieldsGrid { display: grid; grid-template-rows: auto; gap: 10px; }
+.formGroup { position: relative; margin: 12px 0; width: 100%; }
+.formGroup input { padding: 14px; font-size: 14px; border-radius: 8px; border: 2px solid #3f3f3f; background-color: transparent; color: #C3C3C3; transition: 0.15s all ease; width: 100%; box-sizing: border-box; }
+.formGroup input:hover { border-color: #8E8E8E; }
+.formGroup input:focus { border-color: #0098ae; }
+.formGroup input::placeholder { color: transparent; }
+.formGroup label { position: absolute; top: 16px; left: 14px; font-size: 14px; padding: 0 10px; color: #C3C3C3; pointer-events: none; transition: 0.15s all ease; }
+.formGroup input:focus + label, .formGroup input:not(:placeholder-shown) + label { transform: translate(5px, -26px); background-color: #171e20; font-size: 14px; color: #0098ae; }
+.formGroupAlt { position: relative; margin: 12px 0; width: 100%; }
+.formGroupAlt input { padding: 14px; font-size: 14px; border-radius: 8px; border: 2px solid #3f3f3f; background-color: transparent; color: #C3C3C3; transition: 0.15s all ease; width: 100%; box-sizing: border-box; }
+.formGroupAlt input:hover { border-color: #8E8E8E; }
+.formGroupAlt input:focus { border-color: #0098ae; }
+.formGroupAlt input::placeholder { color: transparent; }
+.formGroupAlt label { position: absolute; top: 16px; left: 14px; font-size: 14px; padding: 0 10px; color: #C3C3C3; pointer-events: none; transition: 0.15s all ease; }
+.formGroupAlt input:focus + label, .formGroupAlt input:not(:placeholder-shown) + label { transform: translate(5px, -26px); background-color: #121212; font-size: 14px; color: #0098ae; }
+.passwordField { padding-right: 65px !important; }
+.checkboxGrid { display: grid; grid-template-columns: auto 1fr; width: fit-content; gap: 14px; }
+.checkboxTitle { font-weight: 800; font-size: 14px; }
+.checkboxInfo { font-size: 11px; }
+.checkbox .checkbox { --bg: transparent; --brdr: #0098ae; --brdr-actv: #0098ae; --brdr-hovr: #0098ae; --dur: calc((var(--size, 2)/2) * 0.6s); display: inline-block; width: calc(var(--size, 1) * 22px); position: relative; }
+.checkbox .checkbox:after { content: ""; width: 100%; padding-top: 100%; display: block; }
+.checkbox .checkbox > * { position: absolute; }
+.checkbox .checkbox input { -webkit-appearance: none; -moz-appearance: none; -webkit-tap-highlight-color: transparent; cursor: pointer; background-color: var(--bg); border-radius: calc(var(--size, 1) * 4px); border: calc(var(--newBrdr, var(--size, 1)) * 1px) solid; color: var(--newBrdrClr, var(--brdr)); outline: none; margin: 0; padding: 0; transition: all calc(var(--dur) / 3) linear; }
+.checkbox .checkbox input:hover, .checkbox .checkbox input:checked { --newBrdr: calc(var(--size, 1) * 2); }
+.checkbox .checkbox input:hover { --newBrdrClr: var(--brdr-hovr); }
+.checkbox .checkbox input:checked { --newBrdrClr: var(--brdr-actv); transition-delay: calc(var(--dur) /1.3); }
+.checkbox .checkbox input:checked + svg { --dashArray: 16 93; --dashOffset: 109; }
+.checkbox .checkbox svg { fill: none; left: 0; pointer-events: none; stroke: var(--stroke, var(--border-active)); stroke-dasharray: var(--dashArray, 93); stroke-dashoffset: var(--dashOffset, 94); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2px; top: 0; transition: stroke-dasharray var(--dur), stroke-dashoffset var(--dur); }
+.checkbox .checkbox svg, .checkbox .checkbox input { display: block; height: 100%; width: 100%; }
+input[type=submit], input[type=button] { border-radius: 8px; font-weight: 800; font-size: 14px; padding: 12px 20px; background-color: #0098ae; color: #000; border: 1px solid transparent; outline: none; transition: 0.5s ease; color: #FFF; }
+input[type=submit]:hover, input[type=button]:hover { transition: 0.5s ease; background-color: #5dafc0; cursor: pointer; }
+.altButton { border-radius: 8px; font-weight: 800; font-size: 14px; padding: 12px 20px; background-color: #121212 !important; color: #000; border: 1px solid transparent; outline: none; transition: 0.5s ease; color: #FFF; }
+.altButton:hover { background-color: #282828 !important; }
+.radio { user-select: none; display: inline-flex; align-items: center; margin-top: 10px; }
+.radio:first-of-type { margin-top: 0; }
+.radio label { padding-left: .6em; color: #C3C3C3; font-weight: 500; line-height: 20px; }
+.radio label:hover, .radio input[type="radio"]:hover ~ label { color: #FFF; }
+.radio input[type="radio"] { appearance: none; -moz-appearance: none; -webkit-appearance: none; position: relative; display: inline-block; width: 14px; height: 14px; border-radius: 10px; background-color: #fff; box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.12) 0px 1px 1px 0px, rgba(64, 68, 82, 0.16) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(64, 68, 82, 0.08) 0px 2px 5px 0px; transition: all 240ms ease; margin: 0; vertical-align: middle; }
+.radio input[type="radio"]:after { content: ""; position: absolute; display: block; top: 50%; left: 50%; width: 6px; height: 6px; border-radius: 50%; background: #fff; opacity: 0; transform: translate(-50%, -50%) scale(1.25); transition: all 240ms ease-in-out; }
+.radio input[type="radio"]:checked { background-color: rgb(0, 152, 174); box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.12) 0px 1px 1px 0px, rgb(99, 91, 255) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(64, 68, 82, 0.08) 0px 2px 5px 0px; }
+.radio input[type="radio"]:checked:focus { box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(1, 150, 237, 0.36) 0px 0px 0px 4px, rgba(0, 0, 0, 0.12) 0px 1px 1px 0px, rgb(99, 91, 255) 0px 0px 0px 1px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(64, 68, 82, 0.08) 0px 2px 5px 0px; }
+.radio input[type="radio"]:checked:after { opacity: 1; transform: translate(-50%, -50%) scale(1); box-shadow: #2E69EB 0px 0px 0px 1px; }
+.pageNumberInput { border: none; border-bottom: 2px solid #C3C3C3; outline: none; padding: 5px; width: 40px; text-align: center; border-radius: 0; -moz-appearance: textfield; -webkit-appearance: none; appearance: none; font-weight: bold; }
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
+.pageNumberInput:hover { background-color: #181818; }
+.pageNumberInput:focus { background-color: #181818; }
+.checkboxRadioContainer { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; align-items: flex-start; align-content: flex-start; }
+.checkboxRadioContainer label { flex: 0 0 auto; }
+.checkboxRadio { position: relative; display: inline-flex; }
+.checkboxRadio input { position: absolute; opacity: 0; cursor: pointer; }
+.checkboxRadio .box { padding: 10px 20px; min-width: 100px; text-align: center; font-size: 16px; font-weight: 600; border: 2px solid #3f3f3f; border-radius: 8px; color: #C3C3C3; background-color: #121212; transition: all 0.3s ease; cursor: pointer; }
+.checkboxRadio input:checked + .box { border-color: #0098ae; background-color: #282828; color: #C3C3C3; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); }
+.checkboxRadio .box:hover { border-color: #0098ae; color: #C3C3C3; }
+.checkboxRadio input[type="radio"]:checked + .box { border-radius: 50px; }
+.checkboxRadio input:focus + .box { outline: 2px solid #0098ae; outline-offset: 2px; }
+input[type=button] { margin-left: 10px; }
+input[type=button]:first-of-type { margin-left: 0; }
+.cancelButton { border-radius: 8px; font-weight: 800; font-size: 14px; padding: 12px 20px; background-color: #717171 !important; color: #000; border: 1px solid transparent; outline: none; transition: 0.5s ease; color: #FFF; }
+.cancelButton:hover { transition: 0.5s ease; background-color: #3f3f3f !important; cursor: pointer; }
+input[type=file] { display: none; }

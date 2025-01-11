@@ -1,0 +1,185 @@
+<% if (hasVoted) { %>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(drawCharts);
+    
+        function drawCharts() {
+            const charts = {};
+
+            <% poll.questions.forEach(question => { %>
+                if (!charts[<%= question.number %>]) {
+                    charts[<%= question.number %>] = {
+                        data: {},
+                    };
+                }
+
+                charts[<%= question.number %>].data = google.visualization.arrayToDataTable([
+                    ['<%= locale.topicHelper.pollResultsOption %>', '<%= locale.topicHelper.pollResultsVotes %>'],
+                    <% question.options.forEach(option => { %>
+                        ['<%= option.title %>', <%= option.totalVotes %>],
+                    <% }) %>
+                ]);
+        
+                // Pie Chart Options
+                charts[<%= question.number %>].pieOptions = {
+                    title: '<%= locale.topicHelper.pollResultsProportion %>',
+                    pieHole: 0.4,
+                    backgroundColor: '#171e20',
+                    titleTextStyle: {
+                        color: '#C3C3C3',
+                    },
+                    chartArea: {
+                        backgroundColor: '#ffffff',
+                    },
+                    legend: {
+                        textStyle: {
+                            color: '#C3C3C3',
+                        }
+                    }
+                };
+        
+                // Bar Chart Options
+                charts[<%= question.number %>].barOptions = {
+                    title: '<%= locale.topicHelper.pollResultsProportion %>',
+                    legend: {position: 'none' },
+                    titleTextStyle: {
+                        color: '#C3C3C3',  
+                    },
+                    hAxis: {
+                        title: '<%= locale.topicHelper.pollResultsVotes %>',
+                        minValue: 0,
+                        textStyle: {
+                            color: '#C3C3C3',
+                        }
+                    },
+                    vAxis: {
+                        title: '<%= locale.topicHelper.pollResultsOptions %>',
+                        textStyle: {
+                            color: '#C3C3C3',
+                        }
+                    },
+                    backgroundColor: '#171e20',
+                    chartArea: {
+                        backgroundColor: '#171e20',
+                    },
+                    annotations: {
+                        highContrast: false,
+                        textStyle: {
+                            color: '#C3C3C3',
+                        }
+                    },
+                    annotations: {
+                        alwaysOutside: true,
+                    }
+                };
+        
+                // Render the Pie Chart
+                charts[<%= question.number %>].pieChart = new google.visualization.PieChart(document.getElementById('pie-chart-<%= question.number %>'));
+                charts[<%= question.number %>].pieChart.draw(charts[<%= question.number %>].data, charts[<%= question.number %>].pieOptions);
+        
+                // Render the Bar Chart
+                charts[<%= question.number %>].barChart = new google.visualization.BarChart(document.getElementById('bar-chart-<%= question.number %>'));
+                charts[<%= question.number %>].barChart.draw(charts[<%= question.number %>].data, charts[<%= question.number %>].barOptions);
+            <% }); %>
+        }
+    </script>
+<% } %>
+<% if (canVote) { %>
+    <div class="dialog" id="dialog-poll-viewresults">
+        <div class="dialogHeader">
+            <div class="dualGridCentered">
+                <div class="title"><%= locale.topicHelper.viewPollResultsTitle %></div>
+                <div class="alignRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.global.closeDialogTooltip %>" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+            </div>
+        </div>
+        <div class="dialogContentWithFooter">
+            <div class="dialogWarning">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <%= locale.topicHelper.viewPollResultsWarning %>
+            </div>
+        </div>
+        <div class="dialogFooter">
+            <input type="button" name="confirmviewpollbutton" id="confirmviewpollbutton" value="<%= locale.topicHelper.proceedButton %>" data-topicid="<%= topic.getId() %>" onclick="viewPollResults(this);">
+            <input type="button" name="cancelviewpollbutton" id="cancelviewpollbutton" value="<%= locale.topicHelper.cancelButton %>" class="cancelButton" onclick="closeDialog();">   
+        </div>
+    </div>
+<% } %>
+<div id="poll-container">
+    <div class="pollBox">
+        <div class="pollBoxTitle">
+            <div class="dualGridCentered">
+                <div class="pollBoxTitleText"><i class="fa-solid fa-square-poll-vertical"></i><%= poll.title %></div>
+                <div class="alignRight"><span class="tooltip tooltip--top" data-title="<%= totalVotersTooltip %>"><i class="fa-solid fa-users"></i> <%- totalVoters %></span></div>
+            </div>
+        </div>
+        <div class="pollBoxContent"<% if (!signedIn) { %> style="border-radius: 0 0 8px 8px;"<% } %>>
+            <% if (hasVoted) { %>
+                <% poll.questions.forEach(question => { %>
+                    <div id="question-<%= question.number %>-results">
+                    <div class="pollHeader"><%= question.number %>. <%= question.question %></div>
+                    <div class="pollResultsGrid">
+                        <div id="pie-chart-<%= question.number %>"></div>
+                        <div id="bar-chart-<%= question.number %>"></div>
+                    </div>
+                </div>
+                <% }); %>
+            <% } else { %>
+                <% poll.questions.forEach(question => { %>
+                    <div id="question-<%= question.number %>-vote">
+                    <div class="pollHeader"><%= question.number %>. <%= question.question %></div>
+                    <% if (question.multipleChoice) { %>
+                            <div class="checkboxRadioContainer">
+                        <% question.options.forEach(option => { %>
+                                <label class="checkboxRadio">
+                                    <input type="checkbox" name="question[<%= question.number %>][]" value="<%+ option.title %>">
+                                    <span class="box"><%= option.title %></span>    
+                                </label>
+                        <% }); %>
+                            </div>
+                    <% } else { %>
+                            <div class="checkboxRadioContainer">
+                        <% question.options.forEach(option => { %>
+                            <label class="checkboxRadio">
+                                <input type="radio" name="question[<%= question.number %>]" value="<%= option.title %>">
+                                <span class="box"><%= option.title %></span>
+                            </label>    
+                        <% }); %>
+                            </div>
+                    <% } %>
+                </div>
+                <% }); %>
+            <% } %>
+        </div>
+        <% if (signedIn) { %>
+            <div class="pollFooter">
+            <div class="tripleGridCentered">
+                <div>
+                    <% if (canVote) { %>
+                        <input type="button" name="votebutton" id="votebutton" value="Submit Vote" data-topicid="<%= topic.getId() %>" onclick="submitVote(this);">
+                        <input type="button" name="resultsbutton" id="resultsbutton" value="View Results" class="altButton" data-dialog="dialog-poll-viewresults" data-width="500" onclick="openDialog(event, this);">
+                    <% } %>
+                </div>
+                <div class="alignCenter">
+                    <% if (canCloseOpenPoll) { %>
+                        <span class="pollAction">
+                        <% if (poll.closed) { %>
+                            <a href="javascript:void(0);"><i class="fa-solid fa-rotate-left"></i><%= locale.topicHelper.reopenPoll %></a>
+                        <% } else { %>
+                            <a href="javascript:void(0);"><i class="fa-solid fa-xmark"></i><%= locale.topicHelper.closePoll %></a>
+                        <% } %>
+                        </span>
+                    <% } %>    
+                </div>
+                <div class="alignRight">
+                    <% if (poll.doesClose && !poll.closed) { %>
+                        <%- closesAt %>
+                    <% } else if (poll.doesClose && poll.closed) { %>
+                        <%- closedOn %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>

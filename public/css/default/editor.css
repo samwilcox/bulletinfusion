@@ -1,0 +1,52 @@
+.editorBox { width: 100%; box-sizing: border-box; border-radius: 8px; background-color: #121212; color: #C3C3C3; padding: 8px; border: 1px solid #3f3f3f; }
+.editorToolbar { width: auto; margin-bottom: 10px; }
+.editorContent { width: 100%; box-sizing: border-box; background-color: #121212; color: #C3C3C3; font-size: 14px; padding: 20px; min-height: 400px; max-height: 600px; max-width: 100%; overflow-y: auto; overflow-x: auto; border: none; outline: none; }
+.editorBox:focus-within { outline: 3px solid #0098ae; }
+.editorToolbar a, .editorToolbar a:link, .editorToolbar a:active, .editorToolbar a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; border-radius: 8px; padding: 8px 12px; display: inline-block; }
+.editorToolbar a:hover { color: #FFF; text-decoration: none; transition: 0.5s ease; background-color: #282828; }
+.editorToolbar i { margin-right: 5px; }
+.editorToolbar i + i { margin-left: 5px; margin-right: 0; }
+.editorToolbarSeparator { height: 16px; width: 1px; background-color: #3f3f3f; display: inline-block; margin: 0 5px; }
+.editorDdScroller { border-radius: 8px; max-height: 400px; overflow-y: auto; }
+.editorDualGrid { display: grid; grid-template-columns: auto auto; gap: 10px; width: fit-content; }
+.editorDualGridCentered { display: grid; grid-template-columns: auto auto; gap: 10px; align-items: center; width: fit-content; }
+.editorNumberField { width: 100px !important; }
+.editorDialogScroller { width: auto; max-height: 400px; overflow-y: auto; }
+.editorImgSpacer img { padding: 4px; }
+.editorCodeEditor { width: auto; border-radius: 8px; background-color: #121212; padding: 20px; border: 1px solid #3f3f3f; min-height: 400px; max-height: 600px; overflow-y: auto; outline: none; font-family: 'Courier New', Courier, monospace; }
+.editorCodeEditor:hover { border-color: #8b8b8b; }
+.editorCodeEditor:focus { outline: 3px solid #0098ae; }
+.uploaderBox { width: auto; border-radius: 8px; background-color: #2c3335; border: 2px solid #121212; padding: 20px; }
+.uploaderBoxGrid { display: grid; grid-template-columns: auto 1fr auto; gap: 20px; }
+.uploaderBoxCenterGrid { display: grid; grid-template-rows: auto auto; gap: 20px; }
+.uploaderBoxTitle { font-size: 24px; font-weight: 600; text-align: center; }
+.uploaderBoxTitle i { margin-right: 8px; }
+.uploaderBoxInfo { font-size: 14px; text-align: center; }
+.uploaderBoxFileLimit { font-size: 15px; }
+.uploaderBoxExistingAttachments { font-size: 15px; text-align: right; }
+.uploaderBoxDragOver { border: 2px dashed #575757; }
+.uploaderPreviewBox { width: auto; border-radius: 8px; background-color: #121212; border: 2px solid #3f3f3f; padding: 20px; margin-top: 8px; display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; display: none; }
+.uploaderPreviewItem { flex: 0 1 auto; width: fit-content; padding: 10px; background-color: #2c3335; border: 2px solid #74797a; border-radius: 8px; position: relative; }
+.uploaderPreviewItemFileName { width: auto; border-radius: 8px; background-color: #171e20; padding: 8px 20px; font-weight: 600; text-align: center; margin-bottom: 8px; }
+.uploaderPreviewItemPhoto { width: auto; border-radius: 8px; padding: 8px; background-color: #121212; text-align: center; }
+.uploaderPreviewItemPhoto img { border-radius: 8px; }
+.uploaderPreviewItemSize { width: auto; border-radius: 8px; margin-top: 8px; background-color: #282828; padding: 8px 20px; text-align: center; }
+.uploaderPreviewItemPhoto i { font-size: 100px; }
+.uploaderDelete a, .uploaderDelete a:link, .uploaderDelete a:active, .uploaderDelete a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; position: absolute; top: -14px; right: -14px; z-index: 100; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 26px; height: 26px; border: 2px solid #3f3f3f; background-color: #121212; }
+.uploaderDelete a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; background-color: #282828; }
+.uploaderInsert a, .uploaderInsert a:link, .uploaderInsert a:active, .uploaderInsert a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; position: absolute; top: -14px; left: -14px; z-index: 100; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 26px; height: 26px; border: 2px solid #3f3f3f; background-color: #121212 }
+.uploaderInsert a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; background-color: #282828; }
+.editorQuickReplyBox { width: auto; border-radius: 8px; background-color: #282828; padding: 20px; border: 1px solid #575757; }
+.editorQuickReplyBoxGrid { display: grid; grid-template-columns: auto 1fr; gap: 0; }
+.editorQuickReplyBoxGridLeft { padding: 0 20px 0 0; position: relative; }
+.editorTriangle { position: absolute; top: 12px; right: 0; width: 0; height: 0; z-index: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 14px solid #121212; }
+.editorTriangleAlt { position: absolute; top: 50%; right: -20px; width: 0; height: 0; transform: translateY(-50%); z-index: 0; border-top: 10px solid transparent; border-bottom: 10px solid transparent; border-right: 14px solid #121212; }
+.editorMarginTop { margin-top: 20px; }
+.editorMarginBottom { margin-bottom: 20px; }
+.editorQuickReplyOptionsGrid { width: auto; margin-bottom: 30px; display: grid; grid-template-rows: auto; gap: 14px; }
+.editorQuickReplyButtonContainer { width: auto; margin-top: 30px; text-align: center; }
+.editorQuickReply { width: auto; border-radius: 8px; background-color: #282828; border: 1px solid #575757; padding: 20px; }
+.editorQuickReply:hover { cursor: pointer; background-color: #3f3f3f; }
+.editorQuickReplyGrid { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; }
+.editorQuickReplyInner { width: auto; border-radius: 8px; padding: 20px; background-color: #121212; font-size: 16px; }
+.editorQuickReplyInner i { margin-right: 8px; }

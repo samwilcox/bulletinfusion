@@ -1,0 +1,9 @@
+<div class="uploaderPreviewItem">
+    <span class="uploaderDelete"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.uploadHelper.deleteFileTooltip %>" data-id="<%= id %>" data-type="<%= type %>" onclick="deleteFile(this);"><i class="fa-solid fa-trash-can"></i></a></span>
+    <span class="uploaderInsert"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.uploadHelper.insertImageTooltip %>" data-image="<%= imageUrl %>" onclick="insertImageIntoEditor(this);"><i class="fa-solid fa-plus"></i></a></span>
+    <div class="uploaderPreviewItemFileName"><%= fileName %></div>
+    <div class="uploaderPreviewItemPhoto">
+        <img src="<%= thumbnail %>" width="200" alt="*">
+    </div>
+    <div class="uploaderPreviewItemSize"><%- fileSize %></div>
+</div>

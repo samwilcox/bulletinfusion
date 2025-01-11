@@ -1,0 +1,389 @@
+<script src="<%= baseUrl %>/js/editor.js"></script>
+<link rel="stylesheet" href="<%= themeCssUrl %>/editor.css">
+<script>registerEditor('editor-<%= id %>');</script>
+
+<% if (toolbarEnabled) { %>
+    <% if (toolbar.insert.code) { %>
+        <div class="codeBox" id="code-box-template" style="display: none;">
+            <div class="codeBoxTitle" id="code-box-title"><%= locale.global.codeTitle %></div>
+            <div class="codeBoxContent" id="code-box-content"></div>
+        </div>
+    <% } %>
+    <% if (toolbar.insert.quote) { %>
+        <div class="quoteBox" id="quote-box-template" style="display: none;">
+            <div class="quoteBoxTitle" id="quote-box-title"><%= locale.global.quoteTitle %></div>
+            <div class="quoteBoxContent" id="quote-box-content"></div>
+        </div>
+    <% } %>
+    
+    <% if (toolbar.font) { %>
+        <div class="dropDownMenu" id="ddm-editor-font-<%= id %>">
+            <span class="dropDownMenuLinks">
+                <div class="editorDdScroller">
+                    <% if (fontList) { %>
+                        <% fontList.forEach(font => { %>
+                            <a href="javascript:void(0);" data-font="<%= font %>" onclick="changeFont(this);" style="font-family: '<%= font %>';"><%= font %></a>
+                        <% }); %>
+                    <% } %>
+                </div>
+            </span>
+        </div>
+    <% } %>
+    <% if (toolbar.size) { %>
+        <div class="dropDownMenu" id="ddm-editor-fontsize-<%= id %>">
+            <span class="dropDownMenuLinks">
+                <div class="editorDdScroller">
+                    <a href="javascript:void(0);" style="font-size: 10px;" data-size="1" onclick="changeSize(this);"><%= locale.editorHelper.xxSmall %></a>
+                    <a href="javascript:void(0);" style="font-size: 13px;" data-size="2" onclick="changeSize(this);"><%= locale.editorHelper.xSmall %></a>
+                    <a href="javascript:void(0);" style="font-size: 16px;" data-size="3" onclick="changeSize(this);"><%= locale.editorHelper.small %></a>
+                    <a href="javascript:void(0);" style="font-size: 18px;" data-size="4" onclick="changeSize(this);"><%= locale.editorHelper.medium %></a>
+                    <a href="javascript:void(0);" style="font-size: 24px;" data-size="5" onclick="changeSize(this);"><%= locale.editorHelper.large %></a>
+                    <a href="javascript:void(0);" style="font-size: 32px;" data-size="6" onclick="changeSize(this);"><%= locale.editorHelper.xLarge %></a>
+                    <a href="javascript:void(0);" style="font-size: 48px;" data-size="7" onclick="changeSize(this);"><%= locale.editorHelper.xxLarge %></a>
+                </div>
+            </span>
+        </div>
+    <% } %>
+    <% if (toolbar.color) { %>
+        <div class="dropDownMenu" id="ddm-editor-fontcolor-<%= id %>">
+            <input type="color" name="fontcolor" id="editor-font-color-input-<%= id %>" value="#C3C3C3">
+        </div>
+    <% } %>
+    <% if (toolbar.insert.hyperlink) { %>
+        <div class="dialog" id="dialog-editor-hyperlink-<%= id %>">
+            <div class="dialogHeader">
+                <div class="dualGridCentered">
+                    <div class="title"><%= locale.editorHelper.insertHyperlinkTitle %></div>
+                    <div class="alignRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.global.closeDialogTooltip %>" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+                </div>
+            </div>
+            <div class="dialogContentWithFooter">
+                <div class="fieldsGrid">
+                    <div class="formGroupAlt">
+                        <input type="url" name="url" id="editor-url-input-<%= id %>" placeholder="<%= locale.editorHelper.urlAddressPlaceholder %>">
+                        <label for="editor-url-input-<%= id %>"><%= locale.editorHelper.urlAddressPlaceholder %></label>
+                    </div>
+                    <div class="formGroupAlt">
+                        <input type="text" name="title" id="editor-url-title-input-<%= id %>" placeholder="<%= locale.editorHelper.urlTitlePlaceholder %>">
+                        <label for="editor-url-title-input-<%= id %>"><%= locale.editorHelper.urlTitlePlaceholder %></label>
+                    </div>
+                </div>
+            </div>
+            <div class="dialogFooter">
+                <input type="button" name="inserthyperlinkbutton" id="editor-insert-hyperlink-button" value="<%= locale.editorHelper.insertHyperlinkButton %>" data-editor="editor-<%= id %>" data-url="editor-url-input-<%= id %>" data-title="editor-url-title-input-<%= id %>" onclick="insertHyperlink(this);">
+            </div>
+        </div>
+    <% } %>
+    <% if (toolbar.insert.image) { %>
+        <div class="dialog" id="dialog-editor-image-<%= id %>">
+            <div class="dialogHeader">
+                <div class="dualGridCentered">
+                    <div class="title"><%= locale.editorHelper.insertImageTitle %></div>
+                    <div class="alignRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.global.closeDialogTooltip %>" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+                </div>
+            </div>
+            <div class="dialogContentWithFooter">
+                <div class="fieldsGrid">
+                    <div class="formGroupAlt">
+                        <input type="url" name="imageurl-<%= id %>" id="editor-image-url-input-<%= id %>" placeholder="<%= locale.editorHelper.imageUrlPlaceholder %>">
+                        <label for="editor-image-url-input-<%= id %>"><%= locale.editorHelper.imageUrlPlaceholder %></label>
+                    </div>
+                    <div>
+                        <div class="checkboxGrid">
+                            <div>
+                                <div class="checkbox">
+                                    <span class="checkbox">
+                                        <input type="checkbox" name="editor-custom-dimensions-<%= id %>" id="editor-custom-dimensions-<%= id %>" value="1" data-divone="editor-image-dim-one-<%= id %>" data-divtwo="editor-image-dim-two-<%= id %>" data-divthree="editor-image-dim-three-<%= id %>" onclick="toggleImageDim(this);">
+                                        <svg>
+                                        <use xlink:href="#checkbox" class="checkbox"></use>
+                                        </svg>
+                                    </span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                        <symbol id="checkbox" viewBox="0 0 22 22">
+                                        <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                        </symbol>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="editor-custom-dimensions-<%= id %>"><%= locale.editorHelper.imageCustomPlaceholder %></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="editor-image-dim-one-<%= id %>" style="display: none;">
+                        <div class="checkboxGrid">
+                            <div>
+                                <div class="checkbox">
+                                    <span class="checkbox">
+                                        <input type="checkbox" name="editor-maintain-ar-<%= id %>" id="editor-maintain-ar-<%= id %>" value="1" checked>
+                                        <svg>
+                                        <use xlink:href="#checkbox" class="checkbox"></use>
+                                        </svg>
+                                    </span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                        <symbol id="checkbox" viewBox="0 0 22 22">
+                                        <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                        </symbol>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="editor-maintain-ar-<%= id %>"><%= locale.editorHelper.imageMaintainAspectRatio %></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="editor-image-dim-two-<%= id %>" style="display: none;">
+                        <div class="editorDualGridCentered">
+                            <div class="bold"><%= locale.editorHelper.imageRatio %></div>
+                            <div>
+                                <select name="editor-ratio-select-<%= id %>" id="editor-ratio-select-<%= id %>">
+                                    <option value="1:1">1:1</option>
+                                    <option value="4:3">4:3</option>
+                                    <option value="16:9" selected>16:9</option>
+                                    <option value="21:9">21:9</option>
+                                    <option value="3:2">3:2</option>
+                                    <option value="5:4">5:4</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="editor-image-dim-three-<%= id %>" style="display: none;">
+                        <div class="formGroupAlt">
+                            <input type="number" name="editor-image-width-input-<%= id %>" id="editor-image-width-input-<%= id %>" class="editorNumberField" placeholder="<%= locale.editorHelper.imageWidth %>" data-width="editor-image-width-input-<%= id %>" data-height="editor-image-height-input-<%= id %>" data-enabled="editor-maintain-ar-<%= id %>" data-ratio="editor-ratio-select-<%= id %>" onchange="maintainAspectRatio(this);">
+                            <label for="editor-image-width-input-<%= id %>"><%= locale.editorHelper.imageWidth %></label>
+                        </div>
+                        <div class="formGroupAlt">
+                            <input type="number" name="editor-image-height-input-<%= id %>" id="editor-image-height-input-<%= id %>" class="editorNumberField" placeholder="<%= locale.editorHelper.imageHeight %>" data-width="editor-image-width-input-<%= id %>" data-height="editor-image-height-input-<%= id %>" data-enabled="editor-maintain-ar-<%= id %>" data-ratio="editor-ratio-select-<%= id %>" onchange="maintainAspectRatio(this);">
+                            <label for="editor-image-height-input-<%= id %>"><%= locale.editorHelper.imageHeight %></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialogFooter">
+                <input type="button" name="insertimagebutton" id="editor-insert-image-button" value="<%= locale.editorHelper.insertImageButton %>" data-editor="editor-<%= id %>" data-width="editor-image-width-input-<%= id %>" data-height="editor-image-height-input-<%= id %>" data-source="editor-image-url-input-<%= id %>" onclick="insertImage(this);">
+            </div>
+        </div>
+    <% } %>
+    <% if (toolbar.insert.media) { %>
+        <div class="dialog" id="dialog-editor-media-<%= id %>">
+            <div class="dialogHeader">
+                <div class="dualGridCentered">
+                    <div class="title"><%= locale.editorHelper.insertMediaTitle %></div>
+                    <div class="alignRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.global.closeDialogTooltip %>" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+                </div>
+            </div>
+            <div class="dialogContentWithFooter">
+                <div class="formGroupAlt">
+                    <input type="url" name="editor-insert-media-input-<%= id %>" id="editor-insert-media-input-<%= id %>" placeholder="<%= locale.editorHelper.mediaPlaceholder %>">
+                    <label for="editor-insert-media-input-<%= id %>"><%= locale.editorHelper.mediaPlaceholder %></label>
+                </div>
+            </div>
+            <div class="dialogFooter">
+                <input type="button" name="insertmediabutton" id="editor-insert-media-button" value="<%= locale.editorHelper.insertMediaButton %>" data-editor="editor-<%= id %>" data-source="editor-insert-media-input-<%= id %>" onclick="insertMedia(this);">
+            </div>
+        </div>
+    <% } %>
+    <% if (toolbar.insert.gif) { %>
+        <script>
+            $(document).ready(function() {
+                loadTrendingGifs('editor-gif-container-<%= id %>', 'editor-<%= id %>');
+            });
+        </script>
+        <div class="dialog" id="dialog-editor-gif-<%= id %>">
+            <div class="dialogHeader">
+                <div class="dualGridCentered">
+                    <div class="title"><%= locale.editorHelper.insertGifTitle %></div>
+                    <div class="alignRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.global.closeDialogTooltip %>" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+                </div>
+            </div>
+            <div class="dialogContentWithFooter">
+                <div class="editorDialogScroller editorImgSpacer" id="editor-gif-container-<%= id %>"></div>
+            </div>
+            <div class="dialogFooter">
+                <div class="formGroupAlt">
+                    <input type="search" name="editor-search-gif-<%= id %>" id="editor-search-gif-<%= id %>" placeholder="<%= locale.editorHelper.searchGiphyPlaceholder %>" data-editor="editor-<%= id %>" data-container="editor-gif-container-<%= id %>" data-field="editor-search-gif-<%= id %>" onkeydown="searchGifs(event, this);">
+                    <label for="editor-search-gif-<%= id %>"><%= locale.editorHelper.searchGiphyPlaceholder %></label>
+                </div>
+            </div>
+        </div>
+    <% } %>
+    <% if (toolbar.insert.emoticon) { %>
+        <script>
+            $(document).ready(function() {
+                loadEmoticons('editor-emoticon-container-<%= id %>', 'editor-<%= id %>');
+            });
+        </script>
+        <div class="dialog" id="dialog-editor-emoticons-<%= id %>">
+            <div class="dialogHeader">
+                <div class="dualGridCentered">
+                    <div class="title"><%= locale.editorHelper.insertEmoticonTitle %></div>
+                    <div class="alignRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.global.closeDialogTooltip %>" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+                </div>
+            </div>
+            <div class="dialogContent">
+                <div class="editorDialogScroller" id="editor-emoticon-container-<%= id %>"></div>
+            </div>
+        </div>
+    <% } %>
+    <% if (toolbar.insert.code) { %>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                hljs.highlightAll();
+                const codeEditor = $("#editor-code-input-<%= id %>");
+        
+                function applySyntaxHighlighting() {
+                    const code = codeEditor.html();
+        
+                    if (!codeEditor.find('pre').length) {
+                        codeEditor.html('<pre><code class="' + currentCodeLang + '">' + code + '</code></pre>');
+                    }
+        
+                    hljs.highlightElement(codeEditor.find('code')[0]);
+                }
+        
+                codeEditor.on('input', function() {
+                    applySyntaxHighlighting();
+                });
+        
+                codeEditor.on('keydown', function(e) { insertTab(e); });
+        
+                codeEditor.on('paste', function(e) {
+                    e.preventDefault();
+                    const editorData = codeEditor.html();
+                    const paste = e.originalEvent.clipboardData.getData('text/plain');
+                    codeEditor.html('<pre><code class="' + currentCodeLang + '">' + editorData + paste + '</code></pre>');
+                    applySyntaxHighlighting();
+                });
+            });
+        </script>
+        <div class="dialog" id="dialog-editor-insertcode-<%= id %>">
+            <div class="dialogHeader">
+                <div class="dualGridCentered">
+                    <div class="title"><%= locale.editorHelper.insertCodeTitle %></div>
+                    <div class="alignRight"><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.global.closeDialogTooltip %>" onclick="closeDialog();"><i class="fa-solid fa-xmark"></i></a></div>
+                </div>
+            </div>
+            <div class="dialogContentWithFooter">
+                <div class="fieldsGrid">
+                    <div>
+                        <div class="editorDualGridCentered">
+                            <div><%= locale.editorHelper.codeLanguage %></div>
+                            <div>
+                                <select name="code-language" id="editor-code-select-<%= id %>">
+                                    <option value="lang-bsh">Bourne shell (Unix shell scripts)</option>
+                                    <option value="lang-c">C</option>
+                                    <option value="lang-cc">C++</option>
+                                    <option value="lang-cpp">C++ (Alternative)</option>
+                                    <option value="lang-cs">C#</option>
+                                    <option value="lang-csh">C Shell</option>
+                                    <option value="lang-css">CSS</option>
+                                    <option value="lang-dart">Dart</option>
+                                    <option value="lang-erb">Embedded Ruby</option>
+                                    <option value="lang-go">Go (Golang)</option>
+                                    <option value="lang-hs">Haskell</option>
+                                    <option value="lang-html">HTML</option>
+                                    <option value="lang-java">Java</option>
+                                    <option value="lang-js" selected>JavaScript</option>
+                                    <option value="lang-json">JSON</option>
+                                    <option value="lang-kotlin">Kotlin</option>
+                                    <option value="lang-lisp">Lisp</option>
+                                    <option value="lang-lua">Lua</option>
+                                    <option value="lang-matlab">MATLAB</option>
+                                    <option value="lang-ml">ML (MetaLanguage)</option>
+                                    <option value="lang-perl">Perl</option>
+                                    <option value="lang-php">PHP</option>
+                                    <option value="lang-py">Python</option>
+                                    <option value="lang-r">R</option>
+                                    <option value="lang-rb">Ruby</option>
+                                    <option value="lang-rust">Rust</option>
+                                    <option value="lang-scala">Scala</option>
+                                    <option value="lang-sh">Shell</option>
+                                    <option value="lang-sql">SQL</option>
+                                    <option value="lang-swift">Swift</option>
+                                    <option value="lang-ts">TypeScript</option>
+                                    <option value="lang-vb">Visual Basic</option>
+                                    <option value="lang-vhdl">VHDL</option>
+                                    <option value="lang-xml">XML</option>
+                                    <option value="lang-yaml">YAML</option>
+                                    <option value="lang-apollo">Apollo Guidance Computer assembly language</option>
+                                    <option value="lang-fs">F#</option>
+                                    <option value="lang-proto">Protocol Buffers</option>
+                                    <option value="lang-clj">Clojure</option>
+                                    <option value="lang-asm">Assembly</option>
+                                    <option value="lang-nasm">NASM assembly</option>
+                                    <option value="lang-bat">Batch files (Windows)</option>
+                                    <option value="lang-tex">TeX/LaTeX</option>
+                                    <option value="lang-make">Makefiles</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="editorCodeEditor" contenteditable="true" id="editor-code-input-<%= id %>"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="dialogFooter">
+                <input type="button" name="insertcodebutton" id="insertcodebutton" value="<%= locale.editorHelper.insertCodeButton %>" data-editor="editor-<%= id %>" data-codeeditor="editor-code-input-<%= id %>" data-language="editor-code-select-<%= id %>" onclick="insertCode(this);">
+            </div>
+        </div>
+    <% } %>
+    <% if (toolbar.alignment.left || toolbar.alignment.center || toolbar.alignment.right || toolbar.alignment.justify || toolbar.alignment.indent || toolbar.alignment.outdent) { %>
+        <div class="dropDownMenu" id="ddm-editor-alignmenu-<%= id %>" style="text-align: center;">
+            <span class="dropDownMenuLinks">
+                    <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.alignLeft %>" onclick="simpleCommand('justifyLeft');"><i class="fa-solid fa-align-left"></i></a>
+                    <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.alignCenter %>" onclick="simpleCommand('justifyCenter');"><i class="fa-solid fa-align-center"></i></a>
+                    <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.alignRight %>" onclick="simpleCommand('justifyRight');"><i class="fa-solid fa-align-right"></i></a>
+                    <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.alignJustify %>" onclick="simpleCommand('justify');"><i class="fa-solid fa-align-justify"></i></a>
+                    <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.alignIndent %>" onclick="simpleCommand('indent');"><i class="fa-solid fa-indent"></i></a>
+                    <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.alignOutdent %>" onclick="simpleCommand('outdent');"><i class="fa-solid fa-outdent"></i></a>
+            </span>
+        </div>
+    <% } %>
+    <% if (toolbar.insert.horizontalRule || toolbar.insert.hyperlink || toolbar.insert.image || toolbar.insert.media || toolbar.insert.gif || toolbar.insert.emoticon || toolbar.insert.code || toolbar.insert.quote) { %>
+        <div class="dropDownMenu" style="text-align: center;" id="ddm-editor-insertmenu-<%= id %>">
+            <span class="dropDownMenuLinks">
+                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.insertHorizontalBar %>" onclick="simpleCommand('insertHorizontalRule');"><i class="fa-solid fa-minus"></i></a>
+                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.insertHyperlink %>" data-dialog="dialog-editor-hyperlink-<%= id %>" data-width="600" onclick="openDialog(event, this);"><i class="fa-solid fa-link"></i></a>
+                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.insertImage %>" data-dialog="dialog-editor-image-<%= id %>" data-width="600" onclick="openDialog(event, this);"><i class="fa-regular fa-image"></i></a>
+                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.insertMedia %>" data-dialog="dialog-editor-media-<%= id %>" data-width="600" onclick="openDialog(event, this);"><i class="fa-solid fa-play"></i></a>
+                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.insertGif %>" data-dialog="dialog-editor-gif-<%= id %>" data-width="600" onclick="openDialog(event, this);"><i class="fa-solid fa-photo-film"></i></a>
+                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.insertEmoticon %>" data-dialog="dialog-editor-emoticons-<%= id %>" data-width="480" onclick="openDialog(event, this);"><i class="fa-regular fa-face-smile"></i></a>
+                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.insertCode %>" data-dialog="dialog-editor-insertcode-<%= id %>" data-width="1000" onclick="openDialog(event, this);"><i class="fa-solid fa-code"></i></a>
+                <a href="javascript:void(0);" class="tooltip tooltip--right" data-title="<%= locale.editorHelper.insertQuote %>" data-editor="editor-<%= id %>-<%= id %>" onclick="insertQuote(this);"><i class="fa-solid fa-quote-right"></i></a>
+            </span>
+        </div>
+    <% } %>
+<% } %>
+<% if (topMargin) { %>
+    <div class="editorMarginTop"></div>
+<% } %>
+<div class="editorBox">
+    <% if (toolbarEnabled) { %>
+        <div class="editorToolbar">
+            <a href="javascript:void(0);" id="ddm-editor-font-link-<%= id %>" data-menu="ddm-editor-font-<%= id %>" data-link="ddm-editor-font-link-<%= id %>" data-ignored="ddm-editor-font-icon1-<%= id %>,ddm-editor-font-icon2-<%= id %>" onclick="openDropDownMenu(this);"><i class="fa-solid fa-font" id="ddm-editor-font-icon1-<%= id %>"></i>Font<i class="fa-solid fa-caret-down" id="ddm-editor-font-icon2-<%= id %>"></i></a>
+            <a href="javascript:void(0);" id="ddm-editor-fontsize-link-<%= id %>" data-menu="ddm-editor-fontsize-<%= id %>" data-link="ddm-editor-fontsize-link-<%= id %>" data-ignored="ddm-editor-fontsize-icon1-<%= id %>,ddm-editor-fontsize-icon2-<%= id %>" onclick="openDropDownMenu(this);"><i class="fa-solid fa-text-height" id="ddm-editor-fontsize-icon1-<%= id %>"></i>Size<i class="fa-solid fa-caret-down" id="ddm-editor-fontsize-icon2-<%= id %>"></i></a>
+            <a href="javascript:void(0);" id="ddm-editor-fontcolor-link-<%= id %>" data-menu="ddm-editor-fontcolor-<%= id %>" data-link="ddm-editor-fontcolor-link-<%= id %>" data-ignored="ddm-editor-fontcolor-icon1-<%= id %>,ddm-editor-fontcolor-icon2-<%= id %>,editor-font-color-input-<%= id %>" onclick="openDropDownMenu(this);"><i class="fa-solid fa-palette" id="ddm-editor-fontcolor-icon1-<%= id %>"></i>Color<i class="fa-solid fa-caret-down" id="ddm-editor-fontcolor-icon2-<%= id %>"></i></a>
+            <span class="editorToolbarSeparator"></span>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.bold %>" onclick="simpleCommand('bold');"><i class="fa-solid fa-bold"></i></a>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.italic %>" onclick="simpleCommand('italic');"><i class="fa-solid fa-italic"></i></a>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.underline %>" onclick="simpleCommand('underline');"><i class="fa-solid fa-underline"></i></a>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.strikethrough %>" onclick="simpleCommand('strikethrough');"><i class="fa-solid fa-strikethrough"></i></a>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.subscript %>" onclick="simpleCommand('subscript');"><i class="fa-solid fa-subscript"></i></a>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.superscript %>" onclick="simpleCommand('superscript');"><i class="fa-solid fa-superscript"></i></a>
+            <span class="editorToolbarSeparator"></span>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.alignMenu %>" id="ddm-editor-alignmenu-link-<%= id %>" data-menu="ddm-editor-alignmenu-<%= id %>" data-link="ddm-editor-alignmenu-link-<%= id %>" data-ignored="ddm-editor-alignmenu-icon-<%= id %>" onclick="openDropDownMenu(this);"><i class="fa-solid fa-align-justify" id="ddm-editor-alignmenu-icon-<%= id %>"></i></a>
+            <span class="editorToolbarSeparator"></span>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.insertMenu %>" id="ddm-editor-insertmenu-link-<%= id %>" data-menu="ddm-editor-insertmenu-<%= id %>" data-link="ddm-editor-insertmenu-link-<%= id %>" data-ignored="ddm-editor-insertmenu-icon-<%= id %>" onclick="openDropDownMenu(this);"><i class="fa-solid fa-circle-plus" id="ddm-editor-insertmenu-icon-<%= id %>"></i></a>
+            <span class="editorToolbarSeparator"></span>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.undo %>" onclick="simpleCommand('undo');"><i class="fa-solid fa-rotate-left"></i></a>
+            <a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.editorHelper.redo %>" onclick="simpleCommand('redo');"><i class="fa-solid fa-rotate-right"></i></a>
+        </div>
+    <% } %>
+    <div contenteditable="true" class="editorContent" id="editor-<%= id %>"></div>
+</div>
+<% if (bottomMargin) { %>
+    <div class="editorMarginBottom"></div>
+<% } %>

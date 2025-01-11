@@ -1,0 +1,9 @@
+<div class="breadcrumbs">
+    <i class="fa-solid fa-folder-tree"></i>
+    <% links.forEach(link => { %>
+        <% if (link.separator) { %>
+            <i class="fa-solid fa-arrow-right"></i>
+        <% } %>
+        <a href="<%= link.url %>"><%= link.title %></a>
+    <% }); %>
+</div>

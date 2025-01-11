@@ -1,0 +1,105 @@
+<div class="dropDownMenu" id="ddm-postoptions-<%= id %>">
+    <span class="dropDownMenuLinks">
+        <% if (canShare) { %>
+            <a href="javascript:void(0);"><i class="fa-solid fa-share-nodes"></i><%= locale.postEntity.shareLink %></a>
+        <% } %>
+        <% if (canReport) { %>
+            <a href="javascript:void(0);"><i class="fa-solid fa-flag"></i><%= locale.postEntity.reportLink %></a>
+        <% } %>
+        <% if (canEdit) { %>
+            <a href="javascript:void(0);"><i class="fa-solid fa-pen-to-square"></i><%= locale.postEntity.editLink %></a>
+        <% } %>
+        <% if (canDelete) { %>
+            <a href="javascript:void(0);"><i class="fa-solid fa-trash-can"></i><%= locale.postEntity.deleteLink %></a>
+        <% } %>
+    </span>
+</div>
+<div class="postBox">
+    <div class="postBoxGrid">
+        <div class="postBoxGridLeft">
+            <div class="postBoxLeftUpperGrid">
+                <div class="memberPostLink"><a href="<%= authorUrl %>"><%= authorName %></a></div>
+                <div class="blockAlignCenter"><%- authorPhoto %></div>
+                <div class="memberPostGroupLink"><a href="<%= authorGroup.url() %>"><%= authorGroup.getTitle() %></a></div>
+                <div>
+                    <div class="postBoxInfoItem">
+                        <span class="postBoxInfoItemTitle"><%= locale.postEntity.totalPosts %></span>
+                        <%- totalPosts %>
+                    </div>
+                    <% if (pronouns.display) { %>
+                        <div class="postBoxInfoItem">
+                            <span class="postBoxInfoItemTitle"><%= locale.postEntity.pronouns %></span>
+                            <%= pronounContent %>
+                        </div>
+                    <% } %>
+                    <div class="postBoxInfoItem">
+                        <span class="postBoxInfoItemTitle"><%= locale.postEntity.reputation %></span>
+                        <%= reputation %>
+                    </div>
+                    <% if (displayJoined) { %>
+                        <div class="postBoxInfoItem">
+                            <span class="postBoxInfoItemTitle"><%= locale.postEntity.joined %></span>
+                            <%- joined %>
+                        </div>
+                    <% } %>
+                    <% if (showLocation) { %>
+                        <div class="postBoxInfoItem">
+                            <span class="postBoxInfoItemTitle"><%= locale.postEntity.location %></span>
+                            <a href="<%= locationUrl %>" target="_blank"><%= location %></a>
+                        </div>
+                    <% } %>
+                    <% if (showGender) { %>
+                        <div class="postBoxInfoItem">
+                            <span class="postBoxInfoItemTitle"><%= locale.postEntity.gender %></span>
+                            <%= gender %>
+                        </div>
+                    <% } %>
+                    <% if (showAge) { %>
+                        <div class="postBoxInfoItem">
+                            <span class="postBoxInfoItemTitle"><%= locale.postEntity.age %></span>
+                            <%= age %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <div class="postBoxGridRight">
+            <div class="postBoxRightFlex">
+                <div class="postBoxRightTop">
+                    <div class="tripleGridCentered">
+                        <div class="iconSpace"><i class="fa-solid fa-calendar-days"></i><%- postedOn %></div>
+                        <div class="alignCenter">
+                            <% if (tags) { %>
+                                <div class="tagsSmallLink"><span class="tooltip tooltip--top" data-title="<%= locale.topic.tagsTooltip %>"><i class="fa-solid fa-tags"></i><i class="fa-solid fa-arrow-right"></i><%= tags %></span></div>
+                            <% } %>
+                        </div>
+                        <div class="postBoxRightTopRight blockAlignRight">
+                            <span><a href="<%= postUrl %>"><%- postNumber %></a></span>
+                            <span id="ddm-postoptions-<%= id %>-span"><a href="javascript:void(0);" id="ddm-postoptions-<%= id %>-link" class="tooltip tooltip--top" data-title="<%= locale.postEntity.postOptionsTooltip %>" data-menu="ddm-postoptions-<%= id %>" data-link="ddm-postoptions-<%= id %>-link" data-ignored="ddm-postoptions-<%= id %>-icon,ddm-postoptions-<%= id %>-span" onclick="openDropDownMenu(this);"><i class="fa-solid fa-ellipsis-vertical" id="ddm-postoptions-<%= id %>-icon"></i></a></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="postBoxRightCenter">
+                    <%- content %>
+                    <%- attachments %>
+                    <% if (includeSignature) { %>
+                        <div class="signatureBox"><%- signature %></div>
+                    <% } %>
+                </div>
+                <div class="postBoxRightBottom">
+                    <div class="dualGridCentered">
+                        <% if (isModerator) { %>
+                            <div class="postModInfo">
+                                <span><%- ipAddress %></span>
+                                <span><%- hostname %></span>
+                            </div>
+                        <% } else { %>
+                            <p></p>
+                        <% } %>
+                        <div class="alignRight blockAlignRight" id="like-button-content-<%= id %>"><%- likeButton %></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
