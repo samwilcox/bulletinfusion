@@ -22,6 +22,17 @@
                 "baseUrl": "<%= baseUrl %>",
                 "csrfEnabled": <%= csrfEnabled %>,
                 "csrfToken": "<%= csrfToken %>",
+                <% if (giphy) { %>
+                    "giphy": {
+                        "apiKey": "<%= giphyApiKey %>",
+                        "trendLimit": <%= giphyTrendLimit %>
+                    },
+                <% } %>
+                <% if (openEmoji) { %>
+                    "openEmoji": {
+                        "apiKey": "<%= openEmojiApiKey %>"
+                    },
+                <% } %>
                 "css": {
                     "alignCenter": "<%= css.alignCenter %>",
                     "sideBarSpace": "<%= css.sideBarSpace %>"
@@ -29,6 +40,9 @@
                 "icons": {
                     "passwordToggleOpen": "fa-solid fa-eye",
                     "passwordToggleClosed": "fa-solid fa-eye-slash"
+                },
+                "locale": {
+                    "loadingPosts": "<%= locale.global.loadingPosts %>"
                 }
             }
         </script>

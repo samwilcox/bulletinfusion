@@ -9,10 +9,10 @@
  * https://license.bulletinfusion.com
  */
 
-const csurf = require('csurf');
+//const csurf = require('csurf');
 const Settings = require('../settings/index'); 
 
-const csrfProtection = csurf({ cookie: true });
+//const csrfProtection = csurf({ cookie: true });
 
 /**
  * Middleware for handing CSRF protection (if enabled).
@@ -23,7 +23,9 @@ const csrfProtection = csurf({ cookie: true });
  */
 const conditionalCSRF = (req, res, next) => {
     if (Settings.get('csrfEnabled')) {
-        return csrfProtection(req, res, next);
+        if (req.method === 'POST' || req.method === 'PUT' || req.method === 'DELETE') {
+            
+        }
     }
 
     next();

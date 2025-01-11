@@ -10,6 +10,7 @@
  */
 
 const fs = require('fs').promises;
+const { dir } = require('console');
 const fsSync = require('fs');
 const path = require('path');
 
@@ -134,6 +135,34 @@ class FileHelper {
             await fs.rename(source, destination);
         } catch (error) {
             console.error(`Error moving file: ${error.message}`);
+        }
+    }
+
+    /**
+     * Get the size of a file.
+     * 
+     * @param {string} filePath - Path of the file to get size for.
+     * @returns {number} The total file size in bytes.
+     */
+    static fileSize(filePath) {
+        try {
+            const stats = fsSync.statSync(filePath);
+            return stats.size;
+        } catch (error) {
+            console.error(`Error reading file size: ${error.message}`);
+        }
+    }
+
+    /**
+     * Creates the directory if it does not exist.
+     * 
+     * @param {string} directory - The directory to create if does not exist.
+     */
+    static createDirectoryIfNotExists(directory) {
+        try {
+            fsSync.mkdirSync(directory, { recursive: true });
+        } catch (error) {
+            console.error(`Error creating directory: ${error.message}`);
         }
     }
 }

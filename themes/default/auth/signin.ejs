@@ -24,7 +24,7 @@
                         <div>
                             <div class="checkbox">
                                 <span class="checkbox">
-                                    <input type="checkbox" name="rememberme" id="rememberme-checkbox"<% if (settings.signInRememberMeChecked) { %> checked<% } %>>
+                                    <input type="checkbox" name="rememberme" value="1" id="rememberme-checkbox"<% if (settings.signInRememberMeChecked) { %> checked<% } %>>
                                     <svg>
                                     <use xlink:href="#checkbox" class="checkbox"></use>
                                     </svg>
@@ -48,7 +48,7 @@
         </div>
         <div class="signInBoxFooter">
             <% if (settings.csrfEnabled) { %>
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" name="_csrfToken" value="<%= csrfToken %>">
             <% } %>
             <input type="hidden" name="referer" value="<%= referer %>">
             <input type="submit" name="signinformsubmit" value="<%= locale.auth.signInButton %>">

@@ -13,6 +13,7 @@ const Settings = require('../settings');
 const LocaleHelper = require('./locale-helper');
 const { DateTime } = require('luxon');
 const DataStoreService = require('../services/datastore-service');
+const memberService = require('../services/member-service');
 
 /**
  * Helpers for working with timestamps and other date/time related tasks.
@@ -287,6 +288,30 @@ class TimeHelper {
         if (timestamp1 < timestamp2) return -1;
         if (timestamp1 < timestamp2) return 1;
         return 0;
+    }
+
+    /**
+     * Generate a greeting based on the current time or a given time.
+     * 
+     * @param {Object} [options={}] - Options for greeting.
+     * @param {Member | null} [options.member] - The member entity to override current user.
+     * @returns {string} The greeting for the time of day. 
+     */
+    static getGreeting(options = {}) {
+        const member = options.member ? options.member : memberService.getMember();
+        const timeZone = member.getTimeZone();
+        const locale = member.getLocale();
+        const currentHour = DateTime.now().setZone(timeZone).hour;
+        
+        if (currentHour >= 5 && currentHour < 12) {
+            return locale.timeHelper.goodMorning;
+        } else if (currentHour >= 12 && currentHour < 17) {
+            return locale.timeHelper.goodAfternoon;
+        } else if (currentHour >= 17 && currentHour < 21) {
+            return locale.timeHelper.goodEvening;
+        } else {
+            return locale.timeHelper.goodNight;
+        }
     }
 }
 

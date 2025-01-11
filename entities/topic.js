@@ -14,6 +14,7 @@ const CacheProviderFactory = require('../data/cache/cache-provider-factory');
 const UtilHelper = require('../helpers/util-helper');
 const TagRepository = require('../repository/tag-repository');
 const LocaleHelper = require('../helpers/locale-helper');
+const PostRepository = require('../repository/post-repository');
 
 /**
  * Entity that represents a single topic.
@@ -35,6 +36,8 @@ class Topic {
         this.hasSolution = false;
         this.solutionPostId = null;
         this.tags = null;
+        this.poll = null;
+        this.hasPoll = false;
     }
 
     /**
@@ -254,6 +257,42 @@ class Topic {
     }
 
     /**
+     * Get the poll data object.
+     * 
+     * @returns {Object} The poll data object.
+     */
+    getPoll() {
+        return this.poll;
+    }
+
+    /**
+     * Set the poll data object.
+     * 
+     * @param {Object} poll The poll data object. 
+     */
+    setPoll(poll) {
+        this.poll = poll;
+    }
+
+    /**
+     * Get whether the topic includes a poll.
+     * 
+     * @returns {boolean} True if topic has a poll, false if it does not.
+     */
+    getHasPoll() {
+        return this.hasPoll;
+    }
+
+    /**
+     * Set whether the topic includes a poll.
+     * 
+     * @param {boolean} hasPoll - True if topic has a poll, false if it does not. 
+     */
+    setHasPoll(hasPoll) {
+        this.hasPoll = hasPoll;
+    }
+
+    /**
      * Get the URL web address to this topic.
      * 
      * @returns {string} The URL web address.
@@ -310,6 +349,34 @@ class Topic {
         }
 
         return tagsList;
+    }
+
+    /**
+     * Returns all the posts assigned to this topic.
+     * 
+     * @returns {Array} An array of post entities.
+     */
+    getPosts() {
+        const cache = CacheProviderFactory.create();
+        const data = cache.get('posts').filter(post => post.topicId === this.getId());
+        data.sort((a, b) => a.createdAt - b.createdAt);
+        return data.map(post => PostRepository.getPostById(post.id));
+    }
+
+    /**
+     * Marges the content from all posts from the topic into one single variable.
+     * 
+     * @returns {string} - The entire content for the topic.
+     */
+    mergePostsContent() {
+        const posts = this.getPosts();
+        let content = '';
+
+        posts.forEach((post) => {
+            content += post.getContent();
+        });
+
+        return content;
     }
 }
  

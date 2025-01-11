@@ -20,6 +20,9 @@ const MemberRepository = require('../repository/member-repository');
 const TimeHelper = require('../helpers/time-helper');
 const PaginationHelper = require('../helpers/pagination-helper');
 const PostRepository = require('../repository/post-repository');
+const TopicHelper = require('../helpers/topic-helper');
+const EditorHelper = require('../helpers/editor-helper');
+const UploadHelper = require('../helpers/upload-helper');
 
 /**
  * Model for the topic-related tasks.
@@ -76,8 +79,18 @@ class TopicModel {
         const entities = postsData.map(obj => PostRepository.getPostById(obj.id));
         const totalItems = entities.length;
         const perLoad = member.getPerLoad().posts;
-
-        this.vars.paginationBar = PaginationHelper.generate(
+        const paginationTop = PaginationHelper.generate(
+            totalItems,
+            perLoad,
+            {
+                singular: LocaleHelper.get('topic', 'postSingular'),
+                plural: LocaleHelper.get('topic', 'postPlural'),
+            },
+            member.getPerLoad().links.posts,
+            UtilHelper.getCurrentPageNumber(req),
+            topic.url()
+        );
+        const paginationBottom = PaginationHelper.generate(
             totalItems,
             perLoad,
             {
@@ -89,7 +102,35 @@ class TopicModel {
             topic.url()
         );
 
+        this.vars.paginationTop = paginationTop.pagination;
+        this.vars.paginationBottom = paginationBottom.pagination;
+        this.vars.topUuid = paginationTop.uuid;
+        this.vars.bottomUuid = paginationBottom.uuid;
+
         this.vars.currentPage = UtilHelper.getCurrentPageNumber(req);
+        this.vars.pageUrl = `${topic.url()}${this.vars.currentPage > 1 ? `/page/${this.vars.currentPage}` : ''}`;
+
+        this.vars.pollData = TopicHelper.getPoll(topic.getId());
+
+        if (PermissionService.getForumPermission('reply')) {
+            const qr = EditorHelper.buildQuickReply({
+                includeUploader: PermissionService.getForumPermission('upload'),
+                subscribe: true,
+                announcement: true,
+                signature: true,
+                contentId: topic.getId(),
+                topMargin: true,
+            });
+
+            this.vars.quickReply = qr.editor;
+            this.vars.editorId = qr.editorId;
+        } else {
+            this.vars.quickReply = null;
+            this.vars.editorId = null;
+        }
+
+        this.vars.similarTopics = TopicHelper.getSimilarTopics(topic.getId());
+        this.vars.previousAndNext = TopicHelper.getPreviousAndNextTopics(topic.getId());
 
         return this.vars;
     }

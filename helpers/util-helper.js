@@ -20,6 +20,9 @@ const CookieHelper = require('./cookie-helper');
 const OutputHelper = require('./output-helper');
 const { v4: uuidv4 } = require('uuid');
 const LocaleHelper = require('./locale-helper');
+const sanitizeHtml = require('sanitize-html');
+const AttachmentRepository = require('../repository/attachment-repository');
+const MemberService = require('../services/member-service');
 
 /**
  * Helpers for the most common tasks.
@@ -212,6 +215,7 @@ class UtilHelper {
      * @param {string} [options.icon=''] - Optional icon for the link.
      * @param {string} [options.target=''] - Optional target value (e.g., '_blank').
      * @param {Object} [options.data={}] - Optional data attributes for the element.
+     * @param {string} [options.id=null] - Optional tag identifier string.
      * @returns {string} The resulting hyperlink. 
      */
     static buildLink(options = {}) {
@@ -225,6 +229,7 @@ class UtilHelper {
             icon = '',
             target = '',
             data = {},
+            id = null,
         } = options;
 
         return OutputHelper.getPartial('util-helper', 'link', {
@@ -238,6 +243,7 @@ class UtilHelper {
             target,
             data,
             haveData: Object.keys(data).length > 0,
+            id,
         });
     }
 
@@ -368,6 +374,125 @@ class UtilHelper {
         } else {
             return 1;
         }
+    }
+
+    /**
+     * Sanitize the given HTML source.
+     * 
+     * @param {string} html - The HTML to sanitize.
+     * @returns {string} The sanitized HTML.
+     */
+    static sanitizeHtmlSource(html) {
+        const sanitizedHtml = sanitizeHtml(html, {
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img', 'h1', 'h2']),
+            allowedAttributes: {
+                ...sanitizeHtml.defaults.allowedAttributes,
+                img: ['src', 'alt']
+            }
+        });
+
+        return sanitizedHtml;
+    }
+
+    /**
+     * Converts a file size in bytes to a more readable format (e.g., 12.34 MB).
+     * 
+     * @param {number} bytes - The file size in bytes.
+     * @param {number} [decimals=2] - The number of decimal places to include (default is 2).
+     * @returns {string} The formatted file size with an appropriate unit.
+     */
+    static formatFileSize(bytes, decimals = 2) {
+        if (bytes === 0) return LocaleHelper.replace('utilHelper', 'bytes', 'total', 0);
+
+        const sizes = [
+            LocaleHelper.get('utilHelper', 'bytes'),
+            LocaleHelper.get('utilHelper', 'kb'),
+            LocaleHelper.get('utilHelper', 'mb'),
+            LocaleHelper.get('utilHelper', 'gb'),
+            LocaleHelper.get('utilHelper', 'tb'),
+            LocaleHelper.get('utilHelper', 'pb'),
+            LocaleHelper.get('utilHelper', 'eb'),
+            LocaleHelper.get('utilHelper', 'zb'),
+            LocaleHelper.get('utilHelper', 'yb'),
+        ]
+
+        const k = 1024;
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        
+        const fileSize = parseFloat((bytes / Math.pow(k, i)).toFixed(decimals));
+
+        return LocaleHelper.replaceAll('utilHelper', 'fileSize', {
+            size: fileSize,
+            unit: sizes[i],
+        });
+    }
+
+    /**
+     * Build the attachments listing.
+     * 
+     * @param {Array} attachments - An array of attachment identifiers.
+     * @returns {string} The resulting attachments list HTML source. 
+     */
+    static buildAttachmentsList(attachments) {
+        const entities = attachments.map(attachmentId => AttachmentRepository.getAttachmentById(attachmentId));
+        entities.sort((a, b) => a.getFileName().localeCompare(b.getFileName()));
+
+        return OutputHelper.getPartial('util-helper', 'attachments-list', {
+            attachments: entities,
+        });
+    }
+
+    /**
+     * Get the like data for a given content.
+     * 
+     * @param {number} contentId - The content identifier.
+     * @param {string} contentType - The content type string.
+     * @returns {Object} Object containing the like data. 
+     */
+    static getLikeData(contentId, contentType) {
+        const cache = CacheProviderFactory.create();
+        const data = cache.get('likes').filter(obj => obj.contentId === parseInt(contentId, 10) && obj.contentType === contentType);
+        const member = MemberService.getMember();
+        const memberData = data.find(obj => obj.likedBy == member.getId());
+
+        return {
+            total: data.length,
+            liked: memberData ? true : false,
+        };
+    }
+
+    /**
+     * Get the like button for given content.
+     * 
+     * @param {number} contentId - The content identifier.
+     * @param {string} contentType - The content type string.
+     * @returns {string} - The like button source.
+     */
+    static getLikeButton(contentId, contentType) {
+        const likeData = this.getLikeData(contentId, contentType);
+        const member = MemberService.getMember();
+
+        return OutputHelper.getPartial('util-helper', 'like-button', {
+            total: this.formatNumber(likeData.total),
+            liked: likeData.liked,
+            signedIn: member.isSignedIn(),
+            contentId,
+            contentType,
+        });
+    }
+
+    /**
+     * Tokenizes a string into words.
+     * 
+     * @param {string} text - The text to tokenize.
+     * @returns {Array} An array of tokens (words).
+     */
+    static tokenize(text) {
+        return text
+            .toLowerCase()
+            .replace(/[^a-z\s]/g, '')
+            .split(/\s+/)
+            .filter(word => word.length > 1);
     }
 } 
 

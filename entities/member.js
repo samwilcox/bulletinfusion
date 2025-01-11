@@ -16,6 +16,9 @@ const UtilHelper = require('../helpers/util-helper');
 const OutputHelper = require('../helpers/output-helper');
 const TimeHelper = require('../helpers/time-helper');
 const GroupRepository = require('../repository/group-repository');
+const StringHelper = require('../helpers/string-helper');
+const FileHelper = require('../helpers/file-helper');
+const LocaleHelper = require('../helpers/locale-helper');
 
 /**
  * Entity that represents a single member.
@@ -26,6 +29,7 @@ class Member {
      */
     constructor() {
         this.configs = {};
+        this.locale = null;
         this.id = null;
         this.username = 'Guest';
         this.displayName = 'Guest';
@@ -58,6 +62,27 @@ class Member {
         this.displayJoined = false;
         this.location = {};
         this.gender = {};
+        this.birthday = {};
+        this.signature = {};
+        this.similarTopics = {};
+    }
+
+    /**
+     * Get the locale collection object.
+     * 
+     * @returns {Object|null} The loaded locale collection or null if not loaded.
+     */
+    isLocaleLoaded() {
+        return this.locale;
+    }
+
+    /**
+     * Set the locale collection object.
+     * 
+     * @param {Object|null} locale - The loaded locale collection or null if not loaded. 
+     */
+    setLocale(locale) {
+        this.locale = locale;
     }
 
     /**
@@ -659,6 +684,60 @@ class Member {
     }
 
     /**
+     * Get the member's birthday data object.
+     * 
+     * @returns {Object} Data object with the member's birthday data.
+     */
+    getBirthday() {
+        return this.birthday;
+    }
+
+    /**
+     * Set the member's birthday data object.
+     * 
+     * @param {Object} birthday - Data object with the member's birthday data.
+     */
+    setBirthday(birthday) {
+        this.birthday = birthday;
+    } 
+
+    /**
+     * Get the member's signature data object.
+     * 
+     * @returns {Object} Data object with the member's signature data.
+     */
+    getSignature() {
+        return this.signature;
+    }
+
+    /**
+     * Set the member's signature data object.
+     * 
+     * @param {Object} signature - Data object with the member's signature data. 
+     */
+    setSignature(signature) {
+        this.signature = signature;
+    }
+
+    /**
+     * Get the member's similar topics setting object.
+     * 
+     * @returns {Object} Object containing the similar topics settings.
+     */
+    getSimilarTopics() {
+        return this.similarTopics;
+    }
+
+    /**
+     * Set the member's similar topics setting object.
+     * 
+     * @param {Object} similarTopics - Object containing the similar topics settings.
+     */
+    setSimilarTopics(similarTopics) {
+        this.similarTopics = similarTopics;
+    }
+
+    /**
      * Gets the URL to this member's profile page.
      * 
      * @returns {string} URL to member's profile page.
@@ -799,7 +878,58 @@ class Member {
         }
 
         return false;
-    }   
+    }
+
+    /**
+     * Builds the member's signature and then returns it.
+     * 
+     * @returns {string} The member's signature.
+     */
+    buildSignature() {
+        let signature = UtilHelper.sanitizeHtmlSource(this.getSignature().content);
+
+        if (Settings.get('censorSignatures')) {
+            signature = StringHelper.censorBadWords(signature);
+        }
+
+        signature = StringHelper.replaceMentionsWithLinks(signature);
+        
+        return signature;
+    }
+
+    /**
+     * Get the total used disk space for the member in bytes.
+     * 
+     * @returns {number} The total disk space used in bytes.
+     */
+    getUsedDiskSpace() {
+        const cache = CacheProviderFactory.create();
+        const data = cache.get('attachments').filter(obj => obj.memberId === this.getId());
+        let attachmentsDir = path.join(__dirname, '..', 'public', Settings.get('uploadsDir'), Settings.get('attachmentsDir'), `member-${this.getId()}`);
+        FileHelper.createDirectoryIfNotExists(attachmentsDir);
+        let totalSpaceUsed = 0;
+
+        data.forEach((attachment) => {
+            const thisAttachmentPath = path.join(attachmentsDir, attachment.fileName);
+            totalSpaceUsed = totalSpaceUsed + FileHelper.fileSize(thisAttachmentPath);
+        });
+
+        return totalSpaceUsed;
+    }
+
+    /**
+     * Get the locale collection for this member.
+     * 
+     * @returns {Object} The loaded locale collection for the member.
+     */
+    getLocale() {
+        if (!this.locale) {
+            this.locale = LocaleHelper.getLocaleById(this.getLocaleId());
+        }
+
+        return this.locale;
+    }
+
 }
 
 module.exports = Member;

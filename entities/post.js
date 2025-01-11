@@ -16,6 +16,12 @@ const UtilHelper = require('../helpers/util-helper');
 const MemberRepository = require('../repository/member-repository');
 const LocaleHelper = require('../helpers/locale-helper');
 const TimeHelper = require('../helpers/time-helper');
+const MathHelper = require('../helpers/math-helper');
+const TagRepository = require('../repository/tag-repository');
+const ForumRepository = require('../repository/forum-repository');
+const StringHelper = require('../helpers/string-helper');
+const MemberService = require('../services/member-service');
+const PermissionService = require('../services/permission-service');
 
 /**
  * Entity that represents a single post.
@@ -39,6 +45,8 @@ class Post {
         this.hostname = null;
         this.userAgent = null;
         this.announcment = false;
+        this.postNumber = null;
+        this.includeSignature = false;
     }
 
     /**
@@ -86,7 +94,7 @@ class Post {
      * @param {number} forumId - The forum object.
      */
     setForumId(forumId) {
-        this.forum = forumId;
+        this.forumId = forumId;
     }
 
     /**
@@ -277,21 +285,142 @@ class Post {
     }
 
     /**
+     * Get the post number.
+     * 
+     * @returns {number} The post number.
+     */
+    getPostNumber() {
+        return this.postNumber;
+    }
+
+    /**
+     * Set the post number.
+     * 
+     * @param {number} postNumber - The post number.
+     */
+    setPostNumber(postNumber) {
+        this.postNumber = postNumber;
+    }
+
+    /**
+     * Get whether to include the member's signature.
+     * 
+     * @returns {boolean} True to include signature, false not to.
+     */
+    getIncludeSignature() {
+        return this.includeSignature;
+    }
+
+    /**
+     * Set whether to include the member's signature.
+     * 
+     * @param {boolean} includeSignature - True to include signature, false not to.
+     */
+    setIncludeSignature(includeSignature) {
+        this.includeSignature = includeSignature;
+    }
+
+    /**
+     * Get the URL address string to this post.
+     * 
+     * @returns {string} The URL web address.
+     */
+    url() {
+        return `${process.env.BASE_URL}/posts/view/${this.getId()}`;
+    }
+
+    /**
+     * Returns a list of tags.
+     * 
+     * @returns {string|null} The tags listing source or null if no tags.
+     */
+    getTagsListing() {
+        let initial = false;
+        const max = Settings.get('postMaxTags');
+        const tags = this.getTags();
+
+        if (!tags || !Array.isArray(tags)) {
+            return null;
+        }
+
+        let tagEntities = tags.map(tag => TagRepository.getTagById(tag));
+        tagEntities.sort((a, b) => a.getTitle().localeCompare(b.getTitle()));
+        tagEntities = tagEntities.slice(0, max);
+
+        let tagsList = '';
+
+        tagEntities.forEach((entity) => {
+            tagsList += `${initial ? '' : ', '}${entity.buildLink()}`;
+            initial = false;
+        });
+
+        if (tags.length > max) {
+            tagEntities += UtilHelper.buildLink({
+                title: LocaleHelper.get('postEntity', 'moreTags'),
+                separator: ', ',
+                onclick: 'openTagsDialog(this);',
+                data: {
+                    postid: this.getId(),
+                }
+            });
+        }
+
+        return tagsList;
+    }
+
+    /**
+     * Determines this post's post number.
+     */
+    determinePostNumber() {
+        const cache = CacheProviderFactory.create();
+        const data = cache.get('posts').filter(obj => obj.topicId === this.getTopicId());
+        data.sort((a, b) => a.createdAt - b.createdAt);
+        let x = 1;
+
+        data.forEach((post) => {
+            if (post.id == this.getId()) {
+                this.setPostNumber(x);
+            }
+
+            x++;
+        });
+    }
+
+    /**
      * Build this entity component.
      * 
      * @returns {string} The component source HTML.
      */
     build() {
+        const forum = ForumRepository.getForumById(this.getForumId());
+        const member = MemberService.getMember();
         const creator = MemberRepository.getMemberById(this.getCreatedBy());
         const creatorGroup = creator.getPrimaryGroup();
-        const pronoun = Settings.get('pronounsList').find(pronoun => pronoun);
+        const pronoun = Settings.get('pronounsList').find(pronoun => creator.getPronouns().content == pronoun);
+        const gender = Settings.get('gendersList').find(gender => creator.getGender().content == gender);
+        const isModerator = member.isModerator() || member.isAdmin();
         let pronounContent = null;
+        let genderContent = null;
         
         if (pronoun) {
             pronounContent = LocaleHelper.get('global', pronoun);
         } else {
             pronounContent = pronoun;
         }
+
+        if (gender) {
+            genderContent = LocaleHelper.get('global', gender);
+        } else {
+            genderContent = gender;
+        }
+
+        let content = UtilHelper.sanitizeHtmlSource(this.getContent());
+
+        if (forum.getCensor()) {
+            content = StringHelper.censorBadWords(content);
+        }
+
+        content = StringHelper.replaceMentionsWithLinks(content);
 
         return OutputHelper.getPartial('post-entity', 'post', {
             authorName: creator.getDisplayName(),
@@ -307,6 +436,27 @@ class Post {
             showLocation: creator.getLocation().display,
             location: creator.getLocation().content,
             locationUrl: `https://www.google.com/maps?q=${encodeURIComponent(creator.getLocation().content)}`,
+            showGender: creator.getGender().display,
+            gender: genderContent,
+            showAge: creator.getBirthday().display,
+            age: MathHelper.calculateAge(creator.getBirthday().month, creator.getBirthday().day, creator.getBirthday().year),
+            postedOn: LocaleHelper.replace('postEntity', 'postedOn', 'timestamp', TimeHelper.formatDate(this.getCreatedAt(), { timeAgo: true })),
+            tags: this.getTagsListing(),
+            postNumber: LocaleHelper.replace('postEntity', 'postNumber', 'number', UtilHelper.formatNumber(this.getPostNumber())),
+            postUrl: this.url(),
+            content,
+            attachments: this.getAttachments() && this.getAttachments().length > 0 ? UtilHelper.buildAttachmentsList(this.getAttachments()) : '',
+            includeSignature: this.getIncludeSignature(),
+            signature: creator.buildSignature(),
+            isModerator: isModerator,
+            ipAddress: LocaleHelper.replace('postEntity', 'ipAddress', 'ip', this.getIpAddress()),
+            hostname: LocaleHelper.replace('postEntity', 'hostname', 'hostname', this.getHostname()),
+            canReport: forum.getCanReport(),
+            canShare: forum.getCanShare(),
+            id: this.getId(),
+            canEdit: PermissionService.getForumPermission(this.getForumId(), 'edit') || isModerator,
+            canDelete: PermissionService.getForumPermission(this.getForumId(), 'delete') || isModerator,
+            likeButton: UtilHelper.getLikeButton(this.getId(), 'post'),
         });
     }
 }

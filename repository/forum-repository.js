@@ -49,6 +49,9 @@ class ForumRepository {
         forum.setIcon(data.icon);
         forum.setHotThreshold(parseInt(data.hotThreshold, 10));
         forum.setCensor(parseInt(data.censor, 10) == 1);
+        forum.setCanShare(parseInt(data.canShare, 10) == 1);
+        forum.setCanReport(parseInt(data.canReport, 10) == 1);
+        forum.setSimilarTopicsForums(data.similarTopicsForums ? (data.similarTopicsForums === 'all' ? null : JSON.parse(data.similarTopicsForums)) : []);
 
         return forum;
     }

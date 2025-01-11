@@ -1,0 +1,8 @@
+<div class="attachmentsGrid">
+    <div class="attachmentsGridTitle"><i class="fa-solid fa-paperclip"></i><%= locale.utilHelper.attachmentsTitle %></div>
+    <div class="attachmentsGridContent">
+        <% attachments.forEach(attachment => { %>
+            <%- attachment.build() %>
+        <% }); %>
+    </div>
+</div>

@@ -20,5 +20,8 @@ router.get('/subscribebutton', ajaxController.getSubscribeButton.bind(ajaxContro
 router.post('/togglesubscription', ajaxController.toggleSubscription.bind(ajaxController));
 router.post('/updatesubscriptionpreferences', ajaxController.updateSubscriptionPreferences.bind(ajaxController));
 router.post('/posts', ajaxController.getPosts.bind(ajaxController));
+router.post('/likeunlikecontent', ajaxController.likeUnlikeContent.bind(ajaxController));
+router.post('/viewpollresults', ajaxController.viewPollResults.bind(ajaxController));
+router.post('/upload', ajaxController.uploadFile.bind(ajaxController));
 
 module.exports = router;

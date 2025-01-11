@@ -19,6 +19,10 @@ const DatabaseProviderFactory = require('../data/db/database-provider-factory');
 const MemberService = require('../services/member-service');
 const PostHelper = require('../helpers/post-helper');
 const PostRepository = require('../repository/post-repository');
+const PaginationHelper = require('../helpers/pagination-helper');
+const TopicRepository = require('../repository/topic-repository');
+const TopicHelper = require('../helpers/topic-helper');
+const UploadHelper = require('../helpers/upload-helper');
 
 /**
  * Model for AJAX-related tasks.
@@ -29,6 +33,7 @@ class AjaxModel {
      */
     constructor() {
         this.vars = {};
+        this.vars.data = {};
     }
 
     /**
@@ -181,6 +186,7 @@ class AjaxModel {
     getPosts(req) {
         const { topicId, currentPage } = req.body;
         const cache = CacheProviderFactory.create();
+        const topic = TopicRepository.getTopicById(topicId);
         this.vars.success = true;
 
         const data = cache.get('posts').filter(obj => obj.topicId === parseInt(topicId, 10));
@@ -202,7 +208,175 @@ class AjaxModel {
 
         this.vars.data.posts = builtPosts;
 
+        const perLoad = req.member.getPerLoad().posts;
+
+        this.vars.data.paginationTop = PaginationHelper.generate(
+            data.length,
+            perLoad,
+            {
+                singular: LocaleHelper.get('topic', 'postSingular'),
+                plural: LocaleHelper.get('topic', 'postPlural'),
+            },
+            req.member.getPerLoad().links.posts,
+            UtilHelper.getCurrentPageNumber(req),
+            topic.url()
+        );
+
+        this.vars.data.paginationBottom = PaginationHelper.generate(
+            data.length,
+            perLoad,
+            {
+                singular: LocaleHelper.get('topic', 'postSingular'),
+                plural: LocaleHelper.get('topic', 'postPlural'),
+            },
+            req.member.getPerLoad().links.posts,
+            UtilHelper.getCurrentPageNumber(req),
+            topic.url()
+        );
+
         return this.vars;
+    }
+
+    /**
+     * Like/Unlike content.
+     * 
+     * @param {Object} req - The request object from Express.
+     */
+    async likeUnlikeContent(req) {
+        const { contentId, contentType, mode } = req.body;
+        const cache = CacheProviderFactory.create();
+        const db = DatabaseProviderFactory.create();
+        const member = req.member;
+
+        if (!this.vars.data) {
+            this.vars.data = {};
+        }
+
+        if (!member.isSignedIn()) {
+            this.vars.success = false;
+            this.vars.data.message = LocaleHelper.get('errors', 'guestAttemptToLikeContent');
+            return this.vars;
+        }
+
+        const likes = cache.get('likes').find(obj => obj.contentId === parseInt(contentId, 10) && obj.contentType === contentType && obj.likedBy === member.getId());
+        const liked = likes ? true : false;
+        
+        switch (mode) {
+            case 'like':
+                if (!liked) {
+                    db.insert('likes', {
+                        contentId,
+                        contentType,
+                        likedBy: member.getId(),
+                        likedAt: new Date(),
+                    });
+
+                    await cache.update('likes');
+
+                    this.vars.success = true;
+                    this.vars.data.likeButton = UtilHelper.getLikeButton(contentId, contentType);
+                    this.vars.data.message = LocaleHelper.get('ajax', 'likedContentNotify');
+                    return this.vars;
+                } else {
+                    this.vars.success = false;
+                    this.vars.data.message = LocaleHelper.get('errors', 'contentAlreadyLiked');
+                    return this.vars;
+                }
+            case 'unlike':
+                if (liked) {
+                    db.delete('likes', {
+                        contentId,
+                        contentType,
+                        likedBy: member.getId(),
+                    });
+
+                    await cache.update('likes');
+
+                    this.vars.success = true;
+                    this.vars.data.likeButton = UtilHelper.getLikeButton(contentId, contentType);
+                    this.vars.data.message = LocaleHelper.get('ajax', 'unlikedContentNotify');
+                    return this.vars;
+                } else {
+                    this.vars.success = false;
+                    this.vars.data.message = LocaleHelper.get('errors', 'contentNotLiked');
+                    return this.vars;
+                }
+            default:
+                this.vars.success = false;
+                this.vars.data.message = `${LocaleHelper.get('errors', 'invalidLikeMode')} ${mode}`;
+                return this.vars;
+        }
+    }
+
+    /**
+     * View the poll results.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @returns {Object} Resulting JSON data.
+     */
+    async viewPollResults(req) {
+        const { topicId } = req.body;
+        const member = req.member;
+
+        if (!member.isSignedIn()) {
+            this.vars.succes = false;
+            this.vars.data.message = LocaleHelper.get('errors', 'unallowedGuestAction');
+            return this.vars;
+        }
+
+        const cache = CacheProviderFactory.create();
+        const db = DatabaseProviderFactory.create();
+        const data = cache.get('topics').find(obj => obj.id === topicId);
+
+        if (!data) {
+            this.vars.succes = false;
+            this.vars.data.message = LocaleHelper.get('errors', 'topicDoesNotExist');
+            return this.vars;
+        }
+
+        const topic = TopicRepository.getTopicById(parseInt(topicId, 10));
+        let poll = topic.getPoll();
+        const alreadyCast = (poll.voters.voted.find(memberId => memberId === member.getId()) || poll.voters.didNotVote.find(memberId => memberId === member.getId()));
+
+        if (!alreadyCast) {
+            poll.voters.didNotVote.push(member.getId());
+            
+            try {
+                db.update('topics', { poll: JSON.stringify(poll) }, { id: topic.getId() });
+                await cache.update('topics');
+
+                this.vars.succes = true;
+                this.vars.data.poll = TopicHelper.getPoll(topic.getId());
+                this.vars.data.message = LocaleHelper.get('ajax', 'viewPollResultsNotify');
+                return this.vars;
+            } catch(error) {
+                this.vars.succes = false;
+                this.vars.data.message = LocaleHelper.replace('errors', 'errorOccuredDuringDbAction', 'error', error.getMessage());
+                return this.vars;
+            }
+        }
+
+        this.vars.succes = true;
+        this.vars.data.poll = TopicHelper.getPoll(topic.getId());
+        return this.vars;
+    }
+
+    /**
+     * Upload a file.
+     * 
+     * @param {Object} req - The request object from Express.
+     */
+    uploadFile(req) {
+        const { type } = req.body;
+
+        try {
+            return UploadHelper.uploadFile(req, type);
+        } catch (error) {
+            console.error(LocaleHelper.replace('errors', 'errorDuringUpload', 'error', error));
+            this.vars.succes = false;
+            this.vars.data.message = LocaleHelper.replace('errors', 'errorDuringUpload', 'error', error);
+            return this.vars;
+        }
     }
 }
 

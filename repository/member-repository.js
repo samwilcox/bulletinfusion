@@ -57,7 +57,7 @@ class MemberRepository {
             member.setThemeId(parseInt(data.themeId, 10));
             member.setBlocks(data.blocks ? JSON.parse(data.blocks) : null);
             member.setPhotoType(data.photoType);
-            member.setPhotoId(parseInt(data.photoId, 10));
+            member.setPhotoId(data.photoId ? parseInt(data.photoId, 10) : null);
             member.setTimeZone(data.timeZone);
             member.setDateFormat(data.dateFormat);
             member.setTimeFormat(data.timeFormat);
@@ -92,6 +92,9 @@ class MemberRepository {
             member.setDisplayJoined(parseInt(data.displayJoined, 10) == 1);
             member.setLocation(data.location ? JSON.parse(data.location) : null);
             member.setGender(data.gender ? JSON.parse(data.gender) : null);
+            member.setBirthday(data.birthday ? JSON.parse(data.birthday) : null);
+            member.setSignature(data.signature ? JSON.parse(data.signature) : null);
+            member.setSimilarTopics(data.similarTopics ? JSON.parse(data.similarTopics) : null);
         } else {
             member = this.guestSettings(member);
         }
@@ -154,6 +157,9 @@ class MemberRepository {
         member.setDisplayJoined(false);
         member.setLocation(null);
         member.setGender(null);
+        member.setBirthday(null);
+        member.setSignature(null);
+        member.setSimilarTopics(Settings.get('defaultSimilarTopics'));
 
         return member;
     }

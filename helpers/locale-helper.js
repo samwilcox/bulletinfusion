@@ -9,6 +9,7 @@
  * https://license.bulletinfusion.com
  */
 
+const CacheProviderFactory = require('../data/cache/cache-provider-factory');
 const FileHelper = require('./file-helper');
 const path = require('path');
 
@@ -103,6 +104,37 @@ class LocaleHelper {
         }
 
         return words;
+    }
+
+    /**
+     * Get the entire locale collection for the given locale.
+     * 
+     * @param {number} localeId - The identifier of the locale to get.
+     * @returns {Object|null} The entire locale collection for the locale or null if locale is not found.
+     */
+    static async getLocaleById(localeId) {
+        const cache = CacheProviderFactory.create();
+        const data = cache.get('locales').find(l => l.id === localeId);
+        if (!data) return null;
+
+        const localeFilePath = path.join(__dirname, '..', 'locale', data.folder, 'locale.json');
+        const localeData = await FileHelper.readFile(localeFilePath);
+        const localeJson = JSON.parse(localeData);
+        let locale = {};
+
+        for (const category in localeJson) {
+            if (!locale.hasOwnProperty(category)) {
+                locale[category] = {};
+
+                for (const key in localeJson[category]) {
+                    if (localeJson[category].hasOwnProperty(key)) {
+                        locale[category][key] = localeJson[category][key];
+                    }
+                }
+            }
+        }
+
+        return locale;
     }
 }
 

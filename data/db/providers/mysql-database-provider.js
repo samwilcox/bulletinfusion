@@ -100,7 +100,13 @@ class MySQLDatabaseProvider extends DatabaseInterface {
 
         const sql = `INSERT INTO ${this.tablePrefix}${table} (${columns}) VALUES (${placeHolders})`;
 
-        return this.query(sql, values);
+        return this.query(sql, values)
+            .then(result => {
+                return result.insertId;
+            })
+            .catch(error => {
+                throw error;
+            });
     }
 
     /**

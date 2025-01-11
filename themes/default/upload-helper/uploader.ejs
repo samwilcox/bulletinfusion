@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="<%= themeCssUrl %>/editor.css">
+<script src="<%= baseUrl %>/js/editor.js"></script>
+<% if (topMargin) { %>
+    <div class="editorMarginTop"></div>
+<% } %>
+<div class="uploaderBox" id="drop-area">
+    <input type="file" name="file" id="file-input">
+    <div class="uploaderBoxGrid">
+        <div class="uploaderBoxFileLimit"><%- maxFileSize %></div>
+        <div class="alignCenter">
+            <div class="uploaderBoxCenterGrid">
+                <div class="uploaderBoxTitle"><i class="fa-solid fa-upload"></i><%= locale.uploadHelper.uploaderTitle %></div>
+                <div class="uploaderBoxInfo"><%- uploadInfo %></div>
+            </div>
+        </div>
+        <div class="uploaderBoxExistingAttachments">
+            <% if (type === 'attachment') { %>
+                <a href="javascript:void(0);"><%= locale.uploadHelper.insertExistingAttachment %></a>
+            <% } %>
+        </div>
+    </div>
+</div>
+<div class="uploaderPreviewBox" id="uploaded-files"></div>
+<% if (bottomMargin) { %>
+    <div class="editorMarginBottom"></div>
+<% } %>

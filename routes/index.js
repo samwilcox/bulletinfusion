@@ -15,6 +15,6 @@ const IndexController = require('../controllers/index-controller');
 
 const indexController = new IndexController();
 
-router.get('/', indexController.buildHomePage.bind(indexController));
+router.get('/',  indexController.buildHomePage.bind(indexController));
 
 module.exports = router;

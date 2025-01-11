@@ -4,6 +4,11 @@
         topicId: <%= topic.getId() %>,
         currentPage: <%= currentPage %>,
     };
+
+    var paginationMode = 'posts';
+    var paginationTopId = 'pagination-bar-<%= topUuid %>';
+    var paginationBottomId = 'pagination-bar-<%= bottomUuid %>'
+    var addressBarUrl = '<%= pageUrl %>';
 </script>
 <div class="pageBannerTop">
     <span class="forumsSymbolLinkTopic"><a href="<%= forum.url() %>" style="color: <%= forum.getTextColor() %>; background-color: <%= forum.getColor() %>" onmouseover="this.style.color='<%= forum.getDarkColor().idealTextColor %>'; this.style.backgroundColor='<%= forum.getDarkColor().darkenedColor %>';" onmouseout="this.style.color='<%= forum.getTextColor() %>'; this.style.backgroundColor='<%= forum.getColor() %>';"><%- forum.getIcon() %><%= forum.getTitle() %></a></span>
@@ -19,8 +24,8 @@
             <% } %>
         </div>
         <div class="alignRight buttonsGroup">
-            <% if (permissions.reply) { %>
-                <span class="brightButton"><a href="javascript:void(0);"><i class="fa-solid fa-reply"></i>Reply</a></span>
+            <% if (permissions.reply && !pollData.pollOnly) { %>
+                <span class="brightButton"><a href="javascript:void(0);" data-editor="editor-<%= editorId %>" onclick="openQuickReply(this);"><i class="fa-solid fa-reply"></i>Reply</a></span>
             <% } %>
             <% if (permissions.newTopic) { %>
                 <span class="brightButton"><a href=""><i class="fa-solid fa-folder-plus"></i>New Topic</a></span>
@@ -51,5 +56,35 @@
         </div>
     </div>
 </div>
-<%- paginationBar %>
+<% if (pollData.hasPoll) { %>
+    <%- pollData.pollHtml %>
+<% } %>
+<span id="pagination-top-bar"><%- paginationTop %></span>
 <div id="posts-container"></div>
+<div class="loadingContent" id="content-loading">
+    <div class="loadingContentGrid">
+        <div><img src="<%= imagesetUrl %>/images/loaders/pulse-loader.gif" alt="*"></div>
+        <div id="content-loading-content"></div>
+    </div>
+</div>
+<span id="pagination-bottom-bar"><%- paginationBottom %></span>
+<% if (previousAndNext.previous && previousAndNext.next) { %>
+    <div class="nextPreviousTopicBar">
+        <div class="left">
+            <% if (previousAndNext.left) { %>
+                <a href="<%= previousAndNext.left.url() %>"><i class="fa-solid fa-arrow-left"></i><%= locale.topic.previousTopic %></a>
+            <% } %>
+        </div>
+        <div class="alignRight right">
+            <% if (previousAndNext.right) { %>
+                <a href="<%= previousAndNext.right.url() %>"><%= locale.topic.nextTopic %><i class="fa-solid fa-arrow-right"></i></a>
+            <% } %>
+        </div>
+    </div>
+<% } %>
+<% if (quickReply) { %>
+    <%- quickReply %>
+<% } %>
+<% if (similarTopics) { %>
+    <%- similarTopics %>
+<% } %>

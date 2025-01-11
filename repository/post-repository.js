@@ -54,6 +54,8 @@ class PostRepository {
         post.setHostname(data.hostname);
         post.setUserAgent(data.userAgent);
         post.setAnnouncment(parseInt(data.announcment, 10) == 1);
+        post.determinePostNumber();
+        post.setIncludeSignature(parseInt(data.includeSignature, 10) == 1);
 
         return post;
     }
@@ -67,6 +69,18 @@ class PostRepository {
     static getPostById(postId) {
         const data = this.loadPostDataById(postId);
         return this.buildPostFromData(data);
+    }
+
+    /**
+     * Get posts by topic ID.
+     * 
+     * @param {number} topicId - The topic identifier.
+     * @returns {Array} An array of posts for the given topic.
+     */
+    static getPostsByTopicId(topicId) {
+        const cache = CacheProviderFactory.create();
+        const posts = cache.get('posts') || [];
+        return posts.filter(post => post.topicId === topicId);
     }
 }
 

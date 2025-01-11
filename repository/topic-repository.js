@@ -11,9 +11,8 @@
 
 const CacheProviderFactory = require('../data/cache/cache-provider-factory');
 const TimeHelper = require('../helpers/time-helper');
-const ForumRepository = require('./forum-repository');
-const MemberRepository = require('./member-repository');
 const PostRepository = require('./post-repository');
+const SimilarTopicsService = require('../services/similar-topics-service');
 
 /**
  * TopicReposity is responsible for handling and retrieval and construction of 'Topic' entity.
@@ -55,6 +54,8 @@ class TopicRepository {
         topic.setHasSolution(parseInt(data.hasSolution, 10) == 1);
         topic.setSolutionPost(parseInt(data.solutionPostId, 10));
         topic.setTags(data.tags ? JSON.parse(data.tags) : null);
+        topic.setPoll(data.poll ? JSON.parse(data.poll) : null);
+        topic.setHasPoll(data.poll ? true : false);
 
         return topic;
     }
@@ -68,6 +69,69 @@ class TopicRepository {
     static getTopicById(topicId) {
         const data = this.loadTopicDataById(topicId);
         return this.buildTopicFromData(data);
+    }
+
+    /**
+     * Find topics based on various search criteria.
+     * 
+     * @param {Object} [filters={}] - The filters to apply on the topic search.
+     * @param {number} currentTopicId - The ID of the current topic to exclude.
+     * @param {string} [filters.title] - The title to search for (optional).
+     * @param {Array} [filters.tags] - Tags to search for (optional).
+     * @param {number|Array} [filters.forumId] - Forum ID(s) to search within (optional).
+     * @param {boolean} [filters.locked] - Whether the topic id locked (optional).
+     * @returns {Array} A list of related 'Topic' entities that match the filters.
+     */
+    static findForSimilar(filters = {}, currentTopicId) {
+        const cache = CacheProviderFactory.create();
+        let topicsData = cache.get('topics') || [];
+
+        topicsData = topicsData.filter(topic => topic.id !== currentTopicId);
+
+        const similarTopics = [];
+        const similarTopicIds = SimilarTopicsService.getSimilarTopicsByContent(currentTopicId);
+
+        for (const topicId of similarTopicIds) {
+            const topic = topicsData.find(t => t.id === topicId);
+
+            if (topic) {
+                similarTopics.push(topic);
+            }
+        }
+
+        if (filters.title) {
+            topicsData = topicsData.filter(topic => topic.title.toLowerCase().includes(filters.title.toLocaleLowerCase()));
+        }
+
+        if (filters.tags && Array.isArray(filters.tags)) {
+            topicsData = topicsData.filter(topic => {
+                const topicTagsMatch = topic.tags && Array.isArray(topic.tags) && filters.tags.every(tagId => JSON.parse(topic.tags).includes(tagId));
+
+                const postTagsMatch = posts.some(post => {
+                    return post.tags && Array.isArray(post.tags) && filters.tags.every(tagId => post.tags.includes(tagId));
+                });
+
+                return topicTagsMatch || postTagsMatch;
+            });
+        }
+
+        if (filters.forumId) {
+            if (Array.isArray(filters.forumId)) {
+                topicsData = topicsData.filter(topic =>
+                    filters.forumId.includes(topic.id)
+                );
+            } else {
+                topicsData = topicsData.filter(topic => topic.forumId === filters.forumId);
+            }
+        }
+
+        if (filters.locked !== undefined) {
+            topicsData = topicsData.filter(topic => topic.locked === filters.locked);
+        }
+
+        const allFilteredTopics = [...new Set([...similarTopics, ...topicsData])];
+
+        return allFilteredTopics.map(this.buildTopicFromData);
     }
 }
 

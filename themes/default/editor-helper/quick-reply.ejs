@@ -1,0 +1,114 @@
+<% if (topMargin) { %>
+    <div class="editorMarginTop"></div>
+<% } %>
+<div class="editorQuickReply" id="quick-reply-clicker" data-editor="editor-<%= editorId %>" onclick="openQuickReply(this);">
+    <div class="editorQuickReplyGrid">
+        <div class="relative"><%- photo %><span class="editorTriangleAlt"></span></div>
+        <div>
+            <div class="editorQuickReplyInner"><i class="fa-solid fa-reply"></i><%= locale.editorHelper.quickReplyClickInfo %></div>
+        </div>
+    </div>
+</div>
+<div style="display: none;" id="quick-reply-container">
+    <form name="quickreplyform" id="quickreplyform" action="<%= action %>" method="post" enctype="application/x-www-form-urlencoded">
+    <div class="editorQuickReplyBox">
+        <div class="editorQuickReplyBoxGrid">
+            <div class="editorQuickReplyBoxGridLeft"><%- photo %><span class="editorTriangle"></span></div>
+            <div>
+                <%- editor %>
+                <%- uploader %>
+                <% if (canSubscribe || canMarkAnnouncement || canUseSignature) { %>
+                    <div class="editorQuickReplyOptionsGrid">
+                        <div>
+                            <% if (canSubscribe) { %>
+                                <div class="checkboxGrid">
+                                    <div>
+                                        <div class="checkbox">
+                                            <span class="checkbox">
+                                                <input type="checkbox" name="subscribe" id="subscribe-checkbox" value="1">
+                                                <svg>
+                                                <use xlink:href="#checkbox" class="checkbox"></use>
+                                                </svg>
+                                            </span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                <symbol id="checkbox" viewBox="0 0 22 22">
+                                                <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                </symbol>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="subscribe-checkbox">
+                                            <span class="checkboxTitle"><%= locale.editorHelper.subscribeToContent %></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                        <div>
+                            <% if (canMarkAnnouncement) { %>
+                                <div class="checkboxGrid">
+                                    <div>
+                                        <div class="checkbox">
+                                            <span class="checkbox">
+                                                <input type="checkbox" name="announcement" id="announcement-checkbox" value="1">
+                                                <svg>
+                                                <use xlink:href="#checkbox" class="checkbox"></use>
+                                                </svg>
+                                            </span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                <symbol id="checkbox" viewBox="0 0 22 22">
+                                                <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                </symbol>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="announcement-checkbox">
+                                            <span class="checkboxTitle"><%= locale.editorHelper.markAsAnnouncement %></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                        <div>
+                            <% if (canUseSignature) { %>
+                                <div class="checkboxGrid">
+                                    <div>
+                                        <div class="checkbox">
+                                            <span class="checkbox">
+                                                <input type="checkbox" name="signature" id="signature-checkbox" value="1"<% if (autoSignature) { %> checked<% } %>>
+                                                <svg>
+                                                <use xlink:href="#checkbox" class="checkbox"></use>
+                                                </svg>
+                                            </span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+                                                <symbol id="checkbox" viewBox="0 0 22 22">
+                                                <path fill="none" stroke="currentColor" d="M5.5,11.3L9,14.8L20.2,3.3l0,0c-0.5-1-1.5-1.8-2.7-1.8h-13c-1.7,0-3,1.3-3,3v13c0,1.7,1.3,3,3,3h13 c1.7,0,3-1.3,3-3v-13c0-0.4-0.1-0.8-0.3-1.2"/>
+                                                </symbol>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="signature-checkbox">
+                                            <span class="checkboxTitle"><%= locale.editorHelper.useSignature %></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                <% } %>
+                <div class="editorQuickReplyButtonContainer">
+                    <input type="hidden" name="contentId" value="<%= contentId %>">
+                    <input type="hidden" name="contentType" value="<%= contentType %>">
+                    <input type="submit" name="quickreplybutton" id="quickreplybutton" value="<%= locale.editorHelper.submitReplyButton %>">
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+<% if (bottomMargin) { %>
+    <div class="editorMarginBottom"></div>
+<% } %>

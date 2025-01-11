@@ -32,5 +32,7 @@ module.exports = function getTablesToCache() {
         'forum_permissions',
         'subscriptions',
         'tags',
+        'attachments',
+        'likes',
     ];
 };

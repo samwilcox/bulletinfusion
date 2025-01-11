@@ -15,9 +15,38 @@
 // const theSettings = JSON.stringify(settings);
 // console.log(theSettings);
 
-const loc = {
-    display: true,
-    content: 'Boise, Idaho, US'
+// const poll = {
+//     title: 'A test poll',
+//     pollOnly: false,
+//     doesClose: false,
+//     closesAt: null,
+//     closed: false,
+//     voters: {
+//         voted: [],
+//         didNotVote: [],
+//     },
+//     questions: [
+//         {
+//             number: 1,
+//             question: 'Does Trump suck?',
+//             multipleChoice: false,
+//             options: [
+//                 {
+//                     title: 'Yes',
+//                     totalVotes: 0,
+//                 },
+//                 {
+//                     title: 'No',
+//                     totalVotes: 0,
+//                 }
+//             ]
+//         }
+//     ]
+// };
+
+const ext = {
+    show: true,
+    max: 5
 };
 
-console.log(JSON.stringify(loc));
+console.log(JSON.stringify(ext));

@@ -20,7 +20,8 @@ const sessionMiddleware = require('../middleware/session-middleware');
 const localeMiddleware = require('../middleware/locale-middleware');
 const viewEngineMiddleware = require('../middleware/view-engine-middleware');
 const ejsLayouts = require('express-ejs-layouts');
-const { conditionalCSRF } = require('../middleware/csrf-middleware');
+//const { conditionalCSRF } = require('../middleware/csrf-middleware');
+const { secureStateMiddleware, setConfig } = require('securestate');
 
 /**
  * Sets up all the middleware.
@@ -33,6 +34,7 @@ module.exports = (app) => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(express.static('public'));
+    app.use(secureStateMiddleware);
     app.use(session({
         secret: process.env.SESSION_SECRET_KEY,
         resave: false,
@@ -46,7 +48,7 @@ module.exports = (app) => {
     app.use(localeMiddleware);
     app.use(viewEngineMiddleware);
     app.use(ejsLayouts);
-    app.use(conditionalCSRF);
+    //app.use(conditionalCSRF);
 
     console.log('Middleware set up.');
 };

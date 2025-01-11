@@ -30,6 +30,9 @@ class Forum {
         this.icon = null;
         this.hotThreshold = 20;
         this.censor = false;
+        this.canShare = false;
+        this.canReport = false;
+        this.similarTopicsForums = [];
     }
 
     /**
@@ -213,30 +216,60 @@ class Forum {
     }
 
     /**
-     * Initialize this entity.
+     * Get whether people can share content in this forum.
      * 
-     * @param {Object} params - Entity data parameters.
+     * @returns {boolean} True if people can share content in this forum,
+     *                    False if people cannot share content in this forum.
      */
-    initialize(params) {
-        this.setId(params.id);
-        const cache = CacheProviderFactory.create();
-        let data = cache.get('forums').filter(obj => obj.id == this.getId());
-        
-        if (!data || data.length == 0) {
-            throw new Error("Failed to initialize a forum entity");
-        }
+    getCanShare() {
+        return this.canShare;
+    }
 
-        data = data[0];
+    /**
+     * Set whether people can share content in this forum.
+     * 
+     * @param {boolean} canShare - True if people can share content in this forum,
+     *                             False if people cannot share content in this forum.
+     * 
+     */
+    setCanShare(canShare) {
+        this.canShare = canShare;
+    }
 
-        this.setTitle(data.title);
-        this.setDescription(data.description);
-        this.setSortOrder(parseInt(data.sortOrder));
-        this.setVisible(parseInt(data.visible) == 1);
-        this.setColor(data.color);
-        this.setTextColor(data.textColor);
-        this.setIcon(data.icon);
-        this.setHotThreshold(parseInt(data.hotThreshold));
-        this.setCensor(parseInt(data.censor));
+    /**
+     * Get whether people can report content in this forum.
+     * 
+     * @returns {boolean} True if people can report content, false if they cannot.
+     */
+    getCanReport() {
+        return this.canReport;
+    }
+
+    /**
+     * Set whether people can report content in this forum.
+     * 
+     * @param {boolean} canReport - True if people can report content, false if they cannot.
+     */
+    setCanReport(canReport) {
+        this.canReport = canReport;
+    }
+
+    /**
+     * Get the array of forums to pull similar topics from.
+     * 
+     * @returns {Array} An array of forums to pull similar topics from.
+     */
+    getSimilarTopicsForums() {
+        return this.similarTopicsForums;
+    }
+
+    /**
+     * Set the array of forums to pull similar topics from.
+     * 
+     * @param {Array} similarTopicsForums - An Array of forums to pull similar topics from.
+     */
+    setSimilarTopicsForums(similarTopicsForums) {
+        this.similarTopicsForums = similarTopicsForums;
     }
 
     /**

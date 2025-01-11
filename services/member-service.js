@@ -215,6 +215,17 @@ class MemberService {
         await cache.update('members');
         return MemberRepository.getMemberById(insertInfo.insertId);
     }
+
+    /**
+     * Get the entire locale for the given member.
+     * 
+     * @param {number} memberId - The identifier of the member to get locale for.
+     * @returns {Object} The entire locale object data. 
+     */
+    getLocale(memberId) {
+        const member = this.findById(memberId);
+        
+    }
 }
 
 module.exports = MemberService.getInstance();

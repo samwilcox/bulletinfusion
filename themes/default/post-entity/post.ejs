@@ -1,3 +1,19 @@
+<div class="dropDownMenu" id="ddm-postoptions-<%= id %>">
+    <span class="dropDownMenuLinks">
+        <% if (canShare) { %>
+            <a href="javascript:void(0);"><i class="fa-solid fa-share-nodes"></i><%= locale.postEntity.shareLink %></a>
+        <% } %>
+        <% if (canReport) { %>
+            <a href="javascript:void(0);"><i class="fa-solid fa-flag"></i><%= locale.postEntity.reportLink %></a>
+        <% } %>
+        <% if (canEdit) { %>
+            <a href="javascript:void(0);"><i class="fa-solid fa-pen-to-square"></i><%= locale.postEntity.editLink %></a>
+        <% } %>
+        <% if (canDelete) { %>
+            <a href="javascript:void(0);"><i class="fa-solid fa-trash-can"></i><%= locale.postEntity.deleteLink %></a>
+        <% } %>
+    </span>
+</div>
 <div class="postBox">
     <div class="postBoxGrid">
         <div class="postBoxGridLeft">
@@ -32,14 +48,18 @@
                             <a href="<%= locationUrl %>" target="_blank"><%= location %></a>
                         </div>
                     <% } %>
-                    <div class="postBoxInfoItem">
-                        <span class="postBoxInfoItemTitle">Gender</span>
-                        Male
-                    </div>
-                    <div class="postBoxInfoItem">
-                        <span class="postBoxInfoItemTitle">Age</span>
-                        43
-                    </div>
+                    <% if (showGender) { %>
+                        <div class="postBoxInfoItem">
+                            <span class="postBoxInfoItemTitle"><%= locale.postEntity.gender %></span>
+                            <%= gender %>
+                        </div>
+                    <% } %>
+                    <% if (showAge) { %>
+                        <div class="postBoxInfoItem">
+                            <span class="postBoxInfoItemTitle"><%= locale.postEntity.age %></span>
+                            <%= age %>
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -47,74 +67,36 @@
             <div class="postBoxRightFlex">
                 <div class="postBoxRightTop">
                     <div class="tripleGridCentered">
-                        <div class="iconSpace"><i class="fa-solid fa-calendar-days"></i><strong>Posted:</strong> 11/08/2024 07:22 AM</div>
-                        <div class="alignCenter"><div class="tagsSmallLink"><span class="tooltip tooltip--top" data-title="<%= locale.topic.tagsTooltip %>"><i class="fa-solid fa-tags"></i><i class="fa-solid fa-arrow-right"></i></span></div></div>
+                        <div class="iconSpace"><i class="fa-solid fa-calendar-days"></i><%- postedOn %></div>
+                        <div class="alignCenter">
+                            <% if (tags) { %>
+                                <div class="tagsSmallLink"><span class="tooltip tooltip--top" data-title="<%= locale.topic.tagsTooltip %>"><i class="fa-solid fa-tags"></i><i class="fa-solid fa-arrow-right"></i><%= tags %></span></div>
+                            <% } %>
+                        </div>
                         <div class="postBoxRightTopRight blockAlignRight">
-                            <span><a href="">Post # 1</a></span>
-                            <span><a href="javascript:void(0);" class="tooltip tooltip--top" data-title="<%= locale.postEntity.postOptionsTooltip %>"><i class="fa-solid fa-ellipsis-vertical"></i></a></span>
+                            <span><a href="<%= postUrl %>"><%- postNumber %></a></span>
+                            <span id="ddm-postoptions-<%= id %>-span"><a href="javascript:void(0);" id="ddm-postoptions-<%= id %>-link" class="tooltip tooltip--top" data-title="<%= locale.postEntity.postOptionsTooltip %>" data-menu="ddm-postoptions-<%= id %>" data-link="ddm-postoptions-<%= id %>-link" data-ignored="ddm-postoptions-<%= id %>-icon,ddm-postoptions-<%= id %>-span" onclick="openDropDownMenu(this);"><i class="fa-solid fa-ellipsis-vertical" id="ddm-postoptions-<%= id %>-icon"></i></a></span>
                         </div>
                     </div>
                 </div>
                 <div class="postBoxRightCenter">
-                    <p>Hey everyone!</p>
-
-                    <p>I just wanted to share my thoughts on the recent changes in the platform. It’s been quite exciting to see the updates, but I do have some concerns about how the navigation flows. I think the new layout looks sleek, but the settings menu feels a bit hidden. Maybe adding some shortcuts or tooltips would help users find them more easily.</p>
-
-                    <p>That being said, I think the improvements in the notifications system are fantastic! Getting real-time updates on topics I follow has definitely made me more engaged. It’s a small thing, but it has made a big difference in my overall experience.</p>
-
-                    <p>Also, I’ve been thinking about the future of the community. As more people join, I believe the focus should shift towards creating spaces for niche topics. It’s great to have broad discussions, but I think we should also create rooms for smaller groups to bond over shared interests. What do you all think about this?</p>
-
-                    <p>Looking forward to hearing your thoughts on these ideas!</p>
-
-                    <p>Cheers,</p>
-                    <p>Sam</p>
-                    <div class="attachmentsGrid">
-                        <div class="attachmentsGridTitle"><i class="fa-solid fa-paperclip"></i>Attachments</div>
-                        <div class="attachmentsGridContent">
-                            <div class="attachmentItem">
-                                <div class="attachmentItemGrid">
-                                    <div class="attachmentItemGridTop">sam-picture-1.jpg</div>
-                                    <div class="attachmentItemGridCenter">
-                                        <div class="attachmentItemGridCenterGrid">
-                                            <div class="attachmentItemGridCenterGridLeft"><strong>Size:</strong> 1.2MB</div>
-                                            <div class="attachmentItemGridCenterGridRight"><strong>Downloads:</strong> 12.3M</div>
-                                        </div>
-                                    </div>
-                                    <div class="attachmentItemGridBottom"><a href="">Download</a></div>
-                                </div>
-                            </div>
-                            <div class="attachmentItem">
-                                <div class="attachmentItemGrid">
-                                    <div class="attachmentItemGridTop">sam-picture-1.jpg</div>
-                                    <div class="attachmentItemGridCenter">
-                                        <div class="attachmentItemGridCenterGrid">
-                                            <div class="attachmentItemGridCenterGridLeft"><strong>Size:</strong> 1.2MB</div>
-                                            <div class="attachmentItemGridCenterGridRight"><strong>Downloads:</strong> 12.3M</div>
-                                        </div>
-                                    </div>
-                                    <div class="attachmentItemGridBottom"><a href="">Download</a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="signatureBox">Signature here</div>
+                    <%- content %>
+                    <%- attachments %>
+                    <% if (includeSignature) { %>
+                        <div class="signatureBox"><%- signature %></div>
+                    <% } %>
                 </div>
                 <div class="postBoxRightBottom">
                     <div class="dualGridCentered">
-                        <div class="postModInfo">
-                            <span><strong>IP Address:</strong> 12.32.43.54</span>
-                            <span><strong>Hostname:</strong> hostname.com</span>
-                        </div>
-                        <div class="alignRight blockAlignRight">
-                            <span class="likeLink">
-                                <a href="javascript:void(0);">
-                                    <div class="likeLinkGrid">
-                                        <div class="likeLinkGridLeft">0</div>
-                                        <div class="likeLinkGridRight"><i class="fa-regular fa-thumbs-up"></i>Like</div>
-                                    </div>
-                                </a>
-                            </span>
-                        </div>
+                        <% if (isModerator) { %>
+                            <div class="postModInfo">
+                                <span><%- ipAddress %></span>
+                                <span><%- hostname %></span>
+                            </div>
+                        <% } else { %>
+                            <p></p>
+                        <% } %>
+                        <div class="alignRight blockAlignRight" id="like-button-content-<%= id %>"><%- likeButton %></div>
                     </div>
                 </div>
             </div>

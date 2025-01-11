@@ -20,6 +20,11 @@ var contentData = {
 };
 var currentDialog = null;
 var posts = null;
+var paginationMode = null;
+var paginationTopId = null;
+var paginationBottomId = null;
+var addressBarUrl = null;
+var currentCodeLang = 'javascript';
 
 $(document).ready(function() {
     parseJson();
@@ -30,6 +35,30 @@ $(document).ready(function() {
     }
 
     loadPosts();
+
+    if (paginationMode) {
+        $(document).on('click', '.paginationLinks', function (e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+
+            switch (paginationMode) {
+                case 'posts':
+                    loadPosts({ page: page, updateHistory: true });
+                    break;
+                default:
+                    console.warn('Unsupported pagination mode:', paginationMode);
+                    break;
+            }
+        });
+
+        $(window).on('popstate', function (e) {
+            const state = e.originalEvent.state;
+
+            if (state && state.page && paginationMode === 'posts') {
+                loadPosts({ page: state.page, updateHistory: false });
+            }
+        });
+    }
 });
 
 /**
@@ -488,14 +517,23 @@ function unsubscribeFromContent(element) {
 
 /**
  * Loads the posts for the given topic.
+ * 
+ * @param {Object} [options={}] - Options for loading posts.
+ * @param {boolean} [options.updateHistory=false] - True to update the history in the browser.
+ * @param {number} [options.page=null] - The page number to load posts for.
  */
-function loadPosts() {
+function loadPosts(options = {}) {
+    const { updateHistory = false, page = null } = options;
+
     if (posts && posts.hasOwnProperty('enabled')) {
+        toggleLoadingMessage(json.locale.loadingPosts, 'show');
         const postsContainer = $("#posts-container");
+        const top = $("#pagination-top-bar");
+        const bottom = $("#pagination-bottom-bar");
 
         const data = {
             topicId: posts.topicId,
-            currentPage: posts.currentPage,
+            currentPage: page ? page : posts.currentPage,
         };
 
         ajaxPost('posts', data, function(response) {
@@ -505,7 +543,23 @@ function loadPosts() {
                 } else {
                     postsContainer.append(response.data.posts);
                 }
+
+                top.html(response.data.paginationTop.pagination);
+                bottom.html(response.data.paginationBottom.pagination);
+
+                paginationTopId = `pagination-bar-${response.data.paginationTop.uuid}`;
+                paginationBottomId = `pagination-bar-${response.data.paginationBottom.uuid}`;
+
+                toggleLoadingMessage(json.locale.loadingPosts, 'hide');
+                
+                if (updateHistory) {
+                    scrollToElement(paginationTopId);
+                }
             }
+        }, {
+            updateHistory,
+            page,
+            addressBarUrl,
         });
     }
 }
@@ -525,4 +579,86 @@ function notifyChange(message) {
         notificationBox.fadeOut({ queue: false, duration: 'slow' });
         notificationBox.animate({ 'marginTop': '-=30px' }, 400, 'easeInQuad');
     }, 3000);
+}
+
+/**
+ * Like/Unlike content.
+ * 
+ * @param {Object} element - The element instance.
+ */
+function likeUnlikeContent(element) {
+    const contentId = parseInt($(element).data('contentid'));
+    const contentType = $(element).data('contenttype');
+    const mode = $(element).data('method');
+    const likeContainer = $("#" + $(element).data('content'));
+    const data = {
+        contentId,
+        contentType,
+        mode,
+    };
+
+    ajaxPost('likeunlikecontent', data, function(response) {
+        if (response.success) {
+            likeContainer.html(response.data.likeButton);
+            notifyChange(response.data.message);
+        } else {
+            notifyChange(response.data.message);
+        }
+    });
+}
+
+/**
+ * Scroll to the given element.
+ * 
+ * @param {string} target - The target element identifier to scroll to.
+ */
+function scrollToElement(target) {
+    const targetElement = $("#" + target);
+
+    if (targetElement.length) {
+        $('html, body').animate({
+            scrollTop: targetElement.offset().top
+        }, 500)
+    }
+}
+
+/**
+ * Toggle the loading message.
+ * 
+ * @param {string} message - The message to display.
+ * @param {string} [mode='hide'] - The mode to execute ('show' or 'hide').
+ */
+function toggleLoadingMessage(message, mode = 'hide') {
+    const contentLoader = $("#content-loading");
+    const contentLoaderContent = $("#content-loading-content");
+
+    if (mode == 'show') {
+        contentLoaderContent.html(message);
+        contentLoader.show();
+    } else {
+        contentLoaderContent.html('');
+        contentLoader.hide();
+    }
+}
+
+/**
+ * View the the poll results for the given poll.
+ * 
+ * @param {Object} element - The element instance.
+ */
+function viewPollResults(element) {
+    const pollContainer = $("#poll-container");
+    const topicId = parseInt($(element).data('topicid'), 10);
+    const data = { topicId };
+
+    ajaxPost('viewpollresults', data, function(response) {
+        if (response.success) {
+            pollContainer.html(response.data.poll);
+            closeDialog();
+            notifyChange(response.data.message);
+        } else {
+            closeDialog();
+            notifyChange(response.data.message);
+        }
+    });
 }

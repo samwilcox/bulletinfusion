@@ -28,6 +28,7 @@ class PaginationHelper {
      * @param {string} itemLocale.plural - The plural locale for the item.
      * @param {number} maxPageLinks - The max total of page links on the page.
      * @param {string} [preUrl=null] - Optional URL to place before the query. 
+     * @returns {Object} - Object containing the pagination data ('pagination' and 'uuid').
      */
     static generate(totalItems, itemsPerPage, itemLocale, maxPageLinks, currentPage = 1, preUrl = null) {
         let url = preUrl ? preUrl : process.env.BASE_URL;
@@ -85,22 +86,28 @@ class PaginationHelper {
      * Generate the HTML for the pagination.
      * 
      * @param {Object} paginationData - The pagination data.
-     * @returns {string} - The resulting HTML source.
+     * @returns {Object} Pagination data object ('pagination' and 'uuid').
      */
     static generateHtml(paginationData) {
-        return OutputHelper.getPartial('pagination-helper', 'pagination', {
-            paginationData,
-            displayingItems: LocaleHelper.replaceAll('paginationHelper', 'displayingItems', {
-                start: paginationData.startItem,
-                end: paginationData.endItem,
-                total: paginationData.totalItems,
-                locale: parseInt(paginationData.totalItems, 10) === 1 ? paginationData.itemLocale.singular : paginationData.itemLocale.plural,
+        const uuid = UtilHelper.generateUniqueId();
+
+        return {
+            pagination: OutputHelper.getPartial('pagination-helper', 'pagination', {
+                paginationData,
+                displayingItems: LocaleHelper.replaceAll('paginationHelper', 'displayingItems', {
+                    start: paginationData.startItem,
+                    end: paginationData.endItem,
+                    total: paginationData.totalItems,
+                    locale: parseInt(paginationData.totalItems, 10) === 1 ? paginationData.itemLocale.singular : paginationData.itemLocale.plural,
+                }),
+                pageOfPages: LocaleHelper.replaceAll('paginationHelper', 'ofPages', {
+                    total: paginationData.totalPages,
+                    pages: LocaleHelper.get('paginationHelper', `page${parseInt(paginationData.totalPages, 10) === 1 ? 'Singular' : 'Plural'}`),
+                }),
+                uuid: uuid,
             }),
-            pageOfPages: LocaleHelper.replaceAll('paginationHelper', 'ofPages', {
-                total: paginationData.totalPages,
-                pages: LocaleHelper.get('paginationHelper', `page${parseInt(paginationData.totalPages, 10) === 1 ? 'Singular' : 'Plural'}`),
-            }),
-        });
+            uuid,
+        };
     }
 }
 

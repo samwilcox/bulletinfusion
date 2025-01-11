@@ -9,6 +9,13 @@ input, select, textarea { font-family: 'Poppins', sans-serif; font-size: 13px; b
 .formGroup input::placeholder { color: transparent; }
 .formGroup label { position: absolute; top: 16px; left: 14px; font-size: 14px; padding: 0 10px; color: #C3C3C3; pointer-events: none; transition: 0.15s all ease; }
 .formGroup input:focus + label, .formGroup input:not(:placeholder-shown) + label { transform: translate(5px, -26px); background-color: #171e20; font-size: 14px; color: #0098ae; }
+.formGroupAlt { position: relative; margin: 12px 0; width: 100%; }
+.formGroupAlt input { padding: 14px; font-size: 14px; border-radius: 8px; border: 2px solid #3f3f3f; background-color: transparent; color: #C3C3C3; transition: 0.15s all ease; width: 100%; box-sizing: border-box; }
+.formGroupAlt input:hover { border-color: #8E8E8E; }
+.formGroupAlt input:focus { border-color: #0098ae; }
+.formGroupAlt input::placeholder { color: transparent; }
+.formGroupAlt label { position: absolute; top: 16px; left: 14px; font-size: 14px; padding: 0 10px; color: #C3C3C3; pointer-events: none; transition: 0.15s all ease; }
+.formGroupAlt input:focus + label, .formGroupAlt input:not(:placeholder-shown) + label { transform: translate(5px, -26px); background-color: #121212; font-size: 14px; color: #0098ae; }
 .passwordField { padding-right: 65px !important; }
 .checkboxGrid { display: grid; grid-template-columns: auto 1fr; width: fit-content; gap: 14px; }
 .checkboxTitle { font-weight: 800; font-size: 14px; }
@@ -25,6 +32,8 @@ input, select, textarea { font-family: 'Poppins', sans-serif; font-size: 13px; b
 .checkbox .checkbox svg, .checkbox .checkbox input { display: block; height: 100%; width: 100%; }
 input[type=submit], input[type=button] { border-radius: 8px; font-weight: 800; font-size: 14px; padding: 12px 20px; background-color: #0098ae; color: #000; border: 1px solid transparent; outline: none; transition: 0.5s ease; color: #FFF; }
 input[type=submit]:hover, input[type=button]:hover { transition: 0.5s ease; background-color: #5dafc0; cursor: pointer; }
+.altButton { border-radius: 8px; font-weight: 800; font-size: 14px; padding: 12px 20px; background-color: #121212 !important; color: #000; border: 1px solid transparent; outline: none; transition: 0.5s ease; color: #FFF; }
+.altButton:hover { background-color: #282828 !important; }
 .radio { user-select: none; display: inline-flex; align-items: center; margin-top: 10px; }
 .radio:first-of-type { margin-top: 0; }
 .radio label { padding-left: .6em; color: #C3C3C3; font-weight: 500; line-height: 20px; }
@@ -39,3 +48,17 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 input[type="number"] { -moz-appearance: textfield; }
 .pageNumberInput:hover { background-color: #181818; }
 .pageNumberInput:focus { background-color: #181818; }
+.checkboxRadioContainer { display: flex; flex-wrap: wrap; gap: 20px; justify-content: flex-start; align-items: flex-start; align-content: flex-start; }
+.checkboxRadioContainer label { flex: 0 0 auto; }
+.checkboxRadio { position: relative; display: inline-flex; }
+.checkboxRadio input { position: absolute; opacity: 0; cursor: pointer; }
+.checkboxRadio .box { padding: 10px 20px; min-width: 100px; text-align: center; font-size: 16px; font-weight: 600; border: 2px solid #3f3f3f; border-radius: 8px; color: #C3C3C3; background-color: #121212; transition: all 0.3s ease; cursor: pointer; }
+.checkboxRadio input:checked + .box { border-color: #0098ae; background-color: #282828; color: #C3C3C3; box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2); }
+.checkboxRadio .box:hover { border-color: #0098ae; color: #C3C3C3; }
+.checkboxRadio input[type="radio"]:checked + .box { border-radius: 50px; }
+.checkboxRadio input:focus + .box { outline: 2px solid #0098ae; outline-offset: 2px; }
+input[type=button] { margin-left: 10px; }
+input[type=button]:first-of-type { margin-left: 0; }
+.cancelButton { border-radius: 8px; font-weight: 800; font-size: 14px; padding: 12px 20px; background-color: #717171 !important; color: #000; border: 1px solid transparent; outline: none; transition: 0.5s ease; color: #FFF; }
+.cancelButton:hover { transition: 0.5s ease; background-color: #3f3f3f !important; cursor: pointer; }
+input[type=file] { display: none; }

@@ -65,3 +65,9 @@ a:hover { color: #0098ae; text-decoration: none; transition: 0.5s ease; }
 .paginationLinks a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #282828; }
 .paginationLinks .selected a, .paginationLinks .selected a:link, .paginationLinks .selected a:active, .paginationLinks .selected a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; padding: 4px 10px; border-radius: 4px; font-weight: 700; background-color: #007182; }
 .paginationLinks .selected a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #0098ae; }
+.pollAction a, .pollAction a:link, .pollAction a:active, .pollAction a:visited { color: #000; text-decoration: none; transition: 0.5s ease; border-radius: 8px; padding: 8px 20px; font-size: 11px; font-weight: 600; display: inline-block; background-color: #77bac8; }
+.pollAction a:hover { color: #000; text-decoration: none; transition: 0.5s ease; background-color: #a6d1da; }
+.nextPreviousTopicBar a, .nextPreviousTopicBar a:link, .nextPreviousTopicBar a:active, .nextPreviousTopicBar a:visited { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; border-radius: 8px; padding: 10px 20px; background-color: #43494b; display: inline-block; }
+.nextPreviousTopicBar a:hover { color: #C3C3C3; text-decoration: none; transition: 0.5s ease; background-color: #2c3335; }
+.nextPreviousTopicBar .left i { margin-right: 5px; }
+.nextPreviousTopicBar .right i { margin-left: 5px; }

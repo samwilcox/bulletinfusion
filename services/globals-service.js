@@ -117,7 +117,7 @@ class GlobalsService {
         });
 
         this.globals.signInUrl = UtilHelper.buildUrl(['auth', 'signin']);
-        this.globals.csrfToken = req.csrfToken();
+        this.globals.csrfToken = req._csrfToken;
         this.globals.csrfEnabled = Settings.get('csrfEnabled');
 
         if (member.isSignedIn()) {
@@ -132,6 +132,24 @@ class GlobalsService {
             this.globals.signOutUrl = UtilHelper.buildUrl(['auth', 'signout']);
             this.globals.moderatorToolboxUrl = UtilHelper.buildUrl(['mtoolbox']);
             this.globals.administratorControlPanelUrl = `${process.env.BASE_URL}/${process.env.ADMINCP_FOLDER}`;
+        }
+
+        if (Settings.get('giphyApiKey') && Settings.get('giphyApiKey').length > 0) {
+            this.globals.giphy = true;
+            this.globals.giphyApiKey = Buffer.from(Settings.get('giphyApiKey')).toString('base64');
+            this.globals.giphyTrendLimit = Settings.get('giphyTrendLimit');
+        } else {
+            this.globals.giphy = false;
+            this.globals.giphyApiKey = null;
+            this.globals.giphyTrendLimit = null;
+        }
+
+        if (Settings.get('openEmojiApiKey') && Settings.get('openEmojiApiKey').length > 0) {
+            this.globals.openEmoji = true;
+            this.globals.openEmojiApiKey = Buffer.from(Settings.get('openEmojiApiKey')).toString('base64');
+        } else {
+            this.globals.openEmoji = false;
+            this.globals.openEmojiApiKey = null;
         }
 
         return this.globals;

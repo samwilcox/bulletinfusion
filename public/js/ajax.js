@@ -19,9 +19,12 @@
  * @param {boolean} [options.onError=false] - True to execute a given function on error.
  * @param {any} [options.value=null] - The value to set on error.
  * @param {Function} [options.fn=null] - The function to execute on error.
+ * @param {boolean} [options.updateHistory=false] - True to update history in the browser.
+ * @param {number} [options.page=null] - Optional page number.
+ * @param {string} [options.addressBarUrl=null] - Optional address bar URL.
  */
 function ajaxGet(action, data = null, successCallback, options = {}) {
-    const { onError = false, value = null, fn = null } = options;
+    const { onError = false, value = null, fn = null, updateHistory = false, page = null, addressBarUrl = null } = options;
     let queryString = '';
 
     if (data) {
@@ -37,6 +40,9 @@ function ajaxGet(action, data = null, successCallback, options = {}) {
         type: 'GET',
         contentType: 'application/json',
         success: function(response) {
+            if (updateHistory && addressBarUrl) {
+                history.pushState({ page: page, url: addressBarUrl }, '', addressBarUrl);
+            };
             successCallback(response);
         },
         error: function(xhr, status, error) {
@@ -58,15 +64,24 @@ function ajaxGet(action, data = null, successCallback, options = {}) {
  * @param {boolean} [options.onError=false] - True to execute a given function on error.
  * @param {any} [options.value=null] - The value to set on error.
  * @param {Function} [options.fn=null] - The function to execute on error.
+ * @param {boolean} [options.updateHistory=false] - True to update history in the browser. 
+ * @param {number} [options.page=null] - Optional page number.
+ * @param {string} [options.addressBarUrl=null] - Optional address bar URL.
  */
 function ajaxPost(action, data, successCallback, options = {}) {
-    const { onError = false, value = null, fn = null } = options;
-    const url = `${json.ajaxUrl}/ajax/${action}`;
-    let headers = {};
+    const {
+        onError = false,
+        value = null,
+        fn = null,
+        updateHistory = false,
+        page = null,
+        addressBarUrl = null,
+    } = options;
 
-    if (json.csrfEnabled) {
-        headers['X-CSRF-Token'] = json.csrfToken;
-    }
+    const url = `${json.ajaxUrl}/ajax/${action}`;
+    const headers = json.csrfEnabled
+        ? { 'X-CSRF-Token': json.csrfToken }
+        : {};
 
     $.ajax({
         url,
@@ -74,10 +89,11 @@ function ajaxPost(action, data, successCallback, options = {}) {
         data: JSON.stringify(data),
         processData: false,
         contentType: 'application/json',
-        headers: {
-            ...headers,
-        },
+        headers: headers,
         success: function(response) {
+            if (updateHistory && addressBarUrl) {
+                history.pushState({ page: page, url: addressBarUrl }, '', addressBarUrl);
+            }
             successCallback(response);
         },
         error: function(xhr, status, error) {
@@ -91,6 +107,34 @@ function ajaxPost(action, data, successCallback, options = {}) {
 }
 
 /**
+ * Upload a file via AJAX.
+ * 
+ * @param {FormData} data - The form data object instance. 
+ * @param {*CallableFunction} successCallback - The method to execute on response received. 
+ */
+function ajaxUpload(data, successCallback) {
+    const url = `${json.ajaxUrl}/ajax/upload`;
+    const headers = json.csrfEnabled
+        ? { 'X-CSRF-Token': json.csrfToken }
+        : {};
+
+    $.ajax({
+        url,
+        type: 'POST',
+        data,
+        processData: false,
+        contentType: false,
+        headers,
+        success: function(response) {
+            successCallback(response);
+        },
+        error: function(xhr, status, error) {
+            handleAjaxError(xhr, status, error);
+        }
+    });
+}
+
+/**
  * Handles errors that occur during an AJAX requst.
  * 
  * @param {Object} xhr - The XMLHttpRequest object that contains the response data from the server.
@@ -98,5 +142,5 @@ function ajaxPost(action, data, successCallback, options = {}) {
  * @param {string} error - An optional error message, providing more details about the error.
  */
 function handleAjaxError(xhr, status, error) {
-
+    console.error(xhr, status, error);
 }

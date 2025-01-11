@@ -71,6 +71,36 @@ class AjaxController {
     async getPosts(req, res) {
         res.json(this.model.getPosts(req));
     }
+
+    /**
+     * Like/Unlike content.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @param {Object} res - The response object from Express.
+     */
+    async likeUnlikeContent(req, res) {
+        res.json(await this.model.likeUnlikeContent(req));
+    }
+
+    /**
+     * View the poll results.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @param {Object} res - The response object from Express. 
+     */
+    async viewPollResults(req, res) {
+        res.json(await this.model.viewPollResults(req));
+    }
+
+    /**
+     * Upload a file.
+     * 
+     * @param {Object} req - The request object from Express.
+     * @param {Object} res - The response object from Express. 
+     */
+    async uploadFile(req, res) {
+        this.model.uploadFile(req);
+    }
 }
 
 module.exports = AjaxController;
